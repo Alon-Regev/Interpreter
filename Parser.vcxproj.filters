@@ -72,6 +72,9 @@
     <ClInclude Include="If.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
+    <ClInclude Include="Signal.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -108,6 +111,9 @@
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="If.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Signal.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
   </ItemGroup>

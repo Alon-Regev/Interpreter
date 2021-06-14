@@ -1,30 +1,31 @@
 #include "Interpreter.h"
 
 std::map<std::string, Operator> Interpreter::_operators = {
-	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 8} },
-	{"-", Operator{[](Type* a, Type* b) { return a->sub(b); }, 8} },
-	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 9} },
-	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 9} },
+	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 9} },
+	{"-", Operator{[](Type* a, Type* b) { return a->sub(b); }, 9} },
+	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 10} },
+	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 10} },
 
-	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 10} },
+	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 11} },
 	
-	{",", Operator{(operation)Interpreter::tupleExtension, 4} },
-	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 4} },
+	{",", Operator{(operation)Interpreter::tupleExtension, 5} },
+	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 5} },
 
-	{"=", Operator{(operation)Interpreter::assign, 3} },
+	{"=", Operator{(operation)Interpreter::assign, 4} },
 
-	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 2, UNARY_PREFIX}},
-	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 1} },
+	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 3, UNARY_PREFIX}},
+	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 1}},
+	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 2} },
 
 	// logic operators
-	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 7} },
-	{"!=", Operator{[](Type* a, Type* b) { return a->notEqual(b); }, 7} },
-	{">", Operator{[](Type* a, Type* b) { return a->greater(b); }, 7} },
-	{"<", Operator{[](Type* a, Type* b) { return a->less(b); }, 7} },
-	{">=", Operator{[](Type* a, Type* b) { return a->greaterEqual(b); }, 7} },
-	{"<=", Operator{[](Type* a, Type* b) { return a->lessEqual(b); }, 7} },
-	{"||", Operator{[](Type* a, Type* b) { return a->logicOr(b); }, 6} },
-	{"&&", Operator{[](Type* a, Type* b) { return a->logicAnd(b); }, 5} },
+	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 8} },
+	{"!=", Operator{[](Type* a, Type* b) { return a->notEqual(b); }, 8} },
+	{">", Operator{[](Type* a, Type* b) { return a->greater(b); }, 8} },
+	{"<", Operator{[](Type* a, Type* b) { return a->less(b); }, 8} },
+	{">=", Operator{[](Type* a, Type* b) { return a->greaterEqual(b); }, 8} },
+	{"<=", Operator{[](Type* a, Type* b) { return a->lessEqual(b); }, 8} },
+	{"||", Operator{[](Type* a, Type* b) { return a->logicOr(b); }, 7} },
+	{"&&", Operator{[](Type* a, Type* b) { return a->logicAnd(b); }, 6} },
 };
 std::map<std::string, Type*> Interpreter::_variables;
 
