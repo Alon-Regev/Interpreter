@@ -57,6 +57,54 @@ Type* Int::assign(Type* other)
 		Type::assign(other);
 }
 
+Type* Int::equal(Type* other)
+{
+	if (other->getType() == INT)
+		return new Bool(this->_value == ((Int*)other)->_value);
+	else
+		Type::equal(other);
+}
+
+Type* Int::notEqual(Type* other)
+{
+	if (other->getType() == INT)
+		return new Bool(this->_value != ((Int*)other)->_value);
+	else
+		Type::notEqual(other);
+}
+
+Type* Int::greater(Type* other)
+{
+	if (other->getType() == INT)
+		return new Bool(this->_value > ((Int*)other)->_value);
+	else
+		Type::greater(other);
+}
+
+Type* Int::less(Type* other)
+{
+	if (other->getType() == INT)
+		return new Bool(this->_value < ((Int*)other)->_value);
+	else
+		Type::less(other);
+}
+
+Type* Int::greaterEqual(Type* other)
+{
+	if (other->getType() == INT)
+		return new Bool(this->_value >= ((Int*)other)->_value);
+	else
+		Type::greaterEqual(other);
+}
+
+Type* Int::lessEqual(Type* other)
+{
+	if (other->getType() == INT)
+		return new Bool(this->_value <= ((Int*)other)->_value);
+	else
+		Type::lessEqual(other);
+}
+
 Type* Int::div(Type* other)
 {
 	if (other->getType() == INT)
