@@ -8,11 +8,29 @@ If::If(Type* condition) : Type(IF)
 
 Type* If::block(Type* other)
 {
-	if (other->getType() != BLOCK)
-		return Type::block(other);
-	// run if condition is true
+	// run or return if condition is true
 	if (_condition)
-		return ((Block*)other)->run();
+	{
+		if (other->getType() == BLOCK)
+			return ((Block*)other)->run();
+		else
+			return other;
+	}
 	else
-		return new Undefined();		// maybe return else statement?
+		return new Signal(ELSE_SIGNAL);
+}
+
+Type* If::elseCheck(Type* ifReturn, Type* other)
+{
+	if (ifReturn->getType() == SIGNAL && ((Signal*)ifReturn)->getValue() == ELSE_SIGNAL)
+	{
+		// activate else
+		if (other->getType() == BLOCK)
+		{
+			return ((Block*)other)->run();
+		}
+		else
+			return other;
+	}
+	return ifReturn;
 }
