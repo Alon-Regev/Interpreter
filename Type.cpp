@@ -65,3 +65,43 @@ Type* Type::block(Type* other)
     throw InvalidOperationException("{} between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
+Type* Type::equal(Type* other)
+{
+    throw InvalidOperationException("== between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::notEqual(Type* other)
+{
+    throw InvalidOperationException("!= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::greater(Type* other)
+{
+    throw InvalidOperationException("> between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::less(Type* other)
+{
+    throw InvalidOperationException("< between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::greaterEqual(Type* other)
+{
+    throw InvalidOperationException(">= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::lessEqual(Type* other)
+{
+    throw InvalidOperationException("<= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::logicOr (Type * other)
+{
+    throw InvalidOperationException("|| between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::logicAnd (Type* other)
+{
+    throw InvalidOperationException("&& between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
