@@ -17,6 +17,10 @@ public:
 	bool getValue();
 	// operators
 	virtual Type* assign(Type* other);
+	virtual Type* equal(Type* other);
+	virtual Type* notEqual(Type* other);
+	virtual Type* logicOr(Type* other);
+	virtual Type* logicAnd(Type* other);
 private:
 	bool _value;
 };
