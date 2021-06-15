@@ -149,7 +149,9 @@
     <ClInclude Include="InvalidOperationException.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="PredefinedFunctions.h" />
     <ClInclude Include="Signal.h" />
+    <ClInclude Include="StaticFunction.h" />
     <ClInclude Include="Tuple.h" />
     <ClInclude Include="Type.h" />
     <ClInclude Include="TypeErrorException.h" />
@@ -166,7 +168,9 @@
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="PredefinedFunctions.cpp" />
     <ClCompile Include="Signal.cpp" />
+    <ClCompile Include="StaticFunction.cpp" />
     <ClCompile Include="Tuple.cpp" />
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="Undefined.cpp" />

@@ -7,7 +7,7 @@ Int::Int(const std::string& value) : Type(INT)
 Int::Int(const int value) : Type(INT), _value(value) {}
 Int::Int() : Type(INT), _value(INT_DEFAULT_VALUE) {}
 
-std::string Int::toString()
+std::string Int::toString() const
 {
 	return std::to_string(this->_value);
 }

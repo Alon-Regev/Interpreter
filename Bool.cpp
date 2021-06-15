@@ -11,7 +11,7 @@ Bool::Bool(bool value) : Type(BOOL), _value(value) {}
 
 Bool::Bool() : Type(BOOL), _value(false) {}
 
-std::string Bool::toString()
+std::string Bool::toString() const
 {
 	return this->_value ? TRUE : FALSE;
 }

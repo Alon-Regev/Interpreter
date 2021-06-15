@@ -4,7 +4,7 @@ Void::Void() : Type(VOID)
 {
 }
 
-std::string Void::toString()
+std::string Void::toString() const
 {
     return "";
 }

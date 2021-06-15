@@ -11,7 +11,7 @@ class If : public Type
 {
 public:
 	If(Type* condition);
-	virtual std::string toString() { return IF; }
+	virtual std::string toString() const { return IF; }
 	virtual Type* copy() { return nullptr; }
 	static bool isType(const std::string& value) { return false; }
 	// operators

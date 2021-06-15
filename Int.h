@@ -12,7 +12,7 @@ public:
 	Int(const std::string& value);
 	Int(const int value);
 	Int();
-	virtual std::string toString();
+	virtual std::string toString() const;
 	virtual Type* copy();
 	static bool isType(const std::string& value);
 	// operators

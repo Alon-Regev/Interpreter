@@ -6,7 +6,7 @@ class Type
 {
 public:
 	Type(std::string type, bool staticType=false) : _type(type), _staticType(staticType) {}
-	virtual std::string toString() = 0;
+	virtual std::string toString() const = 0;
 	virtual Type* copy() = 0;
 	const std::string& getType() const;
 	bool isStaticType() const;
