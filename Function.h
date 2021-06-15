@@ -16,7 +16,7 @@ class Function : public Type
 public:
 	Function(Interpreter& interpreter);
 	Function(Type* params, Block* block);
-	virtual std::string toString() { return FUNCTION; }
+	virtual std::string toString() const { return FUNCTION; }
 	virtual Type* copy() { return nullptr; }
 	// operators
 	virtual Type* call(Type* other);

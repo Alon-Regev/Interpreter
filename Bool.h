@@ -11,7 +11,7 @@ public:
 	Bool(const std::string& value);
 	Bool(bool value);
 	Bool();
-	virtual std::string toString();
+	virtual std::string toString() const;
 	virtual Type* copy();
 	static bool isType(const std::string& value);
 	bool getValue();

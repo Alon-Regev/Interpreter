@@ -7,7 +7,7 @@ class Undefined : public Type
 {
 public:
 	Undefined();
-	virtual std::string toString();
+	virtual std::string toString() const;
 	virtual Type* copy();
 	static bool isType(const std::string& value);
 };

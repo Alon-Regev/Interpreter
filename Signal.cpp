@@ -4,7 +4,7 @@ Signal::Signal(const std::string& value) : Type(SIGNAL), _value(value)
 {
 }
 
-std::string Signal::toString()
+std::string Signal::toString() const
 {
 	return this->_value;
 }

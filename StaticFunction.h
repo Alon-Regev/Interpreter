@@ -9,7 +9,7 @@ class StaticFunction : public Type
 {
 public:
 	StaticFunction(staticFunction function);
-	virtual std::string toString() { return STATIC_FUNCTION; }
+	virtual std::string toString() const { return STATIC_FUNCTION; }
 	virtual Type* copy() { return nullptr; }
 	static bool isType(const std::string& value) { return false; }
 	// operators
