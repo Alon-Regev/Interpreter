@@ -14,10 +14,10 @@ Type* Function::call(Type* other)
 		throw InvalidOperationException("arguments to a function with no parameters");
 	else if(!(this->_params->getType() == UNDEFINED && other->getType() == UNDEFINED))
 		this->_params->assign(other);
-	if (this->_function->getType() == UNDEFINED)
-		return new Undefined();
+	if (this->_function->getType() != BLOCK)
+		return this->_function->copy();
 	else
-		return this->_function->run();
+		return ((Block*)this->_function)->run();
 }
 
 Type* Function::assign(Type* other)

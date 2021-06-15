@@ -22,7 +22,7 @@ public:
 	virtual Type* call(Type* other);
 	virtual Type* assign(Type* other);
 private:
-	Block* _function;
+	Type* _function;
 	Interpreter& _interpreter;
 	Type* _params;
 };
