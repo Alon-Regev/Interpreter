@@ -1,5 +1,6 @@
 #pragma once
 #include "Parser.h"
+#include "PredefinedFunctions.h"
 
 #include "TypeErrorException.h"
 #include "VariableException.h"

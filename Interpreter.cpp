@@ -31,6 +31,8 @@ std::map<std::string, Type*> Interpreter::_variables;
 
 Interpreter::Interpreter() : Parser(Interpreter::_operators)
 {
+	// predefined
+	initVariables(this->_variables);
 }
 
 std::string Interpreter::run(const std::string& code)

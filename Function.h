@@ -18,7 +18,6 @@ public:
 	Function(Type* params, Block* block);
 	virtual std::string toString() { return FUNCTION; }
 	virtual Type* copy() { return nullptr; }
-	static bool isType(const std::string& value) { return false; }
 	// operators
 	virtual Type* call(Type* other);
 	virtual Type* assign(Type* other);

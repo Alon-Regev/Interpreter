@@ -75,6 +75,12 @@
     <ClInclude Include="Signal.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
+    <ClInclude Include="StaticFunction.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="PredefinedFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -115,6 +121,12 @@
     </ClCompile>
     <ClCompile Include="Signal.cpp">
       <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticFunction.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="PredefinedFunctions.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
