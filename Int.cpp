@@ -46,6 +46,11 @@ Type* Int::mul(Type* other)
 		Type::mul(other);
 }
 
+Type* Int::negative()
+{
+	return new Int(-this->_value);
+}
+
 Type* Int::assign(Type* other)
 {
 	if (other->getType() == INT)

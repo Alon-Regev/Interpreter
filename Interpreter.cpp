@@ -2,7 +2,7 @@
 
 std::map<std::string, Operator> Interpreter::_operators = {
 	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 9} },
-	{"-", Operator{[](Type* a, Type* b) { return a->sub(b); }, 9} },
+	{"-", Operator{[](Type* a, Type* b) { return a == nullptr ? b->negative() : a->sub(b); }, 9} },
 	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 10} },
 	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 10} },
 
@@ -89,8 +89,14 @@ Type* Interpreter::assign(Type* a, Type* b)
 
 Type* Interpreter::addVariable(std::string variableName, Type* variable, bool isNew)
 {
-	if (isNew && Interpreter::_variables.find(variableName) != Interpreter::_variables.end())
-		throw VariableException('"' + variableName + "\" already exists");
+	Helper::trim(variableName);
+	if (isNew)
+	{
+		if (Interpreter::_variables.find(variableName) != Interpreter::_variables.end())
+			throw VariableException('"' + variableName + "\" already exists");
+		else if (!isVariableNameValid(variableName))
+			throw VariableException('"' + variableName + "\" is not a valid name");
+	}
 	variable->setVariable(variableName);
 	return Interpreter::_variables[variableName] = variable;
 }
@@ -125,4 +131,9 @@ Tuple* Interpreter::tupleExtension(Type* a, Type* b)
 	tuple->extend(a);
 	tuple->extend(b);
 	return tuple;
+}
+
+bool Interpreter::isVariableNameValid(const std::string& name)
+{
+	return std::regex_match(name, std::regex("[a-zA-Z_][a-zA-Z0-9_]*"));
 }

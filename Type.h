@@ -22,6 +22,7 @@ public:
 	virtual Type* assign(Type* other);
 	virtual Type* call(Type* other);
 	virtual Type* block(Type* other);
+	virtual Type* negative();
 	// logic operators
 	virtual Type* equal(Type* other);
 	virtual Type* notEqual(Type* other);

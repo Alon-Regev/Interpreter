@@ -5,6 +5,8 @@
 #include <stack>
 #include <vector>
 #include <map>
+#include "SyntaxException.h"
+#include "Helper.h"
 
 enum opTypes{BINARY_INFIX, UNARY_PREFIX, UNARY_POSTFIX};
 
@@ -38,7 +40,6 @@ private:
 	bool isOpenParentheses(char c);
     bool isCloseParentheses(char c);
     std::string getParentheses(char c);
-    void trim(std::string& str);
 
     const std::map<std::string, Operator>& _operators;
 };
@@ -83,6 +84,8 @@ EvaluationType Parser<EvaluationType>::evaluate(Node* node)
         EvaluationType lv = evaluate(node->_left);
         EvaluationType rv = evaluate(node->_right);
         std::string op = node->_value;
+        if (this->_operators.find(op) == this->_operators.end())
+            throw SyntaxException("Can't parse operators");
         return this->_operators.at(op).func(lv, rv);
     }
 }
@@ -105,6 +108,7 @@ Node* Parser<EvaluationType>::parse(const std::string& expression)
         {
             if (expectingOperator)   // parentheses operator
             {
+                Helper::trim(value);
                 expr.push_back(new Node(value));
                 value = "";
                 expr.push_back(new Node(this->getParentheses(*it))); // parentheses operator
@@ -113,7 +117,8 @@ Node* Parser<EvaluationType>::parse(const std::string& expression)
             }
             else    // regular parentheses
             {
-                if(value != "")
+                Helper::trim(value);
+                if (value != "")
                     expr.push_back(new Node(value));
                 value = "";
                 expr.push_back(new Node(std::string(1, *it)));
@@ -122,6 +127,7 @@ Node* Parser<EvaluationType>::parse(const std::string& expression)
         }
         else if (this->isCloseParentheses(*it))
         {
+            Helper::trim(value);
             expr.push_back(new Node(value));
             value = "";
             expr.push_back(new Node(std::string(1, *it)));
@@ -135,7 +141,7 @@ Node* Parser<EvaluationType>::parse(const std::string& expression)
         }
         else
         {   // is an operator, push value and operator
-            this->trim(value);
+            Helper::trim(value);
             if (value != "")   // not empty
                 expr.push_back(new Node(value));
             // push operator
@@ -145,7 +151,7 @@ Node* Parser<EvaluationType>::parse(const std::string& expression)
             expectingOperator = false;
         }
     }
-    this->trim(value);
+    Helper::trim(value);
     if (value != "") // add last value
         expr.push_back(new Node(value));
     // remove empties
@@ -279,25 +285,4 @@ inline std::string Parser<EvaluationType>::getParentheses(char c)
         return "()";
     else if (c == '{' || c == '}')
         return "{}";
-}
-
-template<class EvaluationType>
-inline void Parser<EvaluationType>::trim(std::string& str)
-{
-    if (str == "")
-        return;
-    // remove from start
-    for (int i = 0; i < str.size(); i++)
-    {
-        if (str[i] == ' ')
-            str.erase(str.begin() + i--);
-        else break;
-    }
-    // remove from end
-    for (int i = str.size() - 1; i > 0; i--)
-    {
-        if (str[i] == ' ')
-            str.erase(str.begin() + i);
-        else break;
-    }
 }
