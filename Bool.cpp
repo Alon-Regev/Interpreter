@@ -11,7 +11,7 @@ Bool::Bool(bool value) : Type(BOOL), _value(value) {}
 
 Bool::Bool() : Type(BOOL), _value(false) {}
 
-std::string Bool::toString()
+std::string Bool::toString() const
 {
 	return this->_value ? TRUE : FALSE;
 }
@@ -40,4 +40,36 @@ Type* Bool::assign(Type* other)
 	}
 	else
 		return Type::assign(other);
+}
+
+Type* Bool::equal(Type* other)
+{
+	if (other->getType() == BOOL)
+		return new Bool(this->_value == ((Bool*)other)->_value);
+	else
+		return Type::equal(other);
+}
+
+Type* Bool::notEqual(Type* other)
+{
+	if (other->getType() == BOOL)
+		return new Bool(this->_value != ((Bool*)other)->_value);
+	else
+		return Type::notEqual(other);
+}
+
+Type* Bool::logicOr(Type* other)
+{
+	if (other->getType() == BOOL)
+		return new Bool(this->_value || ((Bool*)other)->_value);
+	else
+		return Type::logicOr(other);
+}
+
+Type* Bool::logicAnd(Type* other)
+{
+	if (other->getType() == BOOL)
+		return new Bool(this->_value && ((Bool*)other)->_value);
+	else
+		return Type::logicAnd(other);
 }

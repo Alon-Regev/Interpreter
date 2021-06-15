@@ -1,25 +1,37 @@
 #include "Interpreter.h"
 
 std::map<std::string, Operator> Interpreter::_operators = {
-	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 5} },
-	{"-", Operator{[](Type* a, Type* b) { return a->sub(b); }, 5} },
-	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 6} },
-	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 6} },
-
-	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 7} },
+	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 9} },
+	{"-", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? b->negative() : a->sub(b); }, 9, BINARY_INFIX, true} },
+	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 10} },
+	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 10} },
+	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 11} },
 	
-	{",", Operator{(operation)Interpreter::tupleExtension, 4} },
-	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 4} },
+	{",", Operator{(operation)Interpreter::tupleExtension, 5} },
+	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 5} },
 
-	{"=", Operator{(operation)Interpreter::assign, 3} },
+	{"=", Operator{(operation)Interpreter::assign, 4} },
 
-	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 2, UNARY_PREFIX}},
-	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 1} },
+	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 3, UNARY_PREFIX}},
+	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 1}},
+	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 2} },
+
+	// logic operators
+	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 8} },
+	{"!=", Operator{[](Type* a, Type* b) { return a->notEqual(b); }, 8} },
+	{">", Operator{[](Type* a, Type* b) { return a->greater(b); }, 8} },
+	{"<", Operator{[](Type* a, Type* b) { return a->less(b); }, 8} },
+	{">=", Operator{[](Type* a, Type* b) { return a->greaterEqual(b); }, 8} },
+	{"<=", Operator{[](Type* a, Type* b) { return a->lessEqual(b); }, 8} },
+	{"||", Operator{[](Type* a, Type* b) { return a->logicOr(b); }, 7} },
+	{"&&", Operator{[](Type* a, Type* b) { return a->logicAnd(b); }, 6} },
 };
 std::map<std::string, Type*> Interpreter::_variables;
 
 Interpreter::Interpreter() : Parser(Interpreter::_operators)
 {
+	// predefined
+	initVariables(this->_variables);
 }
 
 std::string Interpreter::run(const std::string& code)
@@ -76,8 +88,14 @@ Type* Interpreter::assign(Type* a, Type* b)
 
 Type* Interpreter::addVariable(std::string variableName, Type* variable, bool isNew)
 {
-	if (isNew && Interpreter::_variables.find(variableName) != Interpreter::_variables.end())
-		throw VariableException('"' + variableName + "\" already exists");
+	Helper::trim(variableName);
+	if (isNew)
+	{
+		if (Interpreter::_variables.find(variableName) != Interpreter::_variables.end())
+			throw VariableException('"' + variableName + "\" already exists");
+		else if (!isVariableNameValid(variableName))
+			throw VariableException('"' + variableName + "\" is not a valid name");
+	}
 	variable->setVariable(variableName);
 	return Interpreter::_variables[variableName] = variable;
 }
@@ -112,4 +130,9 @@ Tuple* Interpreter::tupleExtension(Type* a, Type* b)
 	tuple->extend(a);
 	tuple->extend(b);
 	return tuple;
+}
+
+bool Interpreter::isVariableNameValid(const std::string& name)
+{
+	return std::regex_match(name, std::regex("[a-zA-Z_][a-zA-Z0-9_]*"));
 }

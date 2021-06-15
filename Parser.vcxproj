@@ -142,6 +142,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="Bool.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="Helper.h" />
     <ClInclude Include="If.h" />
     <ClInclude Include="Int.h" />
     <ClInclude Include="Interpreter.h" />
@@ -149,6 +150,10 @@
     <ClInclude Include="InvalidOperationException.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="PredefinedFunctions.h" />
+    <ClInclude Include="Signal.h" />
+    <ClInclude Include="StaticFunction.h" />
+    <ClInclude Include="SyntaxException.h" />
     <ClInclude Include="Tuple.h" />
     <ClInclude Include="Type.h" />
     <ClInclude Include="TypeErrorException.h" />
@@ -160,11 +165,15 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Bool.cpp" />
     <ClCompile Include="Function.cpp" />
+    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="If.cpp" />
     <ClCompile Include="Int.cpp" />
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="PredefinedFunctions.cpp" />
+    <ClCompile Include="Signal.cpp" />
+    <ClCompile Include="StaticFunction.cpp" />
     <ClCompile Include="Tuple.cpp" />
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="Undefined.cpp" />

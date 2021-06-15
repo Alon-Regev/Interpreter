@@ -4,7 +4,7 @@ Tuple::Tuple() : Type(TUPLE)
 {
 }
 
-std::string Tuple::toString()
+std::string Tuple::toString() const
 {
     if (this->_values.empty())
         return "()";
@@ -30,6 +30,16 @@ bool Tuple::isVariableTuple()
         if (!value->isVariable())
             return false;
     return true;
+}
+
+std::vector<Type*>::const_iterator Tuple::begin()
+{
+    return this->_values.begin();
+}
+
+std::vector<Type*>::const_iterator Tuple::end()
+{
+    return this->_values.end();
 }
 
 Type* Tuple::assign(Type* other)

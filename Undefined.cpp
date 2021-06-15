@@ -4,7 +4,7 @@ Undefined::Undefined() : Type(UNDEFINED)
 {
 }
 
-std::string Undefined::toString()
+std::string Undefined::toString() const
 {
 	return UNDEFINED;
 }

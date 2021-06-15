@@ -6,7 +6,7 @@ class Type
 {
 public:
 	Type(std::string type, bool staticType=false) : _type(type), _staticType(staticType) {}
-	virtual std::string toString() = 0;
+	virtual std::string toString() const = 0;
 	virtual Type* copy() = 0;
 	const std::string& getType() const;
 	bool isStaticType() const;
@@ -22,6 +22,16 @@ public:
 	virtual Type* assign(Type* other);
 	virtual Type* call(Type* other);
 	virtual Type* block(Type* other);
+	virtual Type* negative();
+	// logic operators
+	virtual Type* equal(Type* other);
+	virtual Type* notEqual(Type* other);
+	virtual Type* greater(Type* other);
+	virtual Type* less(Type* other);
+	virtual Type* greaterEqual(Type* other);
+	virtual Type* lessEqual(Type* other);
+	virtual Type* logicOr (Type* other);
+	virtual Type* logicAnd(Type* other);
 protected:
 	std::string _type;
 	bool _staticType;

@@ -1,5 +1,8 @@
 #pragma once
+#include <regex>
+
 #include "Parser.h"
+#include "PredefinedFunctions.h"
 
 #include "TypeErrorException.h"
 #include "VariableException.h"
@@ -30,5 +33,6 @@ private:
 	static Type* addVariable(std::string variableName, Type* variable, bool isNew=false);
 	Type* checkNewVariable(const std::string& str);
 	static Tuple* tupleExtension(Type* a, Type* b);
+	static bool isVariableNameValid(const std::string& name);
 };
 
