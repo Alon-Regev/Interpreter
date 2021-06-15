@@ -2,10 +2,9 @@
 
 std::map<std::string, Operator> Interpreter::_operators = {
 	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 9} },
-	{"-", Operator{[](Type* a, Type* b) { return a == nullptr ? b->negative() : a->sub(b); }, 9} },
+	{"-", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? b->negative() : a->sub(b); }, 9, BINARY_INFIX, true} },
 	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 10} },
 	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 10} },
-
 	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 11} },
 	
 	{",", Operator{(operation)Interpreter::tupleExtension, 5} },

@@ -8,6 +8,8 @@
 #include "SyntaxException.h"
 #include "Helper.h"
 
+#define INVALID_OPERATOR_USE(op) "invalid operator use of operator \"" + op + '"'
+
 enum opTypes{BINARY_INFIX, UNARY_PREFIX, UNARY_POSTFIX};
 
 typedef Type*(*operation)(Type*, Type*);
@@ -16,6 +18,7 @@ struct Operator
 	operation func;
 	int order;
 	char type = BINARY_INFIX;
+    bool allowNulls = false;    // true if func checks for nulls
 };
 
 template<class EvaluationType>
@@ -86,6 +89,9 @@ EvaluationType Parser<EvaluationType>::evaluate(Node* node)
         std::string op = node->_value;
         if (this->_operators.find(op) == this->_operators.end())
             throw SyntaxException("Can't parse operators");
+        Operator _operator = this->_operators.at(op);
+        if (!_operator.allowNulls && (rv == nullptr && _operator.type == UNARY_PREFIX || lv == nullptr && _operator.type == UNARY_POSTFIX || (lv == nullptr || rv == nullptr) && _operator.type == BINARY_INFIX))
+            throw SyntaxException(INVALID_OPERATOR_USE(op));
         return this->_operators.at(op).func(lv, rv);
     }
 }
