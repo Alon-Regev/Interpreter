@@ -24,6 +24,6 @@ public:
 private:
 	Block* _function;
 	Interpreter& _interpreter;
-	Tuple* _params;
+	Type* _params;
 };
 

@@ -220,12 +220,19 @@ void Parser<EvaluationType>::removeParentheses(std::vector<Node*>& expr)
                 break;  // found sub expression
         }
         if (it == expr.end())
-            break;  // no parentheses at all in expression
+        {
+            if (lastParentheses == expr.end())
+                break;  // no parentheses at all in expression
+            else
+                throw SyntaxException("opening parentheses without closing parentheses");
+        }
         // get sub-expression
+        if (lastParentheses == expr.end())
+            throw SyntaxException("closing parentheses without opening parentheses");
         std::vector<Node*> subExpression(lastParentheses + 1, it);
         Node* newNode = this->parse(subExpression);
         // delete sub-expression from expr and insert new node
-        if ((*lastParentheses)->_value == "{")
+        if ((*lastParentheses)->_value == "{" && newNode != nullptr)
             newNode->_block = true;
         expr.erase(lastParentheses + 1, it + 1);
         if (newNode != nullptr)

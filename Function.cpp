@@ -4,16 +4,20 @@ Function::Function(Interpreter& interpreter) : Type(FUNCTION), _interpreter(inte
 
 Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(block->getInterpreter()), _function(block) 
 {
-	if (params->getType() == UNDEFINED)
-		this->_params = nullptr;
-	else if(params->getType() == TUPLE)
-		this->_params = (Tuple*)params;
+	if (params->getType() == UNDEFINED || params->getType() == TUPLE && ((Tuple*)params)->isVariableTuple() || params->isVariable())
+		this->_params = params;
 }
 
 Type* Function::call(Type* other)
 {
-	this->_params->assign(other);
-	return this->_function->run();
+	if (this->_params->getType() == UNDEFINED && other->getType() != UNDEFINED)
+		throw InvalidOperationException("arguments to a function with no parameters");
+	else if(!(this->_params->getType() == UNDEFINED && other->getType() == UNDEFINED))
+		this->_params->assign(other);
+	if (this->_function->getType() == UNDEFINED)
+		return new Undefined();
+	else
+		return this->_function->run();
 }
 
 Type* Function::assign(Type* other)
