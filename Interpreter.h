@@ -14,6 +14,7 @@
 #include "Int.h"
 #include "Bool.h"
 #include "If.h"
+#include "While.h"
 
 class Function;
 class Block;

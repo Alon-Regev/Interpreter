@@ -15,6 +15,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 3, UNARY_PREFIX}},
 	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 1}},
 	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 2} },
+	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 3, UNARY_PREFIX}},
 
 	// logic operators
 	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 8} },
