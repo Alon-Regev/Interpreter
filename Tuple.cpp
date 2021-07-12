@@ -42,6 +42,11 @@ std::vector<Type*>::const_iterator Tuple::end()
     return this->_values.end();
 }
 
+const std::vector<Type*>& Tuple::getValues()
+{
+    return this->_values;
+}
+
 Type* Tuple::assign(Type* other)
 {
     if (other->getType() != TUPLE)

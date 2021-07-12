@@ -22,6 +22,7 @@ public:
 	virtual Type* assign(Type* other);
 	virtual Type* call(Type* other);
 	virtual Type* block(Type* other);
+	virtual Type* index(Type* other);
 	virtual Type* negative();
 	// logic operators
 	virtual Type* equal(Type* other);
@@ -36,5 +37,7 @@ protected:
 	std::string _type;
 	bool _staticType;
 	std::string _variable = "";
+
+	bool typeCompare(Type* other);
 };
 

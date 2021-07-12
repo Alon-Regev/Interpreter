@@ -40,5 +40,5 @@ int main()
 // fuction prints start message
 void startMessage()
 {
-	std::cout << "Welcome to <nameless interpreter> version 0.1.1!" << std::endl;
+	std::cout << "Welcome to <nameless interpreter> version 0.2!" << std::endl;
 }

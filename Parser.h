@@ -8,6 +8,8 @@
 #include "SyntaxException.h"
 #include "Helper.h"
 
+#include <iostream>
+
 #define INVALID_OPERATOR_USE(op) "invalid operator use of operator \"" + op + '"'
 
 enum opTypes{BINARY_INFIX, UNARY_PREFIX, UNARY_POSTFIX};
@@ -19,6 +21,7 @@ struct Operator
 	int order;
 	char type = BINARY_INFIX;
     bool allowNulls = false;    // true if func checks for nulls
+    bool ltr = false;   // is evaluated Left To Right or Right To Left
 };
 
 template<class EvaluationType>
@@ -31,14 +34,16 @@ public:
 protected:
     virtual EvaluationType valueOf(const std::string& leaf) = 0;
     virtual EvaluationType evaluateBlock(Node* node) = 0;
+    virtual EvaluationType handleParentheses(EvaluationType value, char parenthesesType) { return value; }
 private:
-	Node* parse(const std::string& expression);
+	std::vector<Node*> tokenize(const std::string& expression);
 	Node* parse(std::vector<Node*>& expr, bool removeParentheses=true);
 	void removeParentheses(std::vector<Node*>& expr);
 	EvaluationType evaluate(Node*);
 
 	int isOperator(Node* node);
 	int isOperator(std::string s);
+    int isLTR(Node* node);
 	std::string findOperator(std::string);
 	bool isOpenParentheses(char c);
     bool isCloseParentheses(char c);
@@ -56,7 +61,8 @@ Parser<EvaluationType>::Parser(const std::map<std::string, Operator>& operators)
 template<class EvaluationType>
 inline EvaluationType Parser<EvaluationType>::value(const std::string& expression)
 {    
-    Node* tree = this->parse(expression);
+    std::vector<Node*> temp = this->tokenize(expression);
+    Node* tree = this->parse(temp);
     EvaluationType result = this->evaluate(tree);
     delete tree;
     return result;
@@ -77,11 +83,14 @@ EvaluationType Parser<EvaluationType>::evaluate(Node* node)
     else if (node->isLeaf())
     {
         // is a value
-        return this->valueOf(node->_value);
+        Type* temp = this->valueOf(node->_value);
+        if(node->_block != 0)
+            temp = this->handleParentheses(temp, node->_block);
+        return temp;
     }
     else
     {
-        if (node->_block)
+        if (node->_block == '{')
             return this->evaluateBlock(node);
         // is an operator
         EvaluationType lv = evaluate(node->_left);
@@ -92,13 +101,17 @@ EvaluationType Parser<EvaluationType>::evaluate(Node* node)
         Operator _operator = this->_operators.at(op);
         if (!_operator.allowNulls && (rv == nullptr && _operator.type == UNARY_PREFIX || lv == nullptr && _operator.type == UNARY_POSTFIX || (lv == nullptr || rv == nullptr) && _operator.type == BINARY_INFIX))
             throw SyntaxException(INVALID_OPERATOR_USE(op));
-        return this->_operators.at(op).func(lv, rv);
+
+        EvaluationType temp = this->_operators.at(op).func(lv, rv);
+        if (node->_block != 0)
+            temp = this->handleParentheses(temp, node->_block);
+        return temp;
     }
 }
 
-// function parses string
+// function tokenizes string -> vector<Node*>
 template<class EvaluationType>
-Node* Parser<EvaluationType>::parse(const std::string& expression)
+std::vector<Node*> Parser<EvaluationType>::tokenize(const std::string& expression)
 {
     // put expression on expr
     std::vector<Node*> expr;
@@ -164,7 +177,7 @@ Node* Parser<EvaluationType>::parse(const std::string& expression)
     for (int i = 0; i < expr.size(); i++)
         if (expr[i]->_value.find_first_not_of(' ') == std::string::npos) // is space
                 expr.erase(expr.begin() + i--);
-    return this->parse(expr);
+    return expr;
 }
 
 // function parses expression <expr>
@@ -182,18 +195,14 @@ Node* Parser<EvaluationType>::parse(std::vector<Node*>& expr, bool removeParenth
         if (expr.size() == 1)  // everything was in parentheses
             return expr[0];
     }
-
     // evaluate operators
     int i = 0;
     int lastOperator = 0;   // find operator which will be executed last
     for (i = expr.size() - 1; i >= 0; i--) // go over tokens from end to start
-    {
         // still haven't picked operator || current operator has lower order
-        if (!isOperator(expr[lastOperator]) || isOperator(expr[i]) && isOperator(expr[i]) < isOperator(expr[lastOperator]))
-        {   // new last operator
+        if (!isOperator(expr[lastOperator]) || isOperator(expr[i]) && (isOperator(expr[i]) < isOperator(expr[lastOperator]) || !isLTR(expr[i]) && isOperator(expr[i]) == isOperator(expr[lastOperator])))
+            // new last operator
             lastOperator = i;
-        }
-    }
     // parse two sides of <lastOperator>
     // 1st operand
     std::vector<Node*> operand(expr.begin(), expr.begin() + lastOperator);
@@ -232,8 +241,9 @@ void Parser<EvaluationType>::removeParentheses(std::vector<Node*>& expr)
         std::vector<Node*> subExpression(lastParentheses + 1, it);
         Node* newNode = this->parse(subExpression);
         // delete sub-expression from expr and insert new node
-        if ((*lastParentheses)->_value == "{" && newNode != nullptr)
-            newNode->_block = true;
+        char lp = (*lastParentheses)->_value[0];
+        if (isOpenParentheses(lp) && newNode != nullptr)
+            newNode->_block = lp;
         expr.erase(lastParentheses + 1, it + 1);
         if (newNode != nullptr)
         {
@@ -243,6 +253,8 @@ void Parser<EvaluationType>::removeParentheses(std::vector<Node*>& expr)
         else
         {
             *lastParentheses = new Node("");
+            if (isOpenParentheses(lp))
+                (*lastParentheses)->_block = lp;
         }
     }
 }
@@ -265,6 +277,15 @@ int Parser<EvaluationType>::isOperator(std::string s)
         return this->_operators.at(s).order;
 }
 
+template<class EvaluationType>
+inline int Parser<EvaluationType>::isLTR(Node* node)
+{
+    if (this->_operators.find(node->_value) == this->_operators.end())   // not an operator
+        return 0;
+    else    // find order
+        return this->_operators.at(node->_value).ltr;
+}
+
 // function finds longest operator which starts at substring
 template<class EvaluationType>
 std::string Parser<EvaluationType>::findOperator(std::string substring)
@@ -282,13 +303,13 @@ std::string Parser<EvaluationType>::findOperator(std::string substring)
 template<class EvaluationType>
 inline bool Parser<EvaluationType>::isOpenParentheses(char c)
 {
-    return c == '(' || c == '{';
+    return c == '(' || c == '{' || c == '[';
 }
 
 template<class EvaluationType>
 inline bool Parser<EvaluationType>::isCloseParentheses(char c)
 {
-    return c == ')' || c == '}';
+    return c == ')' || c == '}' || c == ']';
 }
 
 template<class EvaluationType>
@@ -298,4 +319,6 @@ inline std::string Parser<EvaluationType>::getParentheses(char c)
         return "()";
     else if (c == '{' || c == '}')
         return "{}";
+    else if (c == '[' || c == ']')
+        return "[]";
 }
