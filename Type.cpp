@@ -1,4 +1,5 @@
 #include "Type.h"
+#include "String.h"
 
 const std::string& Type::getType() const
 {
@@ -32,6 +33,8 @@ bool Type::isVariable()
 
 Type* Type::add(Type* other)
 {
+    if (other->getType() == STRING)
+        return new String(this->toString() + other->toString());
     throw InvalidOperationException("+ between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
@@ -63,6 +66,11 @@ Type* Type::call(Type* other)
 Type* Type::block(Type* other)
 {
     throw InvalidOperationException("{} between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::index(Type* other)
+{
+    throw InvalidOperationException("[] between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::negative()
@@ -108,5 +116,10 @@ Type* Type::logicOr (Type * other)
 Type* Type::logicAnd (Type* other)
 {
     throw InvalidOperationException("&& between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+bool Type::typeCompare(Type* other)
+{
+    return this->_type == other->_type;
 }
 

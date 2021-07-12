@@ -22,6 +22,11 @@ bool Int::isType(const std::string& value)
 	return std::regex_match(value, std::regex("\\d+"));
 }
 
+int Int::getValue()
+{
+	return this->_value;
+}
+
 Type* Int::add(Type* other)
 {
 	if (other->getType() == INT)
