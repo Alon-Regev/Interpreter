@@ -160,6 +160,7 @@
     <ClInclude Include="Undefined.h" />
     <ClInclude Include="VariableException.h" />
     <ClInclude Include="Void.h" />
+    <ClInclude Include="While.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="Undefined.cpp" />
     <ClCompile Include="Void.cpp" />
+    <ClCompile Include="While.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
