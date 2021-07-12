@@ -7,7 +7,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 10} },
 	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 11} },
 	
-	{",", Operator{(operation)Interpreter::tupleExtension, 5} },
+	{",", Operator{(operation)Interpreter::sequenceExtension, 5} },
 	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 5} },
 
 	{"=", Operator{(operation)Interpreter::assign, 4} },
@@ -15,6 +15,8 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 3, UNARY_PREFIX}},
 	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 1}},
 	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 2} },
+	
+	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 11} },
 
 	// logic operators
 	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 8} },
@@ -66,6 +68,18 @@ Type* Interpreter::evaluateBlock(Node* node)
 	return new Block(*this, node);
 }
 
+Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
+{
+	if (value->getType() == TEMP_SEQUENCE)
+	{
+		if (parenthesesType == '(')
+			return new Tuple(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
+		else if (parenthesesType == '[')
+			return new List(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
+	}
+	return value;
+}
+
 Type* Interpreter::assign(Type* a, Type* b)
 {
 	if (!a->isVariable())
@@ -113,23 +127,25 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		staticType = Interpreter::addVariable(str.substr(strlen(FUNCTION " ")), new Function(*this), true);
 	else if (str.rfind(BOOL " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(BOOL " ")), new Bool());
+	else if (str.rfind(LIST " ", 0) == 0)
+		staticType = Interpreter::addVariable(str.substr(strlen(LIST " ")), new List());
 	else
 		return nullptr;
 	staticType->setStatic();
 	return staticType;
 }
 
-Tuple* Interpreter::tupleExtension(Type* a, Type* b)
+TempSequence* Interpreter::sequenceExtension(Type* a, Type* b)
 {
-	if (a->getType() == TUPLE)
+	if (b->getType() == TEMP_SEQUENCE)
 	{
-		((Tuple*)a)->extend(b);
-		return (Tuple*)a;
+		((TempSequence*)b)->extend(a);
+		return (TempSequence*)b;
 	}
-	Tuple* tuple = new Tuple();
-	tuple->extend(a);
-	tuple->extend(b);
-	return tuple;
+	TempSequence* sequence = new TempSequence();
+	sequence->extend(b);
+	sequence->extend(a);
+	return sequence;
 }
 
 bool Interpreter::isVariableNameValid(const std::string& name)

@@ -65,6 +65,11 @@ Type* Type::block(Type* other)
     throw InvalidOperationException("{} between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
+Type* Type::index(Type* other)
+{
+    throw InvalidOperationException("[] between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
 Type* Type::negative()
 {
     throw InvalidOperationException("- to type \"" + this->_type + '"');
@@ -108,5 +113,10 @@ Type* Type::logicOr (Type * other)
 Type* Type::logicAnd (Type* other)
 {
     throw InvalidOperationException("&& between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+bool Type::typeCompare(Type* other)
+{
+    return this->_type == other->_type;
 }
 

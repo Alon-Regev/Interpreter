@@ -15,6 +15,7 @@ public:
 	virtual std::string toString() const;
 	virtual Type* copy();
 	static bool isType(const std::string& value);
+	int getValue();
 	// operators
 	virtual Type* add(Type* other);
 	virtual Type* sub(Type* other);
