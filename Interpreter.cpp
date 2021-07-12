@@ -18,6 +18,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 
 	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 11, BINARY_INFIX, false, true} },
 	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 3, UNARY_PREFIX}},
+	{"foreach", Operator{[](Type* a, Type* b) { return (Type*)new Foreach(b); }, 3, UNARY_PREFIX}},
 
 	// logic operators
 	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 8} },

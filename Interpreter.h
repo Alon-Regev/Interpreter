@@ -18,6 +18,7 @@
 #include "TempSequence.h"
 #include "String.h"
 #include "While.h"
+#include "Foreach.h"
 
 class Function;
 class Block;
