@@ -1,4 +1,5 @@
 #include "Type.h"
+#include "String.h"
 
 const std::string& Type::getType() const
 {
@@ -32,6 +33,8 @@ bool Type::isVariable()
 
 Type* Type::add(Type* other)
 {
+    if (other->getType() == STRING)
+        return new String(this->toString() + other->toString());
     throw InvalidOperationException("+ between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 

@@ -16,7 +16,6 @@ public:
 	Sequence(std::string type) : Type(type) {}
 	Sequence(std::string type, std::vector<T>& content);
 	// operators
-	virtual Type* add(Type* other);
 	virtual Type* assign(Type* other);
 	virtual Type* index(Type* other);
 	// logic operators
@@ -31,18 +30,6 @@ template<class T>
 inline Sequence<T>::Sequence(std::string type, std::vector<T>& content) : Type(type)
 {
 	this->_content.assign(content.begin(), content.end());
-}
-
-template<class T>
-inline Type* Sequence<T>::add(Type* other)
-{
-	if (this->typeCompare(other))
-	{
-		this->_content.insert(this->_content.end(), ((Sequence<T>*)other)->_content.begin(), ((Sequence<T>*)other)->_content.end());
-		return this;
-	}
-	else
-		return Type::add(other);
 }
 
 template<class T>

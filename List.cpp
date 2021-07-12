@@ -41,6 +41,18 @@ Type* List::equal(Type* other)
 		return Type::equal(other);
 }
 
+Type* List::add(Type* other)
+{
+	if (other->getType() == LIST)
+	{
+		std::vector<Type*> temp = this->_content;
+		temp.insert(temp.end(), ((List*)other)->_content.begin(), ((List*)other)->_content.end());
+		return new List(temp);
+	}
+	else
+		return Type::add(other);
+}
+
 Type* List::toType(Type* value)
 {
 	return value;

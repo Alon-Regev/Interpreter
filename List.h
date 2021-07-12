@@ -15,6 +15,7 @@ public:
 	virtual Type* copy();
 	// operators
 	virtual Type* equal(Type* other);
+	virtual Type* add(Type* other);
 protected:
 	virtual Type* toType(Type* value);
 };
