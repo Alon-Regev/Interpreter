@@ -7,7 +7,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 10} },
 	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 11} },
 	
-	{",", Operator{(operation)Interpreter::sequenceExtension, 5} },
+	{",", Operator{(operation)Interpreter::sequenceExtension, 5, BINARY_INFIX, false, true} },
 	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 5} },
 
 	{"=", Operator{(operation)Interpreter::assign, 4} },
@@ -16,7 +16,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 1}},
 	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 2} },
 	
-	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 11} },
+	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 11, BINARY_INFIX, false, true} },
 
 	// logic operators
 	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 8} },
@@ -76,6 +76,13 @@ Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
 			return new Tuple(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
 		else if (parenthesesType == '[')
 			return new List(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
+	}
+	else if (parenthesesType == '[')	// short list
+	{
+		if (value->getType() == UNDEFINED)
+			return new List();
+		else
+			return new List(std::vector<Type*>{value});
 	}
 	return value;
 }
@@ -137,14 +144,14 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 
 TempSequence* Interpreter::sequenceExtension(Type* a, Type* b)
 {
-	if (b->getType() == TEMP_SEQUENCE)
+	if (a->getType() == TEMP_SEQUENCE)
 	{
-		((TempSequence*)b)->extend(a);
-		return (TempSequence*)b;
+		((TempSequence*)a)->extend(b);
+		return (TempSequence*)a;
 	}
 	TempSequence* sequence = new TempSequence();
-	sequence->extend(b);
 	sequence->extend(a);
+	sequence->extend(b);
 	return sequence;
 }
 

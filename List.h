@@ -1,5 +1,6 @@
 #pragma once
 #include "Sequence.h"
+#include "SyntaxException.h"
 
 #define LIST "list"
 

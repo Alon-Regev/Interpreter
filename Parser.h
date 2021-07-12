@@ -21,6 +21,7 @@ struct Operator
 	int order;
 	char type = BINARY_INFIX;
     bool allowNulls = false;    // true if func checks for nulls
+    bool ltr = false;   // is evaluated Left To Right or Right To Left
 };
 
 template<class EvaluationType>
@@ -42,6 +43,7 @@ private:
 
 	int isOperator(Node* node);
 	int isOperator(std::string s);
+    int isLTR(Node* node);
 	std::string findOperator(std::string);
 	bool isOpenParentheses(char c);
     bool isCloseParentheses(char c);
@@ -81,7 +83,10 @@ EvaluationType Parser<EvaluationType>::evaluate(Node* node)
     else if (node->isLeaf())
     {
         // is a value
-        return this->valueOf(node->_value);
+        Type* temp = this->valueOf(node->_value);
+        if(node->_block != 0)
+            temp = this->handleParentheses(temp, node->_block);
+        return temp;
     }
     else
     {
@@ -195,7 +200,7 @@ Node* Parser<EvaluationType>::parse(std::vector<Node*>& expr, bool removeParenth
     int lastOperator = 0;   // find operator which will be executed last
     for (i = expr.size() - 1; i >= 0; i--) // go over tokens from end to start
         // still haven't picked operator || current operator has lower order
-        if (!isOperator(expr[lastOperator]) || isOperator(expr[i]) && isOperator(expr[i]) <= isOperator(expr[lastOperator]))
+        if (!isOperator(expr[lastOperator]) || isOperator(expr[i]) && (isOperator(expr[i]) < isOperator(expr[lastOperator]) || !isLTR(expr[i]) && isOperator(expr[i]) == isOperator(expr[lastOperator])))
             // new last operator
             lastOperator = i;
     // parse two sides of <lastOperator>
@@ -236,8 +241,9 @@ void Parser<EvaluationType>::removeParentheses(std::vector<Node*>& expr)
         std::vector<Node*> subExpression(lastParentheses + 1, it);
         Node* newNode = this->parse(subExpression);
         // delete sub-expression from expr and insert new node
-        if (isOpenParentheses((*lastParentheses)->_value[0]) && newNode != nullptr)
-            newNode->_block = (*lastParentheses)->_value[0];
+        char lp = (*lastParentheses)->_value[0];
+        if (isOpenParentheses(lp) && newNode != nullptr)
+            newNode->_block = lp;
         expr.erase(lastParentheses + 1, it + 1);
         if (newNode != nullptr)
         {
@@ -247,6 +253,8 @@ void Parser<EvaluationType>::removeParentheses(std::vector<Node*>& expr)
         else
         {
             *lastParentheses = new Node("");
+            if (isOpenParentheses(lp))
+                (*lastParentheses)->_block = lp;
         }
     }
 }
@@ -267,6 +275,15 @@ int Parser<EvaluationType>::isOperator(std::string s)
         return 0;
     else    // find order
         return this->_operators.at(s).order;
+}
+
+template<class EvaluationType>
+inline int Parser<EvaluationType>::isLTR(Node* node)
+{
+    if (this->_operators.find(node->_value) == this->_operators.end())   // not an operator
+        return 0;
+    else    // find order
+        return this->_operators.at(node->_value).ltr;
 }
 
 // function finds longest operator which starts at substring

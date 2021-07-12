@@ -24,12 +24,12 @@ void TempSequence::extend(Type* value)
     this->_values.push_back(value);
 }
 
-std::vector<Type*>::reverse_iterator TempSequence::begin()
+std::vector<Type*>::iterator TempSequence::begin()
 {
-    return this->_values.rbegin();
+    return this->_values.begin();
 }
 
-std::vector<Type*>::reverse_iterator TempSequence::end()
+std::vector<Type*>::iterator TempSequence::end()
 {
-    return this->_values.rend();
+    return this->_values.end();
 }
