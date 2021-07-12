@@ -14,8 +14,9 @@ public:
 	virtual std::string toString() const;
 	virtual Type* copy();
 	// operators
-	virtual Type* index(Type* other);
 	virtual Type* equal(Type* other);
+protected:
+	virtual Type* toType(Type* value);
 };
 
 template<class Iterator>

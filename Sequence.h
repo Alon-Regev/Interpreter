@@ -4,6 +4,11 @@
 #include "Bool.h"
 #include <vector>
 
+#include "SyntaxException.h"
+#include "InvalidOperationException.h"
+
+#define LIST "list"
+
 template <class T>
 class Sequence : public Type
 {
@@ -13,12 +18,13 @@ public:
 	// operators
 	virtual Type* add(Type* other);
 	virtual Type* assign(Type* other);
-	virtual Type* index(Type* other) = 0;
+	virtual Type* index(Type* other);
 	// logic operators
 	virtual Type* equal(Type* other);
 	virtual Type* notEqual(Type* other);
-protected:
 	std::vector<T> _content;
+protected:
+	virtual Type* toType(T value) = 0;
 };
 
 template<class T>
@@ -49,6 +55,27 @@ inline Type* Sequence<T>::assign(Type* other)
 	}
 	else
 		return Type::assign(other);
+}
+
+template<class T>
+inline Type* Sequence<T>::index(Type* other)
+{
+	int index;
+	if (other->getType() == INT)
+		index = ((Int*)other)->getValue();
+	else if (other->getType() == LIST)
+	{
+		if (((Sequence<Type*>*)other)->_content.size() == 1 && ((Sequence<Type*>*)other)->_content[0]->getType() == INT)
+			index = ((Int*)((Sequence<Type*>*)other)->_content[0])->getValue();
+		else
+			throw SyntaxException("Invalid index syntax");
+	}
+	else
+		return Type::index(other);
+	if (0 <= index && index < this->_content.size())
+		return this->toType(this->_content[index]);
+	else
+		throw InvalidOperationException("Index out of range");
 }
 
 template<class T>

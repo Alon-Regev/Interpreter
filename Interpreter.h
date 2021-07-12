@@ -16,6 +16,7 @@
 #include "If.h"
 #include "List.h"
 #include "TempSequence.h"
+#include "String.h"
 
 class Function;
 class Block;

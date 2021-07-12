@@ -108,6 +108,9 @@
     <ClInclude Include="TempSequence.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
+    <ClInclude Include="String.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -165,6 +168,9 @@
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="TempSequence.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="String.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
   </ItemGroup>

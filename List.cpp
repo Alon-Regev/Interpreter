@@ -26,26 +26,6 @@ Type* List::copy()
 	return new List(this->_content);
 }
 
-Type* List::index(Type* other)
-{
-	int index;
-	if (other->getType() == INT)
-		index = ((Int*)other)->getValue();
-	else if (other->getType() == LIST)
-	{
-		if (((List*)other)->_content.size() == 1 && ((List*)other)->_content[0]->getType() == INT)
-			index = ((Int*)((List*)other)->_content[0])->getValue();
-		else
-			throw SyntaxException("Invalid index syntax");
-	}
-	else
-		return Type::index(other);
-	if (0 <= index && index < this->_content.size())
-		return this->_content[index];
-	else
-		throw InvalidOperationException("List index out of range");
-}
-
 Type* List::equal(Type* other)
 {
 	if (this->typeCompare(other))
@@ -59,4 +39,9 @@ Type* List::equal(Type* other)
 	}
 	else
 		return Type::equal(other);
+}
+
+Type* List::toType(Type* value)
+{
+	return value;
 }

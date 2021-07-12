@@ -58,6 +58,8 @@ Type* Interpreter::valueOf(const std::string& str)
 		return new Int(str);
 	else if (Bool::isType(str))
 		return new Bool(str);
+	else if (String::isType(str))
+		return new String(str.substr(1, str.size() - 2));
 	// invalid expression
 	else
 		throw TypeErrorException("Value \"" + str + "\" cannot be parsed");
@@ -136,6 +138,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		staticType = Interpreter::addVariable(str.substr(strlen(BOOL " ")), new Bool());
 	else if (str.rfind(LIST " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(LIST " ")), new List());
+	else if (str.rfind(STRING " ", 0) == 0)
+		staticType = Interpreter::addVariable(str.substr(strlen(STRING " ")), new String());
 	else
 		return nullptr;
 	staticType->setStatic();
