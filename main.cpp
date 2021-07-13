@@ -4,6 +4,7 @@
 #include <exception>
 
 void startMessage();
+std::string codeInput();
 
 int main()
 {
@@ -14,8 +15,8 @@ int main()
 	// code loop
 	do
 	{
-		std::cout << ">>> ";
-		std::getline(std::cin, input);
+		
+		input = codeInput();
 		// special input
 		if (input.empty() || input == "quit")
 			continue;
@@ -40,5 +41,24 @@ int main()
 // fuction prints start message
 void startMessage()
 {
-	std::cout << "Welcome to <nameless interpreter> version 0.3!" << std::endl;
+	std::cout << "Welcome to <nameless interpreter> version 0.3!" << std::endl << std::endl;
+}
+
+// function gets code input, spanning multiple lines if there's ';' on the end (expecting another line)
+std::string codeInput()
+{
+	std::string input, temp;
+	// get first lines
+	std::cout << ">>> ";
+	std::getline(std::cin, input);
+	// get additional line until there is no statement connector ';' || '\'
+	while (!input.empty() && (input.back() == ';' || input.back() == '\\'))
+	{
+		if (input.back() == '\\')
+			input.pop_back();
+		std::cout << "... ";
+		std::getline(std::cin, temp);
+		input += '\n' + temp;
+	}
+	return input;
 }
