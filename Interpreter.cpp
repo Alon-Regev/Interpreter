@@ -1,11 +1,11 @@
 #include "Interpreter.h"
 
 std::map<std::string, Operator> Interpreter::_operators = {
-	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 20} },
-	{"-", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? b->negative() : a->sub(b); }, 20, BINARY_INFIX, true} },
-	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 22} },
-	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 22} },
-	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 23} },
+	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 10} },
+	{"-", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? b->negative() : a->sub(b); }, 10, BINARY_INFIX, true} },
+	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 11} },
+	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 11} },
+	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 12} },
 
 	{",", Operator{(operation)Interpreter::sequenceExtension, 6, BINARY_INFIX, false, true} },
 	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 6} },
@@ -16,7 +16,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 2}},
 	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3} },
 
-	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 23, BINARY_INFIX, false, true} },
+	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 12, BINARY_INFIX, false, true} },
 	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX}},
 	{"foreach", Operator{[](Type* a, Type* b) { return (Type*)new Foreach(b); }, 4, UNARY_PREFIX}},
 
