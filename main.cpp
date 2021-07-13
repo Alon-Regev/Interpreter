@@ -2,12 +2,15 @@
 #include <iostream>
 #include <string>
 #include <exception>
+#include <fstream>
+#include <sstream>
 
 #define VERSION "0.3"
 #define NAME "<nameless interpreter>"
 
 std::string codeInput();
 void runInterpreter();
+int runFile(std::string& fileName);
 
 int main(int argc, char** argv)
 {
@@ -27,16 +30,13 @@ int main(int argc, char** argv)
 		"<file>    : runs a code file\n"
 		"-d        : runs file in line-by-line basic debug mode\n"
 		"-ad       : advanced debug mode\n";
-	else
-	{	
-		if (command.front() == '-')
-		{
-			std::cout << "invalid command. use --help to get list of commands." << std::endl;
-			return 1;
-		}
-		// run file
-		std::cout << "to do: run file " << command << std::endl;
+	else if (command.front() == '-')
+	{
+		std::cout << "invalid command. use --help to get list of commands." << std::endl;
+		return 1;
 	}
+	else
+		return runFile(command);
 }
 
 // function gets code input, spanning multiple lines if there's ';' on the end (expecting another line)
@@ -88,4 +88,19 @@ void runInterpreter()
 			std::cout << e.what() << std::endl;
 		}
 	} while (input != "quit");
+}
+
+// function runs code file
+int runFile(std::string& fileName)
+{
+	std::ifstream file(fileName);
+	if (!file.is_open())
+	{
+		std::cout << "Can't run file \"" << fileName << '"' << std::endl;
+		return 1;
+	}
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+
+	Interpreter().run(buffer.str());
 }
