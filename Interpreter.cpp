@@ -30,7 +30,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"||", Operator{[](Type* a, Type* b) { return a->logicOr(b); }, 8} },
 	{"&&", Operator{[](Type* a, Type* b) { return a->logicAnd(b); }, 7} },
 
-	{";", Operator{[](Type* a, Type* b) { return (Type*)new Undefined(); }, 1, BINARY_INFIX} },
+	{";", Operator{[](Type* a, Type* b) { return (Type*)new Undefined(); }, 1, BINARY_INFIX, true} },
 };
 std::map<std::string, Type*> Interpreter::_variables;
 
