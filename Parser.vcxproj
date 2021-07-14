@@ -153,6 +153,8 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="PredefinedFunctions.h" />
+    <ClInclude Include="Preprocessor.h" />
+    <ClInclude Include="PreprocessorException.h" />
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="Signal.h" />
     <ClInclude Include="StaticFunction.h" />
@@ -180,6 +182,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="PredefinedFunctions.cpp" />
+    <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="Signal.cpp" />
     <ClCompile Include="StaticFunction.cpp" />
