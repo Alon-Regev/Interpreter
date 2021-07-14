@@ -117,6 +117,12 @@
     <ClInclude Include="Foreach.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
+    <ClInclude Include="Preprocessor.h">
+      <Filter>Header Files\Interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="PreprocessorException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -184,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="Foreach.cpp">
       <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Preprocessor.cpp">
+      <Filter>Source Files\Interpreter</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

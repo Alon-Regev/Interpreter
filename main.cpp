@@ -1,4 +1,5 @@
 #include "Interpreter.h"
+#include "Preprocessor.h"
 #include <iostream>
 #include <string>
 #include <exception>
@@ -93,14 +94,15 @@ void runInterpreter()
 // function runs code file
 int runFile(std::string& fileName)
 {
-	std::ifstream file(fileName);
-	if (!file.is_open())
+	try
 	{
-		std::cout << "Can't run file \"" << fileName << '"' << std::endl;
+		std::string code = Helper::readFile(fileName);
+		Preprocessor().process(code);
+		Interpreter().run(code);
+	}
+	catch (InterpreterException& e)
+	{
+		std::cout << e.what() << std::endl;
 		return 1;
 	}
-	std::stringstream buffer;
-	buffer << file.rdbuf();
-
-	Interpreter().run(buffer.str());
 }
