@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 
-#define VERSION "0.3"
+#define VERSION "0.4"
 #define NAME "<nameless interpreter>"
 
 std::string codeInput();
