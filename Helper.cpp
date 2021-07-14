@@ -21,3 +21,23 @@ void Helper::trim(std::string& str)
         else break;
     }
 }
+
+std::vector<std::string> Helper::split(const std::string& str, char delimiter)
+{
+    std::vector<std::string> result;
+    std::stringstream sstream(str);
+    std::string temp;
+    while (std::getline(sstream, temp, delimiter))
+        result.push_back(temp);
+    return result;
+}
+
+std::string Helper::readFile(const std::string& fileName)
+{
+    std::ifstream file(fileName);
+    if (!file.is_open())
+        throw InterpreterException("Can't open file \"" + fileName + '"');
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
