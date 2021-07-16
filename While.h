@@ -9,6 +9,7 @@ class While : public Type
 {
 public:
 	While(Type* condition);
+	virtual ~While();
 	virtual std::string toString() const { return WHILE; }
 	virtual Type* copy() { return nullptr; }
 	static bool isType(const std::string& value) { return false; }

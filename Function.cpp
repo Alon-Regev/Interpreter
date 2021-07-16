@@ -2,10 +2,16 @@
 
 Function::Function(Interpreter& interpreter) : Type(FUNCTION), _interpreter(interpreter) {}
 
-Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(block->getInterpreter()), _function(block) 
+Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(block->getInterpreter()), _function(block->copy()) 
 {
 	if (params->getType() == UNDEFINED || params->getType() == TUPLE && ((Tuple*)params)->isVariableTuple() || params->isVariable())
-		this->_params = params;
+		this->_params = params->copy();
+}
+
+Function::~Function()
+{
+	delete this->_params;
+	delete this->_function;
 }
 
 Type* Function::call(Type* other)
@@ -24,8 +30,9 @@ Type* Function::assign(Type* other)
 {
 	if (other->getType() == FUNCTION)
 	{
-		this->_function = ((Function*)other)->_function;
-		this->_params = ((Function*)other)->_params;
+		this->_function = ((Function*)other)->_function->copy();
+		this->_params = ((Function*)other)->_params->copy();
+		return this;
 	}
 	else
 		return Type::assign(other);

@@ -1,7 +1,12 @@
 #include "While.h"
 
-While::While(Type* condition) : Type(WHILE), _condition(condition)
+While::While(Type* condition) : Type(WHILE), _condition(condition->copy())
 {	
+}
+
+While::~While()
+{
+	delete this->_condition;
 }
 
 Type* While::block(Type* other)
@@ -9,7 +14,11 @@ Type* While::block(Type* other)
 	if (other->getType() != BLOCK)
 		throw InvalidOperationException("invalid while loop");
 	while (this->getCondition())
-		((Block*)other)->run();
+	{
+		Type* res = ((Block*)other)->run();
+		if(!res->isVariable())
+			delete res;
+	}
 	return new Undefined();
 }
 
@@ -20,8 +29,11 @@ bool While::getCondition()
 	else if (this->_condition->getType() == BLOCK)
 	{
 		Type* res = ((Block*)this->_condition)->run();
+		bool ret = false;
 		if (res->getType() == BOOL)
-			return ((Bool*)res)->getValue();
+			ret = ((Bool*)res)->getValue();
+		if (!res->isVariable())
+			delete res;
+		return ret;
 	}
-	return false;
 }

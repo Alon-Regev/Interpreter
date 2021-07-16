@@ -6,6 +6,16 @@ Block::Block(Interpreter& interpreter, Node* node) : Type(BLOCK), _interpreter(i
 	this->_code->_block = false;	// block -> executable tree
 }
 
+Block::~Block()
+{
+	delete this->_code;
+}
+
+Type* Block::copy()
+{
+	return new Block(this->_interpreter, this->_code);
+}
+
 Node* Block::getCode()
 {
 	return this->_code;
