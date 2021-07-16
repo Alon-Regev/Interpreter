@@ -18,7 +18,7 @@ std::string Bool::toString() const
 
 Type* Bool::copy()
 {
-	return nullptr;
+	return new Bool(this->_value);
 }
 
 bool Bool::isType(const std::string& value)

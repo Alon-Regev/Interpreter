@@ -4,6 +4,12 @@ TempSequence::TempSequence() : Type(TEMP_SEQUENCE)
 {
 }
 
+TempSequence::~TempSequence()
+{
+    for (Type*& type : this->_values)
+        delete type;
+}
+
 TempSequence::TempSequence(std::vector<Type*>& values) : Type(TEMP_SEQUENCE)
 {
     this->_values.assign(values.begin(), values.end());
@@ -32,4 +38,9 @@ std::vector<Type*>::iterator TempSequence::begin()
 std::vector<Type*>::iterator TempSequence::end()
 {
     return this->_values.end();
+}
+
+void TempSequence::clear()
+{
+    this->_values.clear();
 }

@@ -9,10 +9,11 @@ class Tuple : public Type
 {
 public:
 	Tuple();
+	virtual ~Tuple();
 	template<class Iterator>
 	Tuple(Iterator begin, Iterator end);
 	virtual std::string toString() const;
-	virtual Type* copy() { return nullptr; }
+	virtual Type* copy();
 	static bool isType(const std::string& value) { return false; }
 	void extend(Type* type);
 	bool isVariableTuple();

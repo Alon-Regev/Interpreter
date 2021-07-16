@@ -2,7 +2,13 @@
 
 void initVariables(std::map<std::string, Type*>& variables)
 {
-	variables["print"] = new StaticFunction(print);
+	setVariable("print", new StaticFunction(print), variables);
+}
+
+void setVariable(const std::string& name, Type* type, std::map<std::string, Type*>& variables)
+{
+	variables[name] = type;
+	variables[name]->setVariable(name);
 }
 
 Type* print(Type* other)

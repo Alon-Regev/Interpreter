@@ -40,9 +40,19 @@ Interpreter::Interpreter() : Parser(Interpreter::_operators)
 	initVariables(this->_variables);
 }
 
+Interpreter::~Interpreter()
+{
+	for (const std::pair<std::string, Type*>& pair : this->_variables)
+		delete pair.second;
+}
+
 std::string Interpreter::run(const std::string& code)
 {
-	return this->value(code)->toString();
+	Type* result = this->value(code);
+	std::string resultStr = result->toString();
+	if(!result->isVariable())
+		delete result;
+	return resultStr;
 }
 
 Type* Interpreter::valueOf(const std::string& str)
@@ -78,19 +88,34 @@ Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
 {
 	if (value->getType() == TEMP_SEQUENCE)
 	{
+		Type* ret = value;
 		if (parenthesesType == '(')
-			return new Tuple(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
+			ret = new Tuple(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
 		else if (parenthesesType == '[')
-			return new List(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
+			ret = new List(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
+		else return ret;
+		((TempSequence*)value)->clear();
+		delete value;
+		return ret;
 	}
 	else if (parenthesesType == '[')	// short list
 	{
 		if (value->getType() == UNDEFINED)
 			return new List();
 		else
-			return new List(std::vector<Type*>{value});
+			return new List(std::vector<Type*>{value->isVariable() ? value->copy() : value});
 	}
 	return value;
+}
+
+void Interpreter::handleTempTypes(Type* a, Type* b, Type* res)
+{
+	// if not variables, delete after being used in operator
+	bool flag = res->getType() == TEMP_SEQUENCE;
+	if (a && !a->isVariable() && !flag)
+		delete a;
+	if (b && !b->isVariable() && !flag)
+		delete b;
 }
 
 Type* Interpreter::assign(Type* a, Type* b)
@@ -124,6 +149,8 @@ Type* Interpreter::addVariable(std::string variableName, Type* variable, bool is
 			throw VariableException('"' + variableName + "\" is not a valid name");
 	}
 	variable->setVariable(variableName);
+	if (Interpreter::_variables.find(variableName) != Interpreter::_variables.end())
+		delete Interpreter::_variables[variableName];
 	return Interpreter::_variables[variableName] = variable;
 }
 
