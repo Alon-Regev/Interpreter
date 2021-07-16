@@ -33,6 +33,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{";", Operator{[](Type* a, Type* b) { return (Type*)new Undefined(); }, 1, BINARY_INFIX, true} },
 };
 std::map<std::string, Type*> Interpreter::_variables;
+std::vector<std::vector<std::string>> Interpreter::_variableScope = std::vector<std::vector<std::string>>({ std::vector<std::string>() });
 
 Interpreter::Interpreter() : Parser(Interpreter::_operators)
 {
@@ -113,6 +114,23 @@ Type* Interpreter::assign(Type* a, Type* b)
 	return Interpreter::addVariable(a->getVariable(), b->copy());
 }
 
+void Interpreter::removeVariable(const std::string& name)
+{
+	Interpreter::_variables.erase(name);//delete from scope
+}
+
+void Interpreter::openScope()
+{
+	Interpreter::_variableScope.push_back(std::vector<std::string>());
+}
+
+void Interpreter::closeScope()
+{
+	for (const std::string& name : Interpreter::_variableScope.back())
+		Interpreter::removeVariable(name);
+	Interpreter::_variableScope.pop_back();
+}
+
 Type* Interpreter::addVariable(std::string variableName, Type* variable, bool isNew)
 {
 	Helper::trim(variableName);
@@ -122,6 +140,7 @@ Type* Interpreter::addVariable(std::string variableName, Type* variable, bool is
 			throw VariableException('"' + variableName + "\" already exists");
 		else if (!isVariableNameValid(variableName))
 			throw VariableException('"' + variableName + "\" is not a valid name");
+		Interpreter::_variableScope.back().push_back(variableName);
 	}
 	variable->setVariable(variableName);
 	return Interpreter::_variables[variableName] = variable;
