@@ -10,6 +10,10 @@
 
 #include <iostream>
 
+#ifdef _DEBUG
+    #define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#endif
+
 #define INVALID_OPERATOR_USE(op) "invalid operator use of operator \"" + op + '"'
 
 enum opTypes{BINARY_INFIX, UNARY_PREFIX, UNARY_POSTFIX};
@@ -35,6 +39,7 @@ protected:
     virtual EvaluationType valueOf(const std::string& leaf) = 0;
     virtual EvaluationType evaluateBlock(Node* node) = 0;
     virtual EvaluationType handleParentheses(EvaluationType value, char parenthesesType) { return value; }
+    virtual void handleTempTypes(EvaluationType, EvaluationType, EvaluationType) {}
 private:
 	std::vector<Node*> tokenize(const std::string& expression);
 	Node* parse(std::vector<Node*>& expr, bool removeParentheses=true);
@@ -61,9 +66,28 @@ Parser<EvaluationType>::Parser(const std::map<std::string, Operator>& operators)
 template<class EvaluationType>
 inline EvaluationType Parser<EvaluationType>::value(const std::string& expression)
 {    
+    Node* tree = nullptr;
+    EvaluationType result = EvaluationType();
     std::vector<Node*> temp = this->tokenize(expression);
-    Node* tree = this->parse(temp);
-    EvaluationType result = this->evaluate(tree);
+    try
+    {
+        tree = this->parse(temp);
+    }
+    catch (std::exception& e)
+    {
+        for (Node* node : temp)
+            delete node;
+        throw;
+    }
+    try
+    {
+        result = this->evaluate(tree);
+    }
+    catch (std::exception& e)
+    {
+        delete tree;
+        throw;
+    }
     delete tree;
     return result;
 }
@@ -103,6 +127,7 @@ EvaluationType Parser<EvaluationType>::evaluate(Node* node)
             throw SyntaxException(INVALID_OPERATOR_USE(op));
 
         EvaluationType temp = this->_operators.at(op).func(lv, rv);
+        this->handleTempTypes(lv, rv, temp);
         if (node->_block != 0)
             temp = this->handleParentheses(temp, node->_block);
         return temp;
@@ -175,8 +200,13 @@ std::vector<Node*> Parser<EvaluationType>::tokenize(const std::string& expressio
         expr.push_back(new Node(value));
     // remove empties
     for (int i = 0; i < expr.size(); i++)
+    {
         if (expr[i]->_value.find_first_not_of(' ') == std::string::npos) // is space
-                expr.erase(expr.begin() + i--);
+        {
+            delete expr[i];
+            expr.erase(expr.begin() + i--);
+        }
+    }
     return expr;
 }
 
@@ -244,7 +274,9 @@ void Parser<EvaluationType>::removeParentheses(std::vector<Node*>& expr)
         char lp = (*lastParentheses)->_value[0];
         if (isOpenParentheses(lp) && newNode != nullptr)
             newNode->_block = lp;
+        delete(*it);
         expr.erase(lastParentheses + 1, it + 1);
+        
         if (newNode != nullptr)
         {
             **lastParentheses = *newNode;
@@ -252,6 +284,8 @@ void Parser<EvaluationType>::removeParentheses(std::vector<Node*>& expr)
         }
         else
         {
+            if (*lastParentheses)
+                delete (*lastParentheses);
             *lastParentheses = new Node("");
             if (isOpenParentheses(lp))
                 (*lastParentheses)->_block = lp;

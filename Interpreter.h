@@ -27,16 +27,18 @@ class Interpreter : public Parser<Type*>
 {
 public:
 	Interpreter();
+	~Interpreter();
 	std::string run(const std::string& code);
 	static Type* assign(Type* a, Type* b);
 	static void removeVariable(const std::string& name);
 	static void openScope();
 	static void closeScope();
-	static Type* addVariable(std::string variableName, Type* variable, bool isNew = false);
+	static Type* addVariable(std::string variableName, Type* variable, bool isNew = false, bool setScope = false);
 protected:
 	virtual Type* valueOf(const std::string& str);
 	virtual Type* evaluateBlock(Node* node);
 	virtual Type* handleParentheses(Type* value, char parenthesesType);
+	virtual void handleTempTypes(Type* a, Type* b, Type* res);
 private:
 	static std::map<std::string, Operator> _operators;
 	static std::map<std::string, Type*> _variables;
