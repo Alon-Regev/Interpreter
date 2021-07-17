@@ -113,9 +113,9 @@ void Interpreter::handleTempTypes(Type* a, Type* b, Type* res)
 {
 	// if not variables, delete after being used in operator
 	bool flag = res->getType() == TEMP_SEQUENCE;
-	if (a && !a->isVariable() && !flag)
+	if (a && !a->isVariable() && !flag && a != res)
 		delete a;
-	if (b && !b->isVariable() && !flag)
+	if (b && !b->isVariable() && !flag && b != res)
 		delete b;
 }
 
