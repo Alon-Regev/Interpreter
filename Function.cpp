@@ -45,7 +45,7 @@ Type* Function::call(Type* other)
 	if (this->_function->getType() != BLOCK)
 		ret = this->_function->copy();
 	else
-		ret = ((Block*)this->_function)->run();
+		ret = ((Block*)this->_function)->run(false);
 	Interpreter::closeScope();
 	return ret;
 }

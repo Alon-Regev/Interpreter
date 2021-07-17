@@ -15,7 +15,7 @@ public:
 	static bool isType(const std::string& value) { return false; }
 	Node* getCode();
 	Interpreter& getInterpreter();
-	Type* run();
+	Type* run(bool openScope = true);
 private:
 	Node* _code;
 	Interpreter& _interpreter;
