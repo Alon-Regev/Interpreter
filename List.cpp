@@ -8,6 +8,12 @@ List::List(std::vector<Type*> content) : Sequence(LIST, content)
 {
 }
 
+List::~List()
+{
+	for (Type*& type : this->_content)
+		delete type;
+}
+
 std::string List::toString() const
 {
 	std::string res = "[";
@@ -23,7 +29,10 @@ std::string List::toString() const
 
 Type* List::copy()
 {
-	return new List(this->_content);
+	std::vector<Type*> temp;
+	for (Type*& type : this->_content)
+		temp.push_back(type->copy());
+	return new List(temp);
 }
 
 Type* List::equal(Type* other)
@@ -45,8 +54,11 @@ Type* List::add(Type* other)
 {
 	if (other->getType() == LIST)
 	{
-		std::vector<Type*> temp = this->_content;
-		temp.insert(temp.end(), ((List*)other)->_content.begin(), ((List*)other)->_content.end());
+		std::vector<Type*> temp;
+		for (Type*& type : this->_content)
+			temp.push_back(type->copy());
+		for (Type*& type : ((List*)other)->_content)
+			temp.push_back(type->copy());
 		return new List(temp);
 	}
 	else
@@ -55,5 +67,5 @@ Type* List::add(Type* other)
 
 Type* List::toType(Type* value)
 {
-	return value;
+	return new Reference(value);
 }

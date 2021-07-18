@@ -8,6 +8,12 @@
 
 #define FUNCTION "function"
 
+struct Parameter
+{
+	std::string name;
+	std::string type;
+};
+
 class Interpreter;
 class Block;
 class Tuple;
@@ -16,6 +22,7 @@ class Function : public Type
 public:
 	Function(Interpreter& interpreter);
 	Function(Type* params, Block* block);
+	virtual ~Function();
 	virtual std::string toString() const { return FUNCTION; }
 	virtual Type* copy() { return nullptr; }
 	// operators
@@ -24,6 +31,6 @@ public:
 private:
 	Type* _function;
 	Interpreter& _interpreter;
-	Type* _params;
+	std::vector<Parameter> _parameters;
 };
 

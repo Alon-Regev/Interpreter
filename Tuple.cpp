@@ -4,6 +4,13 @@ Tuple::Tuple() : Type(TUPLE)
 {
 }
 
+Tuple::~Tuple()
+{
+    for (Type*& type : this->_values)
+        if(!type->isVariable())
+            delete type;
+}
+
 std::string Tuple::toString() const
 {
     if (this->_values.empty())
@@ -16,6 +23,17 @@ std::string Tuple::toString() const
     res.pop_back();
     res.pop_back();
     return res + ")";
+}
+
+Type* Tuple::copy()
+{
+    std::vector<Type*> temp;
+    for (Type*& type : this->_values)
+    {
+        temp.push_back(type->copy());
+        temp.back()->setVariable(type->getVariable());
+    }
+    return new Tuple(temp.begin(), temp.end());
 }
 
 void Tuple::extend(Type* type)
@@ -42,7 +60,7 @@ std::vector<Type*>::const_iterator Tuple::end()
     return this->_values.end();
 }
 
-const std::vector<Type*>& Tuple::getValues()
+std::vector<Type*>& Tuple::getValues()
 {
     return this->_values;
 }

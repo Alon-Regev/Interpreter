@@ -38,6 +38,8 @@ inline Type* Sequence<T>::assign(Type* other)
 	if (this->typeCompare(other))
 	{
 		this->_content.assign(((Sequence<T>*)other)->_content.begin(), ((Sequence<T>*)other)->_content.end());
+		if(!other->isVariable())
+			((Sequence<T>*)other)->_content.clear();
 		return this;
 	}
 	else

@@ -33,6 +33,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{";", Operator{[](Type* a, Type* b) { return (Type*)new Undefined(); }, 1, BINARY_INFIX, true} },
 };
 std::map<std::string, Type*> Interpreter::_variables;
+std::vector<std::vector<std::string>> Interpreter::_variableScope = std::vector<std::vector<std::string>>({ std::vector<std::string>() });
 
 Interpreter::Interpreter() : Parser(Interpreter::_operators)
 {
@@ -40,9 +41,19 @@ Interpreter::Interpreter() : Parser(Interpreter::_operators)
 	initVariables(this->_variables);
 }
 
+Interpreter::~Interpreter()
+{
+	for (const std::pair<std::string, Type*>& pair : this->_variables)
+		delete pair.second;
+}
+
 std::string Interpreter::run(const std::string& code)
 {
-	return this->value(code)->toString();
+	Type* result = this->value(code);
+	std::string resultStr = result->toString();
+	if(!result->isVariable())
+		delete result;
+	return resultStr;
 }
 
 Type* Interpreter::valueOf(const std::string& str)
@@ -78,19 +89,34 @@ Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
 {
 	if (value->getType() == TEMP_SEQUENCE)
 	{
+		Type* ret = value;
 		if (parenthesesType == '(')
-			return new Tuple(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
+			ret = new Tuple(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
 		else if (parenthesesType == '[')
-			return new List(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
+			ret = new List(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
+		else return ret;
+		((TempSequence*)value)->clear();
+		delete value;
+		return ret;
 	}
 	else if (parenthesesType == '[')	// short list
 	{
 		if (value->getType() == UNDEFINED)
 			return new List();
 		else
-			return new List(std::vector<Type*>{value});
+			return new List(std::vector<Type*>{value->isVariable() ? value->copy() : value});
 	}
 	return value;
+}
+
+void Interpreter::handleTempTypes(Type* a, Type* b, Type* res)
+{
+	// if not variables, delete after being used in operator
+	bool flag = res->getType() == TEMP_SEQUENCE;
+	if (a && !a->isVariable() && !flag && a != res)
+		delete a;
+	if (b && !b->isVariable() && !flag && b != res)
+		delete b;
 }
 
 Type* Interpreter::assign(Type* a, Type* b)
@@ -98,6 +124,10 @@ Type* Interpreter::assign(Type* a, Type* b)
 	if (!a->isVariable())
 	{
 		if (a->getType() == TUPLE && ((Tuple*)a)->isVariableTuple())
+		{
+			return a->assign(b);
+		}
+		else if (a->getType() == REFERENCE)
 		{
 			return a->assign(b);
 		}
@@ -113,7 +143,25 @@ Type* Interpreter::assign(Type* a, Type* b)
 	return Interpreter::addVariable(a->getVariable(), b->copy());
 }
 
-Type* Interpreter::addVariable(std::string variableName, Type* variable, bool isNew)
+void Interpreter::removeVariable(const std::string& name)
+{
+	delete Interpreter::_variables[name];
+	Interpreter::_variables.erase(name);
+}
+
+void Interpreter::openScope()
+{
+	Interpreter::_variableScope.push_back(std::vector<std::string>());
+}
+
+void Interpreter::closeScope()
+{
+	for (const std::string& name : Interpreter::_variableScope.back())
+		Interpreter::removeVariable(name);
+	Interpreter::_variableScope.pop_back();
+}
+
+Type* Interpreter::addVariable(std::string variableName, Type* variable, bool isNew, bool setScope)
 {
 	Helper::trim(variableName);
 	if (isNew)
@@ -122,8 +170,13 @@ Type* Interpreter::addVariable(std::string variableName, Type* variable, bool is
 			throw VariableException('"' + variableName + "\" already exists");
 		else if (!isVariableNameValid(variableName))
 			throw VariableException('"' + variableName + "\" is not a valid name");
+		Interpreter::_variableScope.back().push_back(variableName);
 	}
+	else if(setScope)
+		Interpreter::_variableScope.back().push_back(variableName);
 	variable->setVariable(variableName);
+	if (Interpreter::_variables.find(variableName) != Interpreter::_variables.end())
+		delete Interpreter::_variables[variableName];
 	return Interpreter::_variables[variableName] = variable;
 }
 
@@ -144,6 +197,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		staticType = Interpreter::addVariable(str.substr(strlen(LIST " ")), new List());
 	else if (str.rfind(STRING " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(STRING " ")), new String());
+	else if (str.rfind(REFERENCE " ", 0) == 0)
+		staticType = Interpreter::addVariable(str.substr(strlen(REFERENCE " ")), new Reference());
 	else
 		return nullptr;
 	staticType->setStatic();

@@ -1,6 +1,7 @@
 #pragma once
 #include "Sequence.h"
 #include "SyntaxException.h"
+#include "Reference.h"
 
 #define LIST "list"
 
@@ -11,6 +12,7 @@ public:
 	List(std::vector<Type*> content);
 	template<class Iterator>
 	List(Iterator begin, Iterator end);
+	virtual ~List();
 	virtual std::string toString() const;
 	virtual Type* copy();
 	// operators
@@ -23,5 +25,9 @@ protected:
 template<class Iterator>
 inline List::List(Iterator begin, Iterator end) : Sequence(LIST)
 {
-	this->_content.assign(begin, end);
+	for (Iterator it = begin; it != end; it++)
+	{
+		this->_content.push_back((*it)->copy());
+		delete (*it);
+	}
 }

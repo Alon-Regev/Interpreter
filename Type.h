@@ -2,10 +2,15 @@
 #include <string>
 #include "InvalidOperationException.h"
 
+#ifdef _DEBUG
+	#define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#endif
+
 class Type
 {
 public:
 	Type(std::string type, bool staticType=false) : _type(type), _staticType(staticType) {}
+	virtual ~Type() = default;
 	virtual std::string toString() const = 0;
 	virtual Type* copy() = 0;
 	const std::string& getType() const;
