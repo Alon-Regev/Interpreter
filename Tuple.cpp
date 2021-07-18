@@ -7,7 +7,8 @@ Tuple::Tuple() : Type(TUPLE)
 Tuple::~Tuple()
 {
     for (Type*& type : this->_values)
-        delete type;
+        if(!type->isVariable())
+            delete type;
 }
 
 std::string Tuple::toString() const

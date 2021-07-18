@@ -127,6 +127,10 @@ Type* Interpreter::assign(Type* a, Type* b)
 		{
 			return a->assign(b);
 		}
+		else if (a->getType() == REFERENCE)
+		{
+			return a->assign(b);
+		}
 		else
 		{
 			throw InvalidOperationException("assigning to a non-variable value");
@@ -193,6 +197,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		staticType = Interpreter::addVariable(str.substr(strlen(LIST " ")), new List());
 	else if (str.rfind(STRING " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(STRING " ")), new String());
+	else if (str.rfind(REFERENCE " ", 0) == 0)
+		staticType = Interpreter::addVariable(str.substr(strlen(REFERENCE " ")), new Reference());
 	else
 		return nullptr;
 	staticType->setStatic();

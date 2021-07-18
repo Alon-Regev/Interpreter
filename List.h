@@ -1,6 +1,7 @@
 #pragma once
 #include "Sequence.h"
 #include "SyntaxException.h"
+#include "Reference.h"
 
 #define LIST "list"
 
@@ -25,5 +26,8 @@ template<class Iterator>
 inline List::List(Iterator begin, Iterator end) : Sequence(LIST)
 {
 	for (Iterator it = begin; it != end; it++)
+	{
 		this->_content.push_back((*it)->copy());
+		delete (*it);
+	}
 }

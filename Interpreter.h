@@ -19,6 +19,7 @@
 #include "String.h"
 #include "While.h"
 #include "Foreach.h"
+#include "Reference.h"
 
 class Function;
 class Block;
