@@ -19,6 +19,7 @@
 #include "String.h"
 #include "While.h"
 #include "Foreach.h"
+#include "Reference.h"
 
 class Function;
 class Block;
@@ -30,6 +31,10 @@ public:
 	~Interpreter();
 	std::string run(const std::string& code);
 	static Type* assign(Type* a, Type* b);
+	static void removeVariable(const std::string& name);
+	static void openScope();
+	static void closeScope();
+	static Type* addVariable(std::string variableName, Type* variable, bool isNew = false, bool setScope = false);
 protected:
 	virtual Type* valueOf(const std::string& str);
 	virtual Type* evaluateBlock(Node* node);
@@ -38,7 +43,7 @@ protected:
 private:
 	static std::map<std::string, Operator> _operators;
 	static std::map<std::string, Type*> _variables;
-	static Type* addVariable(std::string variableName, Type* variable, bool isNew=false);
+	static std::vector<std::vector<std::string>> _variableScope;
 	Type* checkNewVariable(const std::string& str);
 	static TempSequence* sequenceExtension(Type* a, Type* b);
 	static bool isVariableNameValid(const std::string& name);

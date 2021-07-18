@@ -7,7 +7,8 @@ TempSequence::TempSequence() : Type(TEMP_SEQUENCE)
 TempSequence::~TempSequence()
 {
     for (Type*& type : this->_values)
-        delete type;
+        if(!type->isVariable())
+            delete type;
 }
 
 TempSequence::TempSequence(std::vector<Type*>& values) : Type(TEMP_SEQUENCE)

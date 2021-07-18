@@ -66,9 +66,28 @@ Parser<EvaluationType>::Parser(const std::map<std::string, Operator>& operators)
 template<class EvaluationType>
 inline EvaluationType Parser<EvaluationType>::value(const std::string& expression)
 {    
+    Node* tree = nullptr;
+    EvaluationType result = EvaluationType();
     std::vector<Node*> temp = this->tokenize(expression);
-    Node* tree = this->parse(temp);
-    EvaluationType result = this->evaluate(tree);
+    try
+    {
+        tree = this->parse(temp);
+    }
+    catch (std::exception& e)
+    {
+        for (Node* node : temp)
+            delete node;
+        throw;
+    }
+    try
+    {
+        result = this->evaluate(tree);
+    }
+    catch (std::exception& e)
+    {
+        delete tree;
+        throw;
+    }
     delete tree;
     return result;
 }

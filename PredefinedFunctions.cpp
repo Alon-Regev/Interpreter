@@ -3,6 +3,7 @@
 void initVariables(std::map<std::string, Type*>& variables)
 {
 	setVariable("print", new StaticFunction(print), variables);
+	setVariable("delete", new StaticFunction(deleteVariable), variables);
 }
 
 void setVariable(const std::string& name, Type* type, std::map<std::string, Type*>& variables)
@@ -27,5 +28,16 @@ Type* print(Type* other)
 	{
 		std::cout << other->toString() << std::endl;
 	}
+	return new Void();
+}
+
+Type* deleteVariable(Type* type)
+{
+	if (type->isVariable())
+	{
+		Interpreter::removeVariable(type->getVariable());
+	}
+	else
+		throw InvalidOperationException("Deleting a non-variable value");
 	return new Void();
 }

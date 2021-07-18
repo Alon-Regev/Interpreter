@@ -19,7 +19,7 @@ public:
 	bool isVariableTuple();
 	std::vector<Type*>::const_iterator begin();
 	std::vector<Type*>::const_iterator end();
-	const std::vector<Type*>& getValues();
+	std::vector<Type*>& getValues();
 	// operators
 	virtual Type* assign(Type* other);
 private:

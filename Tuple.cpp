@@ -7,7 +7,8 @@ Tuple::Tuple() : Type(TUPLE)
 Tuple::~Tuple()
 {
     for (Type*& type : this->_values)
-        delete type;
+        if(!type->isVariable())
+            delete type;
 }
 
 std::string Tuple::toString() const
@@ -59,7 +60,7 @@ std::vector<Type*>::const_iterator Tuple::end()
     return this->_values.end();
 }
 
-const std::vector<Type*>& Tuple::getValues()
+std::vector<Type*>& Tuple::getValues()
 {
     return this->_values;
 }

@@ -1,5 +1,6 @@
 #include "Type.h"
 #include "String.h"
+#include "Reference.h"
 
 const std::string& Type::getType() const
 {
@@ -55,6 +56,8 @@ Type* Type::mul(Type* other)
 
 Type* Type::assign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->assign(((Reference*)other)->getValue());
     throw InvalidOperationException("= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 

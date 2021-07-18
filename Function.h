@@ -8,6 +8,12 @@
 
 #define FUNCTION "function"
 
+struct Parameter
+{
+	std::string name;
+	std::string type;
+};
+
 class Interpreter;
 class Block;
 class Tuple;
@@ -25,6 +31,6 @@ public:
 private:
 	Type* _function;
 	Interpreter& _interpreter;
-	Type* _params;
+	std::vector<Parameter> _parameters;
 };
 
