@@ -20,6 +20,7 @@
 #include "While.h"
 #include "Foreach.h"
 #include "Reference.h"
+#include "Pair.h"
 
 class Function;
 class Block;

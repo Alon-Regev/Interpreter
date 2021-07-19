@@ -151,6 +151,7 @@
     <ClInclude Include="InvalidOperationException.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="Pair.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="PredefinedFunctions.h" />
     <ClInclude Include="Preprocessor.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="List.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Pair.cpp" />
     <ClCompile Include="PredefinedFunctions.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="Reference.cpp" />
