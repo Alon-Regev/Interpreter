@@ -6,8 +6,10 @@ Pair::Pair(Type* a, Type* b) : Type(PAIR), _first(a), _second(b)
 
 Pair::~Pair()
 {
-	delete this->_first;
-	delete this->_second;
+	if (!this->_first->isVariable())
+		delete this->_first;
+	if (!this->_second->isVariable())
+		delete this->_second;
 }
 
 std::string Pair::toString() const

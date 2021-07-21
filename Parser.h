@@ -53,6 +53,7 @@ private:
 	bool isOpenParentheses(char c);
     bool isCloseParentheses(char c);
     std::string getParentheses(char c);
+    bool isObject(Node* node);
 
     const std::map<std::string, Operator>& _operators;
 };
@@ -114,7 +115,7 @@ EvaluationType Parser<EvaluationType>::evaluate(Node* node)
     }
     else
     {
-        if (node->_block == '{')
+        if (node->_block == '{' && !this->isObject(node))
             return this->evaluateBlock(node);
         // is an operator
         EvaluationType lv = evaluate(node->_left);
@@ -355,4 +356,18 @@ inline std::string Parser<EvaluationType>::getParentheses(char c)
         return "{}";
     else if (c == '[' || c == ']')
         return "[]";
+}
+
+template<class EvaluationType>
+inline bool Parser<EvaluationType>::isObject(Node* node)
+{
+    if (node->_value == ",")
+    {
+        if ((node->_left->_value == "," && this->isObject(node->_left) || node->_left->_value == ":") && node->_right->_value == ":")
+            return true;
+        else return false;
+    }
+    else if (node->_value == ":")
+        return true;
+    return false;
 }
