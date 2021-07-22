@@ -7,7 +7,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 12} },
 	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 13} },
 
-	{":", Operator{[](Type* a, Type* b) { return (Type*)new Pair(a->copy(), b->copy()); }, 7}},
+	{":", Operator{[](Type* a, Type* b) { return (Type*)new Pair(a->isVariable() ? a : a->copy(), b->isVariable() ? b : b->copy()); }, 7}},
 	{",", Operator{(operation)Interpreter::sequenceExtension, 6, BINARY_INFIX, false, true} },
 	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 6} },
 
@@ -17,6 +17,8 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 2}},
 	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3} },
 
+
+	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 14, BINARY_INFIX, false, true} },
 	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 13, BINARY_INFIX, false, true} },
 	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX}},
 	{"foreach", Operator{[](Type* a, Type* b) { return (Type*)new Foreach(b); }, 4, UNARY_PREFIX}},
@@ -60,11 +62,11 @@ std::string Interpreter::run(const std::string& code)
 Type* Interpreter::valueOf(const std::string& str)
 {
 	// is a variable
+	if (this->_variables.find(str) != this->_variables.end())	// old variable
+		return Interpreter::_variables[str];
 	Type* newVar = this->checkNewVariable(str);
 	if (newVar)
 		return newVar;
-	else if (this->_variables.find(str) != this->_variables.end())	// old variable
-		return Interpreter::_variables[str];
 	// is a type
 	else if (Void::isType(str))
 		return new Void();
@@ -95,6 +97,8 @@ Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
 			ret = new Tuple(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
 		else if (parenthesesType == '[')
 			ret = new List(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
+		else if (parenthesesType == '{')
+			ret = new Object(((TempSequence*)value)->begin(), ((TempSequence*)value)->end());
 		else return ret;
 		((TempSequence*)value)->clear();
 		delete value;
@@ -106,6 +110,11 @@ Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
 			return new List();
 		else
 			return new List(std::vector<Type*>{value->isVariable() ? value->copy() : value});
+	}
+	else if (parenthesesType == '{' && value->getType() == PAIR)
+	{
+		// single value object
+		return new Object((Pair*)value);
 	}
 	return value;
 }
@@ -200,6 +209,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		staticType = Interpreter::addVariable(str.substr(strlen(STRING " ")), new String());
 	else if (str.rfind(REFERENCE " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(REFERENCE " ")), new Reference());
+	else if(this->isVariableNameValid(str))
+		return new Name(str);
 	else
 		return nullptr;
 	staticType->setStatic();

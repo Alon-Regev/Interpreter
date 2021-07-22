@@ -21,6 +21,8 @@
 #include "Foreach.h"
 #include "Reference.h"
 #include "Pair.h"
+#include "Object.h"
+#include "Name.h"
 
 class Function;
 class Block;

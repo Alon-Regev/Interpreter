@@ -10,7 +10,7 @@ public:
 	virtual ~Pair();
 	virtual std::string toString() const;
 	virtual Type* copy();
-private:
+
 	Type* _first;
 	Type* _second;
 };

@@ -77,6 +77,12 @@ Type* Reference::index(Type* other)
 	return this->_value->index(other);
 }
 
+Type* Reference::point(Type* other)
+{
+	this->checkReference();
+	return this->_value->point(other);
+}
+
 Type* Reference::negative()
 {
 	this->checkReference();
