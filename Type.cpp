@@ -81,6 +81,11 @@ Type* Type::point(Type* other)
     throw InvalidOperationException(". between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
+Type* Type::extend(Type* other)
+{
+    throw InvalidOperationException("-> between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
 Type* Type::negative()
 {
     throw InvalidOperationException("- to type \"" + this->_type + '"');

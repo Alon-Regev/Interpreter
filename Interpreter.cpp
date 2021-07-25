@@ -1,15 +1,17 @@
 #include "Interpreter.h"
 
 std::map<std::string, Operator> Interpreter::_operators = {
-	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 11} },
-	{"-", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? b->negative() : a->sub(b); }, 11, BINARY_INFIX, true} },
-	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 12} },
-	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 12} },
-	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 13} },
+	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 12} },
+	{"-", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? b->negative() : a->sub(b); }, 12, BINARY_INFIX, true} },
+	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 13} },
+	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 13} },
+	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 14, false, true} },
 
+	{"->", Operator{[](Type* a, Type* b) { return b->extend(a); }, 6} },
+	{"<-", Operator{[](Type* a, Type* b) { return a->extend(b); }, 6} },
 	{":", Operator{[](Type* a, Type* b) { return (Type*)new Pair(a->isVariable() ? a : a->copy(), b->isVariable() ? b : b->copy()); }, 7}},
 	{",", Operator{(operation)Interpreter::sequenceExtension, 6, BINARY_INFIX, false, true} },
-	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 6} },
+	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 8} },
 
 	{"=", Operator{(operation)Interpreter::assign, 5} },
 
@@ -24,19 +26,19 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"foreach", Operator{[](Type* a, Type* b) { return (Type*)new Foreach(b); }, 4, UNARY_PREFIX}},
 
 	// logic operators
-	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 10} },
-	{"!=", Operator{[](Type* a, Type* b) { return a->notEqual(b); }, 10} },
-	{">", Operator{[](Type* a, Type* b) { return a->greater(b); }, 10} },
-	{"<", Operator{[](Type* a, Type* b) { return a->less(b); }, 10} },
-	{">=", Operator{[](Type* a, Type* b) { return a->greaterEqual(b); }, 10} },
-	{"<=", Operator{[](Type* a, Type* b) { return a->lessEqual(b); }, 10} },
-	{"||", Operator{[](Type* a, Type* b) { return a->logicOr(b); }, 9} },
-	{"&&", Operator{[](Type* a, Type* b) { return a->logicAnd(b); }, 8} },
+	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 11} },
+	{"!=", Operator{[](Type* a, Type* b) { return a->notEqual(b); }, 11} },
+	{">", Operator{[](Type* a, Type* b) { return a->greater(b); }, 11} },
+	{"<", Operator{[](Type* a, Type* b) { return a->less(b); }, 11} },
+	{">=", Operator{[](Type* a, Type* b) { return a->greaterEqual(b); }, 11} },
+	{"<=", Operator{[](Type* a, Type* b) { return a->lessEqual(b); }, 11} },
+	{"||", Operator{[](Type* a, Type* b) { return a->logicOr(b); }, 10} },
+	{"&&", Operator{[](Type* a, Type* b) { return a->logicAnd(b); }, 9} },
 
 	{";", Operator{[](Type* a, Type* b) { return (Type*)new Undefined(); }, 1, BINARY_INFIX, true} },
 };
 std::map<std::string, Type*> Interpreter::_variables;
-std::vector<std::vector<std::string>> Interpreter::_variableScope = std::vector<std::vector<std::string>>({ std::vector<std::string>() });
+std::vector<std::vector<ScopeVariable>> Interpreter::_variableScope = std::vector<std::vector<ScopeVariable>>({ std::vector<ScopeVariable>() });
 
 Interpreter::Interpreter() : Parser(Interpreter::_operators)
 {
@@ -147,7 +149,7 @@ Type* Interpreter::assign(Type* a, Type* b)
 		}
 	}
 	// regular cases
-	if (a->isStaticType())
+	if (a->isStaticType() || a->getType() == REFERENCE)
 		return a->assign(b);	// assign operator
 	// replace
 	return Interpreter::addVariable(a->getVariable(), b->copy());
@@ -161,13 +163,22 @@ void Interpreter::removeVariable(const std::string& name)
 
 void Interpreter::openScope()
 {
-	Interpreter::_variableScope.push_back(std::vector<std::string>());
+	Interpreter::_variableScope.push_back(std::vector<ScopeVariable>());
 }
 
 void Interpreter::closeScope()
 {
-	for (const std::string& name : Interpreter::_variableScope.back())
-		Interpreter::removeVariable(name);
+	for (const ScopeVariable& var : Interpreter::_variableScope.back())
+	{
+		if (var.previousValue == nullptr)
+			Interpreter::removeVariable(var.name);
+		else
+		{
+			delete Interpreter::_variables[var.name];
+			Interpreter::_variables[var.name] = var.previousValue;
+			//Interpreter::addVariable(var.name, var.previousValue);
+		}
+	}
 	Interpreter::_variableScope.pop_back();
 }
 
@@ -180,13 +191,23 @@ Type* Interpreter::addVariable(std::string variableName, Type* variable, bool is
 			throw VariableException('"' + variableName + "\" already exists");
 		else if (!isVariableNameValid(variableName))
 			throw VariableException('"' + variableName + "\" is not a valid name");
-		Interpreter::_variableScope.back().push_back(variableName);
+		Interpreter::_variableScope.back().push_back(ScopeVariable{ variableName, nullptr });
 	}
 	else if(setScope)
-		Interpreter::_variableScope.back().push_back(variableName);
+		Interpreter::_variableScope.back().push_back(ScopeVariable{ variableName, nullptr });
 	variable->setVariable(variableName);
 	if (Interpreter::_variables.find(variableName) != Interpreter::_variables.end())
-		delete Interpreter::_variables[variableName];
+	{
+		// if from this scope delete
+		bool inThisScope = false;
+		for (const ScopeVariable& var : Interpreter::_variableScope.back())
+			if (var.name == variableName)
+				inThisScope = true;
+		if(inThisScope)
+			delete Interpreter::_variables[variableName];
+		else
+			Interpreter::_variableScope.back().back().previousValue = Interpreter::_variables[variableName];
+	}
 	return Interpreter::_variables[variableName] = variable;
 }
 
@@ -209,6 +230,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		staticType = Interpreter::addVariable(str.substr(strlen(STRING " ")), new String());
 	else if (str.rfind(REFERENCE " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(REFERENCE " ")), new Reference());
+	else if (str.rfind(CLASS " ", 0) == 0)
+		staticType = Interpreter::addVariable(str.substr(strlen(CLASS " ")), new Class());
 	else if(this->isVariableNameValid(str))
 		return new Name(str);
 	else
@@ -221,12 +244,12 @@ TempSequence* Interpreter::sequenceExtension(Type* a, Type* b)
 {
 	if (a->getType() == TEMP_SEQUENCE)
 	{
-		((TempSequence*)a)->extend(b);
+		((TempSequence*)a)->sequenceExtend(b);
 		return (TempSequence*)a;
 	}
 	TempSequence* sequence = new TempSequence();
-	sequence->extend(a);
-	sequence->extend(b);
+	sequence->sequenceExtend(a);
+	sequence->sequenceExtend(b);
 	return sequence;
 }
 

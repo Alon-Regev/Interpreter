@@ -29,6 +29,7 @@ public:
 	virtual Type* block(Type* other);
 	virtual Type* index(Type* other);
 	virtual Type* point(Type* other);
+	virtual Type* extend(Type* other);
 	virtual Type* negative();
 	// logic operators
 	virtual Type* equal(Type* other);

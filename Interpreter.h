@@ -23,6 +23,13 @@
 #include "Pair.h"
 #include "Object.h"
 #include "Name.h"
+#include "Class.h"
+
+struct ScopeVariable
+{
+	std::string name;
+	Type* previousValue = nullptr;
+};
 
 class Function;
 class Block;
@@ -46,7 +53,7 @@ protected:
 private:
 	static std::map<std::string, Operator> _operators;
 	static std::map<std::string, Type*> _variables;
-	static std::vector<std::vector<std::string>> _variableScope;
+	static std::vector<std::vector<ScopeVariable>> _variableScope;
 	Type* checkNewVariable(const std::string& str);
 	static TempSequence* sequenceExtension(Type* a, Type* b);
 	static bool isVariableNameValid(const std::string& name);

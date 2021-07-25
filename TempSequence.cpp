@@ -26,7 +26,7 @@ Type* TempSequence::copy()
     return new TempSequence(this->_values);
 }
 
-void TempSequence::extend(Type* value)
+void TempSequence::sequenceExtend(Type* value)
 {
     this->_values.push_back(value);
 }

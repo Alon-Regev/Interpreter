@@ -4,10 +4,12 @@
 #include "String.h"
 #include "List.h"
 #include "Undefined.h"
+#include "Reference.h"
 #include "Name.h"
 #include <map>
 
 #define OBJECT "object"
+#define CLASS "class"
 
 class Object : public Type
 {
@@ -16,15 +18,18 @@ public:
 	Object(Iterator begin, Iterator end);
 	Object(std::map<std::string, Type*>& variables);
 	Object(Pair* pair);
+	Object(const std::string& type);
 	virtual ~Object();
 	virtual std::string toString() const;
 	virtual Type* copy();
+	void toMethods();
 	// operators
 	virtual Type* index(Type* other);
 	virtual Type* point(Type* other);
-private:
+	virtual Type* assign(Type* other);
+	virtual Type* extend(Type* other);
 	std::map<std::string, Type*> _variables;
-
+private:
 	std::string toName(Type* type, bool checkVar = true);
 };
 

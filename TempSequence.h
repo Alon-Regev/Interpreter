@@ -12,7 +12,7 @@ public:
 	TempSequence(std::vector<Type*>& values);
 	virtual std::string toString() const;
 	virtual Type* copy();
-	virtual void extend(Type* value);
+	virtual void sequenceExtend(Type* value);
 	virtual std::vector<Type*>::iterator begin();
 	virtual std::vector<Type*>::iterator end();
 	virtual void clear();

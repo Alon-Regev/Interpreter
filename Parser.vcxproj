@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="Bool.h" />
+    <ClInclude Include="Class.h" />
     <ClInclude Include="Foreach.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Helper.h" />
@@ -176,6 +177,7 @@
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Bool.cpp" />
+    <ClCompile Include="Class.cpp" />
     <ClCompile Include="Foreach.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Helper.cpp" />
