@@ -67,5 +67,5 @@ Type* List::add(Type* other)
 
 Type* List::toType(Type* value)
 {
-	return new Reference(value);
+	return this->isVariable() ? new Reference(value) : value->copy();
 }
