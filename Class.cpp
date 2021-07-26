@@ -22,7 +22,7 @@ Type* Class::call(Type* other)
 	{
 		Object* newCopy = (Object*)this->copy();
 		//newCopy->toMethods();
-		delete newCopy->_variables[this->_variable]->call(nullptr);
+		delete newCopy->_variables[this->_variable]->call(other);
 		delete newCopy->_variables[this->_variable];
 		newCopy->_variables.erase(this->_variable);
 		return newCopy;

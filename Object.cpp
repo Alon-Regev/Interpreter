@@ -23,6 +23,10 @@ Object::Object(const std::string& type) : Type(type)
 {
 }
 
+Object::Object() : Type(OBJECT)
+{
+}
+
 Object::~Object()
 {
 	for (const std::pair<std::string, Type*>& pair : this->_variables)
@@ -58,7 +62,10 @@ Type* Object::index(Type* other)
 	if (((List*)other)->_content.size() > 0)
 	{
 		if (this->_variables.find(this->toName(((List*)other)->_content[0], false)) != this->_variables.end())
-			return new Reference(this->_variables[this->toName(((List*)other)->_content[0], false)]);
+		{
+			Type* value = this->_variables[this->toName(((List*)other)->_content[0], false)];
+			return this->isVariable() ? new Reference(value) : value->copy();
+		}
 		else
 			return new Undefined();
 	}
@@ -68,7 +75,10 @@ Type* Object::index(Type* other)
 Type* Object::point(Type* other)
 {
 	if (this->_variables.find(this->toName(other)) != this->_variables.end())
-		return new Reference(this->_variables[this->toName(other)]);
+	{
+		Type* value = this->_variables[this->toName(other)];
+		return this->isVariable() ? new Reference(value) : value->copy();
+	}
 	else
 		return new Undefined();
 }
@@ -77,6 +87,8 @@ Type* Object::assign(Type* other)
 {
 	if (other->getType() == OBJECT)
 	{
+		for (std::pair<const std::string, Type*>& pair : this->_variables)
+			delete pair.second;
 		this->_variables.clear();
 		for (std::pair<const std::string, Type*>& pair : ((Object*)other)->_variables)
 			this->_variables[pair.first] = pair.second->copy();

@@ -62,6 +62,9 @@ Type* Function::call(Type* other)
 		}
 		else if (this->_parameters.size() != 0)
 		{
+			// other doesn't have multiple arguments
+			if (other->getType() != TUPLE || ((Tuple*)other)->getValues().size() != this->_parameters.size())
+				throw InvalidOperationException("Invalid argument count");
 			for (int i = 0; i < this->_parameters.size(); i++)
 			{
 				Type* value = ((Tuple*)other)->getValues()[i];

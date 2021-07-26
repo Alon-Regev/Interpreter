@@ -232,6 +232,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		staticType = Interpreter::addVariable(str.substr(strlen(REFERENCE " ")), new Reference());
 	else if (str.rfind(CLASS " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(CLASS " ")), new Class());
+	else if (str.rfind(OBJECT " ", 0) == 0)
+		staticType = Interpreter::addVariable(str.substr(strlen(OBJECT " ")), new Object());
 	else if(this->isVariableNameValid(str))
 		return new Name(str);
 	else

@@ -19,6 +19,7 @@ public:
 	Object(std::map<std::string, Type*>& variables);
 	Object(Pair* pair);
 	Object(const std::string& type);
+	Object();
 	virtual ~Object();
 	virtual std::string toString() const;
 	virtual Type* copy();
