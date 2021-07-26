@@ -36,7 +36,7 @@ Type* Tuple::copy()
     return new Tuple(temp.begin(), temp.end());
 }
 
-void Tuple::extend(Type* type)
+void Tuple::sequenceExtend(Type* type)
 {
     this->_values.push_back(type);
 }

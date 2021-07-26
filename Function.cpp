@@ -1,6 +1,6 @@
 #include "Function.h"
 
-Function::Function(Interpreter& interpreter) : Type(FUNCTION), _interpreter(interpreter) {}
+Function::Function(Interpreter& interpreter) : Type(FUNCTION), _interpreter(interpreter), _function(nullptr)  {}
 
 Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(block->getInterpreter()), _function(block->copy())
 {
@@ -14,32 +14,69 @@ Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(bl
 		((Tuple*)params)->getValues().clear();
 		delete params;
 	}
-	else if (params->getType() != UNDEFINED && params->isVariable())
+	else if (params->isVariable())
 	{	// one param
-		this->_parameters.push_back(Parameter{ params->getVariable(), params->getType() });
+		this->_parameters.push_back(Parameter{ params->getVariable(), (params->isStaticType() ? params->getType() : "") });
 		Interpreter::removeVariable(params->getVariable());
 	}
+	else
+	{
+		// zero params
+		delete params;
+	}
+}
+
+Function::Function(std::vector<Parameter>& parameters, Type* function, Interpreter& interpreter, Type* thisType) : Type(FUNCTION), _parameters(parameters), _function(function->copy()), _interpreter(interpreter), _this(thisType ? thisType->copy() : nullptr)
+{
 }
 
 Function::~Function()
 {
 	delete this->_function;
+	delete this->_this;
+}
+
+Type* Function::copy()
+{
+	return new Function(this->_parameters, this->_function, this->_interpreter, this->_this);
+}
+
+void Function::setThis(Type* value, bool deletePrev)
+{
+	//if(deletePrev)
+		delete this->_this;
+	this->_this = value;
 }
 
 Type* Function::call(Type* other)
 {
-	if (this->_parameters.empty() && other->getType() != UNDEFINED)
-		throw InvalidOperationException("arguments to a function with no parameters");
-
-	Interpreter::openScope();
-	if (this->_parameters.size() == 1)
-		Interpreter::addVariable(this->_parameters[0].name, other, false, true);
-	else if(this->_parameters.size() != 0)
+	if (other)
 	{
-		for (int i = 0; i < this->_parameters.size(); i++)
-			Interpreter::addVariable(this->_parameters[i].name, ((Tuple*)other)->getValues()[i], false, true);
-		((Tuple*)other)->getValues().clear();
+		if (this->_parameters.empty() && other->getType() != UNDEFINED)
+			throw InvalidOperationException("arguments to a function with no parameters");
+
+		Interpreter::openScope();
+		if (this->_parameters.size() == 1)
+		{
+			Interpreter::addVariable(this->_parameters[0].name, this->_parameters[0].type == REFERENCE ? new Reference(other) : other, false, true);
+		}
+		else if (this->_parameters.size() != 0)
+		{
+			// other doesn't have multiple arguments
+			if (other->getType() != TUPLE || ((Tuple*)other)->getValues().size() != this->_parameters.size())
+				throw InvalidOperationException("Invalid argument count");
+			for (int i = 0; i < this->_parameters.size(); i++)
+			{
+				Type* value = ((Tuple*)other)->getValues()[i];
+				Interpreter::addVariable(this->_parameters[i].name, this->_parameters[i].type == REFERENCE ? new Reference(value) : value, false, true);
+			}
+			((Tuple*)other)->getValues().clear();
+		}
 	}
+	else
+		Interpreter::openScope();
+	if (this->_this)
+		Interpreter::addVariable("this", new Reference(this->_this), false, true);
 
 	Type* ret = nullptr;
 	if (this->_function->getType() != BLOCK)

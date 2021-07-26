@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="Bool.h" />
+    <ClInclude Include="Class.h" />
     <ClInclude Include="Foreach.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Helper.h" />
@@ -150,7 +151,10 @@
     <ClInclude Include="InterpreterException.h" />
     <ClInclude Include="InvalidOperationException.h" />
     <ClInclude Include="List.h" />
+    <ClInclude Include="Name.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Pair.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="PredefinedFunctions.h" />
     <ClInclude Include="Preprocessor.h" />
@@ -173,6 +177,7 @@
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Bool.cpp" />
+    <ClCompile Include="Class.cpp" />
     <ClCompile Include="Foreach.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Helper.cpp" />
@@ -181,7 +186,10 @@
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="List.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Name.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Pair.cpp" />
     <ClCompile Include="PredefinedFunctions.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="Reference.cpp" />
