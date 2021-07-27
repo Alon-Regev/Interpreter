@@ -61,6 +61,15 @@ std::string Interpreter::run(const std::string& code)
 	return resultStr;
 }
 
+void Interpreter::importFunctions(const std::map<std::string, staticFunction>& functions)
+{
+	for (const std::pair<std::string, staticFunction>& pair : functions)
+	{
+		this->_variables[pair.first] = new StaticFunction(pair.second);
+		this->_variables[pair.first]->setVariable(pair.first);
+	}
+}
+
 Type* Interpreter::valueOf(const std::string& str)
 {
 	// is a variable

@@ -40,6 +40,7 @@ public:
 	Interpreter();
 	~Interpreter();
 	std::string run(const std::string& code);
+	void importFunctions(const std::map<std::string, staticFunction>&);
 	static Type* assign(Type* a, Type* b);
 	static void removeVariable(const std::string& name);
 	static void openScope();

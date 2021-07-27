@@ -104,8 +104,11 @@ int runFile(std::string& fileName)
 	try
 	{
 		std::string code = Helper::readFile(fileName);
-		Preprocessor().process(code);
-		Interpreter().run(code);
+		Preprocessor p;
+		p.process(code);
+		Interpreter i;
+		i.importFunctions(p.getImportedFunctions());
+		i.run(code);
 	}
 	catch (InterpreterException& e)
 	{
