@@ -2,7 +2,7 @@
 
 If::If(Type* condition) : Type(IF)
 {
-	if (condition->getType() == BOOL)
+	if (condition->getType() == _BOOL)
 		this->_condition = ((Bool*)condition)->getValue();
 }
 

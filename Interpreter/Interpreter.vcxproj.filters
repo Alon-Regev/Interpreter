@@ -13,109 +13,82 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Types">
-      <UniqueIdentifier>{21c44a3e-d428-4f5f-826e-750d8b4c0097}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Types">
-      <UniqueIdentifier>{ccbb4fb0-9d0d-41de-baa8-dc0415f7ae33}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Exceptions">
-      <UniqueIdentifier>{381c8b52-b09b-487c-b663-f88ca9290666}</UniqueIdentifier>
+      <UniqueIdentifier>{d06cc47d-19c8-494f-88d3-e4447d4df0ad}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Interpreter">
-      <UniqueIdentifier>{b3d0d874-15fd-4e1e-88d3-6c529c27148c}</UniqueIdentifier>
+      <UniqueIdentifier>{dad7d008-cfa0-4164-a8d3-836d9f4cf407}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Other">
-      <UniqueIdentifier>{960ad2cb-979c-4cb3-ac29-51a3eaf4a18f}</UniqueIdentifier>
+      <UniqueIdentifier>{160e8448-9e23-49e1-8c0c-ac0f0fdb4c34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Types">
+      <UniqueIdentifier>{137fc5b0-1ec4-4ff2-840b-672956b32149}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Interpreter">
-      <UniqueIdentifier>{a85dd92a-ceca-4ce0-9c52-dfdc6f1533f3}</UniqueIdentifier>
+      <UniqueIdentifier>{2defcb84-22e2-4d32-a63a-2ff32c520316}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Other">
-      <UniqueIdentifier>{1af735ae-60c1-4826-baf7-09836db28230}</UniqueIdentifier>
+      <UniqueIdentifier>{4edee4a9-9f47-4cf0-b422-96a8d5a1a9f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Types">
+      <UniqueIdentifier>{7c946870-bde5-4890-96a4-74233faeb9a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Type.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Void.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeErrorException.h">
-      <Filter>Header Files\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="Int.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="InvalidOperationException.h">
-      <Filter>Header Files\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="InterpreterException.h">
-      <Filter>Header Files\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="VariableException.h">
-      <Filter>Header Files\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="Function.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
     <ClInclude Include="Block.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Undefined.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Tuple.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
     <ClInclude Include="Bool.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
-    <ClInclude Include="If.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Signal.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticFunction.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="SyntaxException.h">
-      <Filter>Header Files\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="Interpreter.h">
-      <Filter>Header Files\Interpreter</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser.h">
-      <Filter>Header Files\Interpreter</Filter>
-    </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>Header Files\Interpreter</Filter>
-    </ClInclude>
-    <ClInclude Include="Helper.h">
-      <Filter>Header Files\Other</Filter>
-    </ClInclude>
-    <ClInclude Include="PredefinedFunctions.h">
-      <Filter>Header Files\Other</Filter>
-    </ClInclude>
-    <ClInclude Include="Sequence.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="List.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="TempSequence.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="String.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="While.h">
+    <ClInclude Include="Class.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
     <ClInclude Include="Foreach.h">
       <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Function.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Helper.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="If.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Int.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpreter.h">
+      <Filter>Header Files\Interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpreterException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="InvalidOperationException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="List.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Name.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Header Files\Interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Pair.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Header Files\Interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="PredefinedFunctions.h">
+      <Filter>Header Files\Other</Filter>
     </ClInclude>
     <ClInclude Include="Preprocessor.h">
       <Filter>Header Files\Interpreter</Filter>
@@ -126,48 +99,96 @@
     <ClInclude Include="Reference.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
+    <ClInclude Include="Sequence.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Pair.h">
+    <ClInclude Include="Signal.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Name.h">
+    <ClInclude Include="StaticFunction.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Class.h">
+    <ClInclude Include="String.h">
       <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="SyntaxException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="TempSequence.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Tuple.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Undefined.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Void.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="While.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeErrorException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableException.h">
+      <Filter>Header Files\Exceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Type.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Void.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Int.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Function.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
     <ClCompile Include="Block.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Undefined.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Tuple.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="Bool.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
+    <ClCompile Include="Class.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Foreach.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Function.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Helper.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
     <ClCompile Include="If.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Int.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpreter.cpp">
+      <Filter>Source Files\Interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="List.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Name.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Source Files\Interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Pair.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Reference.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Sequence.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="Signal.cpp">
@@ -176,53 +197,32 @@
     <ClCompile Include="StaticFunction.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
-    <ClCompile Include="Interpreter.cpp">
-      <Filter>Source Files\Interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="Node.cpp">
-      <Filter>Source Files\Interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="Helper.cpp">
-      <Filter>Source Files\Other</Filter>
-    </ClCompile>
-    <ClCompile Include="PredefinedFunctions.cpp">
-      <Filter>Source Files\Other</Filter>
-    </ClCompile>
-    <ClCompile Include="Sequence.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="List.cpp">
+    <ClCompile Include="String.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="TempSequence.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
-    <ClCompile Include="String.cpp">
+    <ClCompile Include="Tuple.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
-    <ClCompile Include="While.cpp">
+    <ClCompile Include="Type.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
-    <ClCompile Include="Foreach.cpp">
+    <ClCompile Include="Undefined.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="Preprocessor.cpp">
       <Filter>Source Files\Interpreter</Filter>
     </ClCompile>
-    <ClCompile Include="Reference.cpp">
+    <ClCompile Include="Void.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
+    <ClCompile Include="While.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
-    <ClCompile Include="Pair.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Name.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Class.cpp">
-      <Filter>Source Files\Types</Filter>
+    <ClCompile Include="PredefinedFunctions.cpp">
+      <Filter>Source Files\Other</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
