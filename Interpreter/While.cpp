@@ -24,13 +24,13 @@ Type* While::block(Type* other)
 
 bool While::getCondition()
 {
-	if (this->_condition->getType() == BOOL)
+	if (this->_condition->getType() == _BOOL)
 		return ((Bool*)this->_condition)->getValue();
 	else if (this->_condition->getType() == BLOCK)
 	{
 		Type* res = ((Block*)this->_condition)->run();
 		bool ret = false;
-		if (res->getType() == BOOL)
+		if (res->getType() == _BOOL)
 			ret = ((Bool*)res)->getValue();
 		if (!res->isVariable())
 			delete res;

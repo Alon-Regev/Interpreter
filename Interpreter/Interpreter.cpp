@@ -61,6 +61,15 @@ std::string Interpreter::run(const std::string& code)
 	return resultStr;
 }
 
+void Interpreter::importFunctions(const std::map<std::string, staticFunction>& functions)
+{
+	for (const std::pair<std::string, staticFunction>& pair : functions)
+	{
+		this->_variables[pair.first] = new StaticFunction(pair.second);
+		this->_variables[pair.first]->setVariable(pair.first);
+	}
+}
+
 Type* Interpreter::valueOf(const std::string& str)
 {
 	// is a variable
@@ -222,8 +231,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		staticType = Interpreter::addVariable(str.substr(strlen(INT " ")), new Int(), true);
 	else if (str.rfind(FUNCTION " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(FUNCTION " ")), new Function(*this), true);
-	else if (str.rfind(BOOL " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(BOOL " ")), new Bool());
+	else if (str.rfind(_BOOL " ", 0) == 0)
+		staticType = Interpreter::addVariable(str.substr(strlen(_BOOL " ")), new Bool());
 	else if (str.rfind(LIST " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(LIST " ")), new List());
 	else if (str.rfind(STRING " ", 0) == 0)

@@ -41,3 +41,11 @@ std::string Helper::readFile(const std::string& fileName)
     buffer << file.rdbuf();
     return buffer.str();
 }
+
+std::string Helper::getFileExtension(const std::string& path)
+{
+    size_t dotPos = path.find_last_of(".");
+    if (dotPos == std::string::npos)
+        return "";
+    return path.substr(dotPos + 1);
+}

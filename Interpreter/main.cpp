@@ -1,5 +1,6 @@
 #include "Interpreter.h"
 #include "Preprocessor.h"
+#include "PackageManager.h"
 #include <iostream>
 #include <string>
 #include <exception>
@@ -10,7 +11,7 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#define VERSION "0.5"
+#define VERSION "0.6"
 #define NAME "<nameless interpreter>"
 
 std::string codeInput();
@@ -28,16 +29,39 @@ int main(int argc, char** argv)
 		return 0;
 	}
 	std::string command(argv[1]);
-	if (command == "--version")
-		std::cout << NAME << " " << VERSION << std::endl;
-	else if (command == "--help")
+	if (command == "--help")
 		std::cout <<
-		"--help    : shows list of commands (this)\n"
-		"--version : shows version number\n\n"
+		"--help         : shows list of commands (this)\n"
+		"--version / -v : shows version number\n\n"
 
-		"<file>    : runs a code file\n"
-		"-d        : runs file in line-by-line basic debug mode\n"
-		"-ad       : advanced debug mode\n";
+		"--install      : installs all projects packages\n"
+		"--install <p>  : installs specified package\n"
+		"--upload <p>   : uploads specified package\n\n"
+
+		"<file>         : runs a code file\n";
+	else if(command == "--version" || command == "-v")
+		std::cout << NAME << " " << VERSION << std::endl;
+	else if (command == "--install")
+	{
+		if (argc == 2)
+		{
+			// todo
+		}
+		else if(argc > 2)
+		{
+			for (int p = 2; p < argc; p++)
+				PackageManager::install(argv[p]);
+		}
+	}
+	else if (command == "--upload")
+	{
+		if (argc == 3)
+		{
+			PackageManager::upload(argv[2]);
+		}
+		else
+			std::cerr << "Invalid number of arguments..." << std::endl;
+	}
 	else if (command.front() == '-')
 	{
 		std::cout << "invalid command. use --help to get list of commands." << std::endl;
@@ -104,8 +128,11 @@ int runFile(std::string& fileName)
 	try
 	{
 		std::string code = Helper::readFile(fileName);
-		Preprocessor().process(code);
-		Interpreter().run(code);
+		Preprocessor p;
+		p.process(code);
+		Interpreter i;
+		i.importFunctions(p.getImportedFunctions());
+		i.run(code);
 	}
 	catch (InterpreterException& e)
 	{
