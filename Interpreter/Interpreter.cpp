@@ -231,8 +231,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		staticType = Interpreter::addVariable(str.substr(strlen(INT " ")), new Int(), true);
 	else if (str.rfind(FUNCTION " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(FUNCTION " ")), new Function(*this), true);
-	else if (str.rfind(BOOL " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(BOOL " ")), new Bool());
+	else if (str.rfind(_BOOL " ", 0) == 0)
+		staticType = Interpreter::addVariable(str.substr(strlen(_BOOL " ")), new Bool());
 	else if (str.rfind(LIST " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(LIST " ")), new List());
 	else if (str.rfind(STRING " ", 0) == 0)

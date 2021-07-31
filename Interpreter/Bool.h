@@ -1,9 +1,9 @@
 #pragma once
 #include "Type.h"
 
-#define BOOL "bool"
-#define FALSE "false"
-#define TRUE "true"
+#define _BOOL "bool"	// _BOOL for solving conflict with WinAPI
+#define _FALSE "false"
+#define _TRUE "true"
 
 class Bool : public Type
 {

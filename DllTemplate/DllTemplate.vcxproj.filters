@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="InterpreterFiles">
+      <UniqueIdentifier>{0e28643a-b35c-4b42-a7a9-eab4a80fa79e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Implementation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Block.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Bool.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Class.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Foreach.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Function.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Helper.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\If.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Int.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Interpreter.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\InterpreterException.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\InvalidOperationException.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\List.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Name.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Node.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Object.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Pair.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Parser.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\PredefinedFunctions.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Preprocessor.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\PreprocessorException.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Reference.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Sequence.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Signal.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\StaticFunction.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\String.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\SyntaxException.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\TempSequence.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Tuple.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Type.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\TypeErrorException.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Undefined.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\VariableException.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Void.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\While.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Implementation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Block.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Bool.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Class.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Foreach.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Function.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Helper.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\If.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Int.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Interpreter.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\List.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Name.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Node.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Object.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Pair.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\PredefinedFunctions.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Preprocessor.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Reference.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Sequence.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Signal.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\StaticFunction.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\String.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\TempSequence.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Tuple.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Type.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Undefined.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Void.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\While.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

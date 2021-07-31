@@ -1,19 +1,19 @@
 #include "Bool.h"
 
-Bool::Bool(const std::string& value) : Type(BOOL)
+Bool::Bool(const std::string& value) : Type(_BOOL)
 {
-	if (value == FALSE)
+	if (value == _FALSE)
 		_value = false;
-	else if (value == TRUE)
+	else if (value == _TRUE)
 		_value = true;
 }
-Bool::Bool(bool value) : Type(BOOL), _value(value) {}
+Bool::Bool(bool value) : Type(_BOOL), _value(value) {}
 
-Bool::Bool() : Type(BOOL), _value(false) {}
+Bool::Bool() : Type(_BOOL), _value(false) {}
 
 std::string Bool::toString() const
 {
-	return this->_value ? TRUE : FALSE;
+	return this->_value ? _TRUE : _FALSE;
 }
 
 Type* Bool::copy()
@@ -23,7 +23,7 @@ Type* Bool::copy()
 
 bool Bool::isType(const std::string& value)
 {
-	return value == TRUE || value == FALSE;
+	return value == _TRUE || value == _FALSE;
 }
 
 bool Bool::getValue()
@@ -33,7 +33,7 @@ bool Bool::getValue()
 
 Type* Bool::assign(Type* other)
 {
-	if (other->getType() == BOOL)
+	if (other->getType() == _BOOL)
 	{
 		this->_value = ((Bool*)other)->_value;
 		return this;
@@ -44,7 +44,7 @@ Type* Bool::assign(Type* other)
 
 Type* Bool::equal(Type* other)
 {
-	if (other->getType() == BOOL)
+	if (other->getType() == _BOOL)
 		return new Bool(this->_value == ((Bool*)other)->_value);
 	else
 		return Type::equal(other);
@@ -52,7 +52,7 @@ Type* Bool::equal(Type* other)
 
 Type* Bool::notEqual(Type* other)
 {
-	if (other->getType() == BOOL)
+	if (other->getType() == _BOOL)
 		return new Bool(this->_value != ((Bool*)other)->_value);
 	else
 		return Type::notEqual(other);
@@ -60,7 +60,7 @@ Type* Bool::notEqual(Type* other)
 
 Type* Bool::logicOr(Type* other)
 {
-	if (other->getType() == BOOL)
+	if (other->getType() == _BOOL)
 		return new Bool(this->_value || ((Bool*)other)->_value);
 	else
 		return Type::logicOr(other);
@@ -68,7 +68,7 @@ Type* Bool::logicOr(Type* other)
 
 Type* Bool::logicAnd(Type* other)
 {
-	if (other->getType() == BOOL)
+	if (other->getType() == _BOOL)
 		return new Bool(this->_value && ((Bool*)other)->_value);
 	else
 		return Type::logicAnd(other);

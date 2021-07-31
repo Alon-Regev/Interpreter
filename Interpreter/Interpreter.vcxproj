@@ -18,11 +18,81 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\PackageManagerServer\SocketFileIO.h" />
+    <ClInclude Include="Block.h" />
+    <ClInclude Include="Bool.h" />
+    <ClInclude Include="Class.h" />
+    <ClInclude Include="Foreach.h" />
+    <ClInclude Include="Function.h" />
+    <ClInclude Include="Helper.h" />
+    <ClInclude Include="If.h" />
+    <ClInclude Include="Int.h" />
+    <ClInclude Include="Interpreter.h" />
+    <ClInclude Include="InterpreterException.h" />
+    <ClInclude Include="InvalidOperationException.h" />
+    <ClInclude Include="List.h" />
+    <ClInclude Include="Name.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="PackageManager.h" />
+    <ClInclude Include="Pair.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="PredefinedFunctions.h" />
+    <ClInclude Include="Preprocessor.h" />
+    <ClInclude Include="PreprocessorException.h" />
+    <ClInclude Include="Reference.h" />
+    <ClInclude Include="Sequence.h" />
+    <ClInclude Include="Signal.h" />
+    <ClInclude Include="StaticFunction.h" />
+    <ClInclude Include="String.h" />
+    <ClInclude Include="SyntaxException.h" />
+    <ClInclude Include="TempSequence.h" />
+    <ClInclude Include="Tuple.h" />
+    <ClInclude Include="Type.h" />
+    <ClInclude Include="TypeErrorException.h" />
+    <ClInclude Include="Undefined.h" />
+    <ClInclude Include="VariableException.h" />
+    <ClInclude Include="Void.h" />
+    <ClInclude Include="While.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\PackageManagerServer\SocketFileIO.cpp" />
+    <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Bool.cpp" />
+    <ClCompile Include="Class.cpp" />
+    <ClCompile Include="Foreach.cpp" />
+    <ClCompile Include="Function.cpp" />
+    <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="If.cpp" />
+    <ClCompile Include="Int.cpp" />
+    <ClCompile Include="Interpreter.cpp" />
+    <ClCompile Include="List.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Name.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="PackageManager.cpp" />
+    <ClCompile Include="Pair.cpp" />
+    <ClCompile Include="PredefinedFunctions.cpp" />
+    <ClCompile Include="Preprocessor.cpp" />
+    <ClCompile Include="Reference.cpp" />
+    <ClCompile Include="Sequence.cpp" />
+    <ClCompile Include="Signal.cpp" />
+    <ClCompile Include="StaticFunction.cpp" />
+    <ClCompile Include="String.cpp" />
+    <ClCompile Include="TempSequence.cpp" />
+    <ClCompile Include="Tuple.cpp" />
+    <ClCompile Include="Type.cpp" />
+    <ClCompile Include="Undefined.cpp" />
+    <ClCompile Include="Void.cpp" />
+    <ClCompile Include="While.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0fcd3ebc-4b7d-4360-9e3a-787789e66730}</ProjectGuid>
-    <RootNamespace>Parser</RootNamespace>
+    <ProjectGuid>{5028e77f-5d3d-4f87-9d2d-abdbe5bfb72a}</ProjectGuid>
+    <RootNamespace>Interpreter</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -138,72 +208,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="Block.h" />
-    <ClInclude Include="Bool.h" />
-    <ClInclude Include="Class.h" />
-    <ClInclude Include="Foreach.h" />
-    <ClInclude Include="Function.h" />
-    <ClInclude Include="Helper.h" />
-    <ClInclude Include="If.h" />
-    <ClInclude Include="Int.h" />
-    <ClInclude Include="Interpreter.h" />
-    <ClInclude Include="InterpreterException.h" />
-    <ClInclude Include="InvalidOperationException.h" />
-    <ClInclude Include="List.h" />
-    <ClInclude Include="Name.h" />
-    <ClInclude Include="Node.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="Pair.h" />
-    <ClInclude Include="Parser.h" />
-    <ClInclude Include="PredefinedFunctions.h" />
-    <ClInclude Include="Preprocessor.h" />
-    <ClInclude Include="PreprocessorException.h" />
-    <ClInclude Include="Reference.h" />
-    <ClInclude Include="Sequence.h" />
-    <ClInclude Include="Signal.h" />
-    <ClInclude Include="StaticFunction.h" />
-    <ClInclude Include="String.h" />
-    <ClInclude Include="SyntaxException.h" />
-    <ClInclude Include="TempSequence.h" />
-    <ClInclude Include="Tuple.h" />
-    <ClInclude Include="Type.h" />
-    <ClInclude Include="TypeErrorException.h" />
-    <ClInclude Include="Undefined.h" />
-    <ClInclude Include="VariableException.h" />
-    <ClInclude Include="Void.h" />
-    <ClInclude Include="While.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Block.cpp" />
-    <ClCompile Include="Bool.cpp" />
-    <ClCompile Include="Class.cpp" />
-    <ClCompile Include="Foreach.cpp" />
-    <ClCompile Include="Function.cpp" />
-    <ClCompile Include="Helper.cpp" />
-    <ClCompile Include="If.cpp" />
-    <ClCompile Include="Int.cpp" />
-    <ClCompile Include="Interpreter.cpp" />
-    <ClCompile Include="List.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Name.cpp" />
-    <ClCompile Include="Node.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Pair.cpp" />
-    <ClCompile Include="PredefinedFunctions.cpp" />
-    <ClCompile Include="Preprocessor.cpp" />
-    <ClCompile Include="Reference.cpp" />
-    <ClCompile Include="Sequence.cpp" />
-    <ClCompile Include="Signal.cpp" />
-    <ClCompile Include="StaticFunction.cpp" />
-    <ClCompile Include="String.cpp" />
-    <ClCompile Include="TempSequence.cpp" />
-    <ClCompile Include="Tuple.cpp" />
-    <ClCompile Include="Type.cpp" />
-    <ClCompile Include="Undefined.cpp" />
-    <ClCompile Include="Void.cpp" />
-    <ClCompile Include="While.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
