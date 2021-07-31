@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\PackageManagerServer\SocketFileIO.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Bool.h" />
     <ClInclude Include="Class.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="Name.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="PackageManager.h" />
     <ClInclude Include="Pair.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="PredefinedFunctions.h" />
@@ -55,6 +57,7 @@
     <ClInclude Include="While.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\PackageManagerServer\SocketFileIO.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Bool.cpp" />
     <ClCompile Include="Class.cpp" />
@@ -69,6 +72,7 @@
     <ClCompile Include="Name.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="PackageManager.cpp" />
     <ClCompile Include="Pair.cpp" />
     <ClCompile Include="PredefinedFunctions.cpp" />
     <ClCompile Include="Preprocessor.cpp" />

@@ -138,6 +138,12 @@
     <ClInclude Include="VariableException.h">
       <Filter>Header Files\Exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="PackageManager.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PackageManagerServer\SocketFileIO.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -222,6 +228,12 @@
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="PredefinedFunctions.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="PackageManager.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PackageManagerServer\SocketFileIO.cpp">
       <Filter>Source Files\Other</Filter>
     </ClCompile>
   </ItemGroup>
