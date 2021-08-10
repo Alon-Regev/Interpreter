@@ -39,6 +39,21 @@ Type* String::add(Type* other)
         return new String(this->toString() + other->toString());
 }
 
+Type* String::toInt()
+{
+    return new Int(this->toString());
+}
+
+Type* String::toBool()
+{
+    return new Bool(this->toString());
+}
+
+Type* String::toFloat()
+{
+    return new Float(this->toString());
+}
+
 Type* String::toType(char value)
 {
     return new String(std::string(1, value));

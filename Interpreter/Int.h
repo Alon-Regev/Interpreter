@@ -31,6 +31,10 @@ public:
 	virtual Type* less(Type* other);
 	virtual Type* greaterEqual(Type* other);
 	virtual Type* lessEqual(Type* other);
+
+	// casting
+	virtual Type* toBool();
+	virtual Type* toFloat();
 private:
 	int _value;
 };

@@ -1,7 +1,11 @@
 #include "Float.h"
 
-Float::Float(const std::string& value) : Type(FLOAT), _value(std::stod(value))
+Float::Float(const std::string& value) : Type(FLOAT)
 {
+	if (Float::isType(value))
+		this->_value = std::stod(value);
+	else
+		throw InvalidOperationException("casting value of \"" + value + "\" to float");
 }
 
 Float::Float(const double value) : Type(FLOAT), _value(value)
@@ -153,4 +157,14 @@ Type* Float::lessEqual(Type* other)
 		return new Bool(this->_value <= ((Int*)other)->getValue());
 	else
 		return Type::lessEqual(other);
+}
+
+Type* Float::toInt()
+{
+	return new Int((int)this->_value);
+}
+
+Type* Float::toBool()
+{
+	return new Bool((bool)this->_value);
 }
