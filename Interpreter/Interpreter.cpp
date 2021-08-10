@@ -85,6 +85,8 @@ Type* Interpreter::valueOf(const std::string& str)
 		return new Undefined();
 	else if (Int::isType(str))
 		return new Int(str);
+	else if (Float::isType(str))
+		return new Float(str);
 	else if (Bool::isType(str))
 		return new Bool(str);
 	else if (String::isType(str))
@@ -97,6 +99,13 @@ Type* Interpreter::valueOf(const std::string& str)
 Type* Interpreter::evaluateBlock(Node* node)
 {
 	return new Block(*this, node);
+}
+
+std::string Interpreter::getValue(const std::string& expression)
+{
+	std::regex r(R"(^((?=[\d\.]*?\d)\d*\.?\d*(e-?\d+)?|[a-zA-Z_](\w*( \w)?)*|".*?[^\\]"))");	// int, float, name or string
+	std::smatch match;
+	return std::regex_search(expression, match, r) ? match.str() : "";
 }
 
 Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
@@ -229,6 +238,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		return Interpreter::addVariable(str.substr(4), new Undefined(), true);
 	else if (str.rfind(INT " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(INT " ")), new Int(), true);
+	else if (str.rfind(FLOAT " ", 0) == 0)
+		staticType = Interpreter::addVariable(str.substr(strlen(FLOAT " ")), new Float(), true);
 	else if (str.rfind(FUNCTION " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(FUNCTION " ")), new Function(*this), true);
 	else if (str.rfind(_BOOL " ", 0) == 0)

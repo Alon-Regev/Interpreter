@@ -38,6 +38,7 @@ public:
 protected:
     virtual EvaluationType valueOf(const std::string& leaf) = 0;
     virtual EvaluationType evaluateBlock(Node* node) = 0;
+    virtual std::string getValue(const std::string& expression) = 0;
     virtual EvaluationType handleParentheses(EvaluationType value, char parenthesesType) { return value; }
     virtual void handleTempTypes(EvaluationType, EvaluationType, EvaluationType) {}
 private:
@@ -142,63 +143,47 @@ std::vector<Node*> Parser<EvaluationType>::tokenize(const std::string& expressio
     // put expression on expr
     std::vector<Node*> expr;
     std::string::const_iterator it;
-    std::string value = "", op = "";
+    std::string op = "";
     bool expectingOperator = false;
     // copy string chars as nodes
     for (it = expression.begin(); it != expression.end(); it++)
     {
-        // check if char is start of an operator
-        op = this->findOperator(std::string(it, expression.end()));
-        if (this->isOpenParentheses(*it))
+        if (*it == ' ' || *it == '\n' || *it == '\t')    // white space
+            continue;
+        // check if char is value
+        std::string value = this->getValue(std::string(it, expression.end()));
+        if (value != "")
+        {
+            expr.push_back(new Node(value));
+            it += value.size() - 1;
+            expectingOperator = true;
+        }
+        else if (this->isOpenParentheses(*it))
         {
             if (expectingOperator)   // parentheses operator
-            {
-                Helper::trim(value);
-                expr.push_back(new Node(value));
-                value = "";
-                expr.push_back(new Node(this->getParentheses(*it))); // parentheses operator
-                expr.push_back(new Node(std::string(1, *it)));
-                expectingOperator = false;
-            }
-            else    // regular parentheses
-            {
-                Helper::trim(value);
-                if (value != "")
-                    expr.push_back(new Node(value));
-                value = "";
-                expr.push_back(new Node(std::string(1, *it)));
-                expectingOperator = false;
-            }
+                expr.push_back(new Node(this->getParentheses(*it)));
+            expr.push_back(new Node(std::string(1, *it)));
+            expectingOperator = false;
         }
         else if (this->isCloseParentheses(*it))
         {
-            Helper::trim(value);
-            expr.push_back(new Node(value));
-            value = "";
             expr.push_back(new Node(std::string(1, *it)));
             expectingOperator = true;
         }
-        else if (op == "")   // not an operator, part of value
-        {
-            value += *it;
-            if(value != " ")
-                expectingOperator = true;
-        }
         else
-        {   // is an operator, push value and operator
-            Helper::trim(value);
-            if (value != "")   // not empty
-                expr.push_back(new Node(value));
-            // push operator
-            expr.push_back(new Node(op));
-            it += op.length() - 1;  // skip over operator
-            value = "";
-            expectingOperator = false;
+        {
+            // check if char is start of an operator
+            op = this->findOperator(std::string(it, expression.end()));
+            if (op != "")   // not an operator, and not value
+            {
+                expr.push_back(new Node(op));
+                it += op.size() - 1;
+                expectingOperator = false;
+            }
+            else
+                throw SyntaxException(std::string("Unknown value ") + *it + " at index " + std::to_string(it - expression.begin()));
         }
     }
-    Helper::trim(value);
-    if (value != "") // add last value
-        expr.push_back(new Node(value));
     // remove empties
     for (int i = 0; i < expr.size(); i++)
     {

@@ -12,6 +12,7 @@
 #include "Void.h"
 #include "Undefined.h"
 #include "Int.h"
+#include "Float.h"
 #include "Bool.h"
 #include "If.h"
 #include "List.h"
@@ -49,6 +50,7 @@ public:
 protected:
 	virtual Type* valueOf(const std::string& str);
 	virtual Type* evaluateBlock(Node* node);
+	virtual std::string getValue(const std::string& expression);
 	virtual Type* handleParentheses(Type* value, char parenthesesType);
 	virtual void handleTempTypes(Type* a, Type* b, Type* res);
 private:
