@@ -1,22 +1,20 @@
 #pragma once
 #include "Type.h"
-#include <regex>
-#include "Bool.h"
-#include "Float.h"
+#include "Int.h"
+#include <sstream>
 
-#define INT "int"
-#define INT_DEFAULT_VALUE 0
+#define FLOAT "float"
 
-class Int : public Type
+class Float : public Type
 {
 public:
-	Int(const std::string& value);
-	Int(const int value);
-	Int();
+	Float(const std::string& value);
+	Float(const double value);
+	Float();
 	virtual std::string toString() const;
 	virtual Type* copy();
 	static bool isType(const std::string& value);
-	int getValue();
+	double getValue();
 	// operators
 	virtual Type* add(Type* other);
 	virtual Type* sub(Type* other);
@@ -32,6 +30,6 @@ public:
 	virtual Type* greaterEqual(Type* other);
 	virtual Type* lessEqual(Type* other);
 private:
-	int _value;
+	double _value;
 };
 

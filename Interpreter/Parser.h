@@ -148,6 +148,8 @@ std::vector<Node*> Parser<EvaluationType>::tokenize(const std::string& expressio
     // copy string chars as nodes
     for (it = expression.begin(); it != expression.end(); it++)
     {
+        if (*it == ' ' || *it == '\n' || *it == '\t')    // white space
+            continue;
         // check if char is value
         std::string value = this->getValue(std::string(it, expression.end()));
         if (value != "")

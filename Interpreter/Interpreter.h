@@ -12,6 +12,7 @@
 #include "Void.h"
 #include "Undefined.h"
 #include "Int.h"
+#include "Float.h"
 #include "Bool.h"
 #include "If.h"
 #include "List.h"
