@@ -40,6 +40,11 @@ public:
 	virtual Type* lessEqual(Type* other);
 	virtual Type* logicOr (Type* other);
 	virtual Type* logicAnd(Type* other);
+
+	// casting
+	virtual Type* toInt();
+	virtual Type* toBool();
+	virtual Type* toFloat();
 protected:
 	std::string _type;
 	bool _staticType;

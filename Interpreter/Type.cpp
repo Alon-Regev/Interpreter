@@ -131,6 +131,21 @@ Type* Type::logicAnd (Type* other)
     throw InvalidOperationException("&& between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
+Type* Type::toInt()
+{
+    throw InvalidOperationException("casting " + this->_type + " to int");
+}
+
+Type* Type::toBool()
+{
+    throw InvalidOperationException("casting " + this->_type + " to bool");
+}
+
+Type* Type::toFloat()
+{
+    throw InvalidOperationException("casting " + this->_type + " to float");
+}
+
 bool Type::typeCompare(Type* other)
 {
     return this->_type == other->_type;

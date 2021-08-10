@@ -2,7 +2,10 @@
 
 Int::Int(const std::string& value) : Type(INT)
 {
-	this->_value = std::stoi(value);
+	if (Int::isType(value))
+		this->_value = std::stoi(value);
+	else
+		throw InvalidOperationException("casting value of \"" + value + "\" to int");
 }
 Int::Int(const int value) : Type(INT), _value(value) {}
 Int::Int() : Type(INT), _value(INT_DEFAULT_VALUE) {}
@@ -136,6 +139,16 @@ Type* Int::lessEqual(Type* other)
 		return new Bool(this->_value <= ((Float*)other)->getValue());
 	else
 		Type::lessEqual(other);
+}
+
+Type* Int::toBool()
+{
+	return new Bool((bool)this->_value);
+}
+
+Type* Int::toFloat()
+{
+	return new Float((double)this->_value);
 }
 
 Type* Int::div(Type* other)

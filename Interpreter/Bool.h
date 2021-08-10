@@ -1,5 +1,7 @@
 #pragma once
 #include "Type.h"
+#include "Int.h"
+#include "Float.h"
 
 #define _BOOL "bool"	// _BOOL for solving conflict with WinAPI
 #define _FALSE "false"
@@ -21,6 +23,10 @@ public:
 	virtual Type* notEqual(Type* other);
 	virtual Type* logicOr(Type* other);
 	virtual Type* logicAnd(Type* other);
+
+	// casting
+	virtual Type* toInt();
+	virtual Type* toFloat();
 private:
 	bool _value;
 };

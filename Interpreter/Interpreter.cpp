@@ -5,7 +5,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"-", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? b->negative() : a->sub(b); }, 12, BINARY_INFIX, true} },
 	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 13} },
 	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 13} },
-	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 14, false, true} },
+	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 15, false, true} },
 
 	{"->", Operator{[](Type* a, Type* b) { return b->extend(a); }, 6} },
 	{"<-", Operator{[](Type* a, Type* b) { return a->extend(b); }, 6} },
@@ -20,8 +20,8 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3} },
 
 
-	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 14, BINARY_INFIX, false, true} },
-	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 13, BINARY_INFIX, false, true} },
+	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 16, BINARY_INFIX, false, true} },
+	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 15, BINARY_INFIX, false, true} },
 	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX}},
 	{"foreach", Operator{[](Type* a, Type* b) { return (Type*)new Foreach(b); }, 4, UNARY_PREFIX}},
 
@@ -36,6 +36,12 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"&&", Operator{[](Type* a, Type* b) { return a->logicAnd(b); }, 9} },
 
 	{";", Operator{[](Type* a, Type* b) { return (Type*)new Undefined(); }, 1, BINARY_INFIX, true} },
+
+	// casting
+	{STRING, Operator{[](Type* a, Type* b) { return (Type*)new String(b->toString()); }, 14, UNARY_PREFIX}},
+	{FLOAT, Operator{[](Type* a, Type* b) { return b->toFloat(); } , 14, UNARY_PREFIX }},
+	{INT, Operator{[](Type* a, Type* b) { return b->toInt(); }, 14, UNARY_PREFIX}},
+	{_BOOL, Operator{[](Type* a, Type* b) { return b->toBool(); }, 14, UNARY_PREFIX}},
 };
 std::map<std::string, Type*> Interpreter::_variables;
 std::vector<std::vector<ScopeVariable>> Interpreter::_variableScope = std::vector<std::vector<ScopeVariable>>({ std::vector<ScopeVariable>() });
@@ -75,9 +81,6 @@ Type* Interpreter::valueOf(const std::string& str)
 	// is a variable
 	if (this->_variables.find(str) != this->_variables.end())	// old variable
 		return Interpreter::_variables[str];
-	Type* newVar = this->checkNewVariable(str);
-	if (newVar)
-		return newVar;
 	// is a type
 	else if (Void::isType(str))
 		return new Void();
@@ -91,6 +94,11 @@ Type* Interpreter::valueOf(const std::string& str)
 		return new Bool(str);
 	else if (String::isType(str))
 		return new String(str.substr(1, str.size() - 2));
+	
+	// check new variable
+	Type* newVar = this->checkNewVariable(str);
+	if (newVar)
+		return newVar;
 	// invalid expression
 	else
 		throw TypeErrorException("Value \"" + str + "\" cannot be parsed");

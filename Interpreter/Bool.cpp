@@ -6,6 +6,8 @@ Bool::Bool(const std::string& value) : Type(_BOOL)
 		_value = false;
 	else if (value == _TRUE)
 		_value = true;
+	else
+		throw InvalidOperationException("casting value of \"" + value + "\" to bool");
 }
 Bool::Bool(bool value) : Type(_BOOL), _value(value) {}
 
@@ -72,4 +74,14 @@ Type* Bool::logicAnd(Type* other)
 		return new Bool(this->_value && ((Bool*)other)->_value);
 	else
 		return Type::logicAnd(other);
+}
+
+Type* Bool::toInt()
+{
+	return new Int((int)this->_value);
+}
+
+Type* Bool::toFloat()
+{
+	return new Float((double)this->_value);
 }
