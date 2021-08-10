@@ -41,6 +41,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{STRING, Operator{[](Type* a, Type* b) { return (Type*)new String(b->toString()); }, 14, UNARY_PREFIX}},
 	{FLOAT, Operator{[](Type* a, Type* b) { return b->toFloat(); } , 14, UNARY_PREFIX }},
 	{INT, Operator{[](Type* a, Type* b) { return b->toInt(); }, 14, UNARY_PREFIX}},
+	{CHAR, Operator{[](Type* a, Type* b) { return b->toChar(); }, 14, UNARY_PREFIX}},
 	{_BOOL, Operator{[](Type* a, Type* b) { return b->toBool(); }, 14, UNARY_PREFIX}},
 };
 std::map<std::string, Type*> Interpreter::_variables;
@@ -94,6 +95,8 @@ Type* Interpreter::valueOf(const std::string& str)
 		return new Bool(str);
 	else if (String::isType(str))
 		return new String(str.substr(1, str.size() - 2));
+	else if (Char::isType(str))
+		return new Char(str[1]);
 	
 	// check new variable
 	Type* newVar = this->checkNewVariable(str);
@@ -111,7 +114,7 @@ Type* Interpreter::evaluateBlock(Node* node)
 
 std::string Interpreter::getValue(const std::string& expression)
 {
-	std::regex r(R"(^((?=[\d\.]*?\d)\d*\.?\d*(e-?\d+)?|[a-zA-Z_](\w*( \w)?)*|".*?[^\\]"))");	// int, float, name or string
+	std::regex r(R"(^((?=[\d\.]*?\d)\d*\.?\d*(e-?\d+)?|[a-zA-Z_](\w*( \w)?)*|".*?[^\\]"|'.'))");	// int, float, name, string or char
 	std::smatch match;
 	return std::regex_search(expression, match, r) ? match.str() : "";
 }
@@ -256,6 +259,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 		staticType = Interpreter::addVariable(str.substr(strlen(LIST " ")), new List());
 	else if (str.rfind(STRING " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(STRING " ")), new String());
+	else if (str.rfind(CHAR " ", 0) == 0)
+		staticType = Interpreter::addVariable(str.substr(strlen(CHAR " ")), new Char());
 	else if (str.rfind(REFERENCE " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(REFERENCE " ")), new Reference());
 	else if (str.rfind(CLASS " ", 0) == 0)

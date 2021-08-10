@@ -151,6 +151,11 @@ Type* Int::toFloat()
 	return new Float((double)this->_value);
 }
 
+Type* Int::toChar()
+{
+	return new Char(this->_value);
+}
+
 Type* Int::div(Type* other)
 {
 	if (other->getType() == INT)

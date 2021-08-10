@@ -146,6 +146,11 @@ Type* Type::toFloat()
     throw InvalidOperationException("casting " + this->_type + " to float");
 }
 
+Type* Type::toChar()
+{
+    throw InvalidOperationException("casting " + this->_type + " to char");
+}
+
 bool Type::typeCompare(Type* other)
 {
     return this->_type == other->_type;

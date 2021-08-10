@@ -22,6 +22,7 @@
     <ClInclude Include="..\PackageManagerServer\SocketFileIO.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Bool.h" />
+    <ClInclude Include="Char.h" />
     <ClInclude Include="Class.h" />
     <ClInclude Include="Float.h" />
     <ClInclude Include="Foreach.h" />
@@ -61,6 +62,7 @@
     <ClCompile Include="..\PackageManagerServer\SocketFileIO.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Bool.cpp" />
+    <ClCompile Include="Char.cpp" />
     <ClCompile Include="Class.cpp" />
     <ClCompile Include="Float.cpp" />
     <ClCompile Include="Foreach.cpp" />
