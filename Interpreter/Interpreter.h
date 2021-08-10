@@ -17,6 +17,7 @@
 #include "If.h"
 #include "List.h"
 #include "TempSequence.h"
+#include "Char.h"
 #include "String.h"
 #include "While.h"
 #include "Foreach.h"

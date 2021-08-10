@@ -1,29 +1,21 @@
 #pragma once
 #include "Type.h"
-#include <regex>
-#include "Bool.h"
-#include "Float.h"
-#include "Char.h"
+#include "Int.h"
 
-#define INT "int"
-#define INT_DEFAULT_VALUE 0
+#define CHAR "char"
 
-class Int : public Type
+class Char : public Type
 {
 public:
-	Int(const std::string& value);
-	Int(const int value);
-	Int();
+	Char(const char value);
+	Char();
 	virtual std::string toString() const;
 	virtual Type* copy();
 	static bool isType(const std::string& value);
-	int getValue();
+	char getValue();
 	// operators
 	virtual Type* add(Type* other);
 	virtual Type* sub(Type* other);
-	virtual Type* div(Type* other);
-	virtual Type* mul(Type* other);
-	virtual Type* negative();
 	virtual Type* assign(Type* other);
 
 	virtual Type* equal(Type* other);
@@ -34,10 +26,8 @@ public:
 	virtual Type* lessEqual(Type* other);
 
 	// casting
-	virtual Type* toBool();
-	virtual Type* toFloat();
-	virtual Type* toChar();
+	virtual Type* toInt();
 private:
-	int _value;
+	char _value;
 };
 

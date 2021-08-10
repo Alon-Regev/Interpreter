@@ -9,6 +9,7 @@
 
 #define LIST "list"
 
+class Bool;
 template <class T>
 class Sequence : public Type
 {

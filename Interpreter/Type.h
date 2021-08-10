@@ -45,6 +45,7 @@ public:
 	virtual Type* toInt();
 	virtual Type* toBool();
 	virtual Type* toFloat();
+	virtual Type* toChar();
 protected:
 	std::string _type;
 	bool _staticType;
