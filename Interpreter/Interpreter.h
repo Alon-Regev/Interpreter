@@ -49,6 +49,7 @@ public:
 protected:
 	virtual Type* valueOf(const std::string& str);
 	virtual Type* evaluateBlock(Node* node);
+	virtual std::string getValue(const std::string& expression);
 	virtual Type* handleParentheses(Type* value, char parenthesesType);
 	virtual void handleTempTypes(Type* a, Type* b, Type* res);
 private:

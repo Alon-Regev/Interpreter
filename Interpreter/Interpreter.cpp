@@ -99,6 +99,13 @@ Type* Interpreter::evaluateBlock(Node* node)
 	return new Block(*this, node);
 }
 
+std::string Interpreter::getValue(const std::string& expression)
+{
+	std::regex r(R"(^((?=[\d\.]*?\d)\d*\.?\d*|[a-zA-Z_]\w*|".*?[^\\]"))");	// int, float, name or string
+	std::smatch match;
+	return std::regex_search(expression, match, r) ? match.str() : "";
+}
+
 Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
 {
 	if (value->getType() == TEMP_SEQUENCE)
