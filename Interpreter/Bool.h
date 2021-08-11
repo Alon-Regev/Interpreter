@@ -2,6 +2,7 @@
 #include "Type.h"
 #include "Int.h"
 #include "Float.h"
+#include "Pair.h"
 
 #define _BOOL "bool"	// _BOOL for solving conflict with WinAPI
 #define _FALSE "false"
@@ -23,7 +24,9 @@ public:
 	virtual Type* notEqual(Type* other);
 	virtual Type* logicOr(Type* other);
 	virtual Type* logicAnd(Type* other);
+	virtual Type* logicNot();
 
+	virtual Type* ternary(Type* other);
 	// casting
 	virtual Type* toInt();
 	virtual Type* toFloat();

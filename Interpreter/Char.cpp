@@ -49,6 +49,41 @@ Type* Char::sub(Type* other)
         return Type::sub(other);
 }
 
+Type* Char::bitXor(Type* other)
+{
+    if (other->getType() == INT)
+        return new Char(this->_value ^ ((Int*)other)->getValue());
+    else if (other->getType() == CHAR)
+        return new Int(this->_value ^ ((Char*)other)->getValue());
+    else
+        return Type::bitXor(other);
+}
+
+Type* Char::bitAnd(Type* other)
+{
+    if (other->getType() == INT)
+        return new Char(this->_value & ((Int*)other)->getValue());
+    else if (other->getType() == CHAR)
+        return new Int(this->_value & ((Char*)other)->getValue());
+    else
+        return Type::bitAnd(other);
+}
+
+Type* Char::bitOr(Type* other)
+{
+    if (other->getType() == INT)
+        return new Char(this->_value | ((Int*)other)->getValue());
+    else if (other->getType() == CHAR)
+        return new Int(this->_value | ((Char*)other)->getValue());
+    else
+        return Type::bitOr(other);
+}
+
+Type* Char::bitNot()
+{
+    return new Int(~this->_value);
+}
+
 Type* Char::assign(Type* other)
 {
     if (other->getType() == INT)
@@ -63,6 +98,61 @@ Type* Char::assign(Type* other)
     }
     else
         Type::assign(other);
+}
+
+Type* Char::addAssign(Type* other)
+{
+    if (other->getType() == INT)
+    {
+        this->_value += ((Int*)other)->getValue();
+        return this;
+    }
+    else
+        Type::addAssign(other);
+}
+
+Type* Char::subAssign(Type* other)
+{
+    if (other->getType() == INT)
+    {
+        this->_value -= ((Int*)other)->getValue();
+        return this;
+    }
+    else
+        Type::subAssign(other);
+}
+
+Type* Char::xorAssign(Type* other)
+{
+    if (other->getType() == INT)
+    {
+        this->_value ^= ((Int*)other)->getValue();
+        return this;
+    }
+    else
+        Type::xorAssign(other);
+}
+
+Type* Char::andAssign(Type* other)
+{
+    if (other->getType() == INT)
+    {
+        this->_value &= ((Int*)other)->getValue();
+        return this;
+    }
+    else
+        Type::andAssign(other);
+}
+
+Type* Char::orAssign(Type* other)
+{
+    if (other->getType() == INT)
+    {
+        this->_value |= ((Int*)other)->getValue();
+        return this;
+    }
+    else
+        Type::orAssign(other);
 }
 
 Type* Char::equal(Type* other)

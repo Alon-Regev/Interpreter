@@ -16,5 +16,5 @@ Type* Undefined::copy()
 
 bool Undefined::isType(const std::string& value)
 {
-	return value == UNDEFINED;
+	return value == UNDEFINED || value == "_";
 }

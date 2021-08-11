@@ -20,8 +20,16 @@ public:
 	virtual Type* sub(Type* other);
 	virtual Type* div(Type* other);
 	virtual Type* mul(Type* other);
+	virtual Type* exp(Type* other);
 	virtual Type* negative();
+
 	virtual Type* assign(Type* other);
+
+	virtual Type* addAssign(Type* other);
+	virtual Type* subAssign(Type* other);
+	virtual Type* divAssign(Type* other);
+	virtual Type* mulAssign(Type* other);
+	virtual Type* expAssign(Type* other);
 
 	virtual Type* equal(Type* other);
 	virtual Type* notEqual(Type* other);

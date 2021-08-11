@@ -1,4 +1,5 @@
 #include "Float.h"
+#include "Float.h"
 
 Float::Float(const std::string& value) : Type(FLOAT)
 {
@@ -78,6 +79,16 @@ Type* Float::mul(Type* other)
 		return Type::mul(other);
 }
 
+Type* Float::exp(Type* other)
+{
+	if (other->getType() == FLOAT)
+		return new Float(pow(this->_value, ((Float*)other)->getValue()));
+	else if (other->getType() == INT)
+		return new Float(pow(this->_value, ((Int*)other)->getValue()));
+	else
+		return Type::exp(other);
+}
+
 Type* Float::negative()
 {
 	return new Float(-this->_value);
@@ -97,6 +108,86 @@ Type* Float::assign(Type* other)
 	}
 	else
 		Type::assign(other);
+}
+
+Type* Float::addAssign(Type* other)
+{
+	if (other->getType() == FLOAT)
+	{
+		this->_value += ((Float*)other)->getValue();
+		return this;
+	}
+	else if (other->getType() == INT)
+	{
+		this->_value += ((Int*)other)->getValue();
+		return this;
+	}
+	else
+		Type::addAssign(other);
+}
+
+Type* Float::subAssign(Type* other)
+{
+	if (other->getType() == FLOAT)
+	{
+		this->_value -= ((Float*)other)->getValue();
+		return this;
+	}
+	else if (other->getType() == INT)
+	{
+		this->_value -= ((Int*)other)->getValue();
+		return this;
+	}
+	else
+		Type::subAssign(other);
+}
+
+Type* Float::divAssign(Type* other)
+{
+	if (other->getType() == FLOAT)
+	{
+		this->_value /= ((Float*)other)->getValue();
+		return this;
+	}
+	else if (other->getType() == INT)
+	{
+		this->_value /= ((Int*)other)->getValue();
+		return this;
+	}
+	else
+		Type::divAssign(other);
+}
+
+Type* Float::mulAssign(Type* other)
+{
+	if (other->getType() == FLOAT)
+	{
+		this->_value *= ((Float*)other)->getValue();
+		return this;
+	}
+	else if (other->getType() == INT)
+	{
+		this->_value *= ((Int*)other)->getValue();
+		return this;
+	}
+	else
+		Type::mulAssign(other);
+}
+
+Type* Float::expAssign(Type* other)
+{
+	if (other->getType() == FLOAT)
+	{
+		this->_value = pow(this->_value, ((Float*)other)->getValue());
+		return this;
+	}
+	else if (other->getType() == INT)
+	{
+		this->_value = pow(this->_value, ((Int*)other)->getValue());
+		return this;
+	}
+	else
+		Type::expAssign(other);
 }
 
 Type* Float::equal(Type* other)

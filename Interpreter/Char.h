@@ -16,7 +16,18 @@ public:
 	// operators
 	virtual Type* add(Type* other);
 	virtual Type* sub(Type* other);
+	virtual Type* bitXor(Type* other);
+	virtual Type* bitAnd(Type* other);
+	virtual Type* bitOr(Type* other);
+	virtual Type* bitNot();
+
 	virtual Type* assign(Type* other);
+
+	virtual Type* addAssign(Type* other);
+	virtual Type* subAssign(Type* other);
+	virtual Type* xorAssign(Type* other);
+	virtual Type* andAssign(Type* other);
+	virtual Type* orAssign(Type* other);
 
 	virtual Type* equal(Type* other);
 	virtual Type* notEqual(Type* other);

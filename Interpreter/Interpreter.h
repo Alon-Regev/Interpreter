@@ -48,6 +48,7 @@ public:
 	static void openScope();
 	static void closeScope();
 	static Type* addVariable(std::string variableName, Type* variable, bool isNew = false, bool setScope = false);
+	static void checkAssign(Type* type);
 protected:
 	virtual Type* valueOf(const std::string& str);
 	virtual Type* evaluateBlock(Node* node);

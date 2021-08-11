@@ -99,9 +99,6 @@
     <ClInclude Include="Reference.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Sequence.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
     <ClInclude Include="Signal.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
@@ -148,7 +145,7 @@
       <Filter>Header Files\Types</Filter>
     </ClInclude>
     <ClInclude Include="Char.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -200,9 +197,6 @@
     <ClCompile Include="Reference.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
-    <ClCompile Include="Sequence.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
     <ClCompile Include="Signal.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
@@ -246,7 +240,7 @@
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="Char.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Types</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
