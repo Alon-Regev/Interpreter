@@ -4,6 +4,7 @@
 #include "Bool.h"
 #include "SyntaxException.h"
 #include "Reference.h"
+#include "Undefined.h"
 
 #define LIST "list"
 

@@ -25,7 +25,7 @@ struct Operator
 	int order;
 	char type = BINARY_INFIX;
     bool allowNulls = false;    // true if func checks for nulls
-    bool ltr = false;   // is evaluated Left To Right or Right To Left
+    bool ltr = true;   // is evaluated Left To Right or Right To Left
 };
 
 template<class EvaluationType>

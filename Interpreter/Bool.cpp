@@ -81,6 +81,14 @@ Type* Bool::logicNot()
 	return new Bool(!this->_value);
 }
 
+Type* Bool::ternary(Type* other)
+{
+	if (other->getType() == PAIR)
+		return this->_value ? ((Pair*)other)->_first->tryReference() : ((Pair*)other)->_second->tryReference();
+	else
+		return Type::ternary(other);
+}
+
 Type* Bool::toInt()
 {
 	return new Int((int)this->_value);

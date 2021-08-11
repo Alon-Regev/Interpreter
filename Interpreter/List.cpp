@@ -111,24 +111,47 @@ Type* List::assign(Type* other)
 
 Type* List::index(Type* other)
 {
-	int index;
-	if (other->getType() == INT)
-		index = ((Int*)other)->getValue();
-	else if (other->getType() == LIST)
+	if (other->getType() != LIST)
+		return Type::index(other);
+	// check if list is only integers
+	for (Type* type : ((List*)other)->getContent())
 	{
-		// regular index [n]
-		if (((List*)other)->_content.size() == 1 && ((List*)other)->_content[0]->getType() == INT)
-			index = ((Int*)((List*)other)->_content[0])->getValue();
-		else
+		if (type->getType() != INT && type->getType() != UNDEFINED)
 			throw SyntaxException("Invalid index syntax");
 	}
+	if (((List*)other)->getContent().size() > 3)
+		throw SyntaxException("Invalid index syntax");
+
+	const std::vector<Type*>& indexList = ((List*)other)->getContent();
+	if (indexList.size() == 1)
+	{
+		// regular index
+		int index = ((Int*)indexList[0])->getValue();
+		if (index < 0)
+			index += this->_content.size();
+		if (0 <= index && index < this->_content.size())
+			return this->isVariable() ? new Reference(this->_content[index]) : this->_content[index]->copy();
+		else
+			throw InvalidOperationException("String index out of range");
+	}
 	else
-		return Type::index(other);
-	if (0 <= index && index < this->_content.size())
-		// return reference if this isn't temporary
-		return this->isVariable() ? new Reference(this->_content[index]) : this->_content[index]->copy();
-	else
-		throw InvalidOperationException("Index out of range");
+	{
+		int step = indexList.size() == 3 && indexList[2]->getType() != UNDEFINED ? ((Int*)indexList[2])->getValue() : 1;
+		// substring
+		int start = indexList[0]->getType() == UNDEFINED ? (step > 0 ? 0 : this->_content.size() - 1) : ((Int*)indexList[0])->getValue();
+		int end = indexList[1]->getType() == UNDEFINED ? (step > 0 ? this->_content.size() : -1 - this->_content.size()) : ((Int*)indexList[1])->getValue();
+		if (start < 0)
+			start += this->_content.size();
+		if (end < 0)
+			end += this->_content.size();
+
+		if (step == 0)
+			throw SyntaxException("Substring step can't be zero");
+		std::vector<Type*> sublist;
+		for (int index = start; (step > 0 ? index < end : index > end) && 0 <= index && index < this->_content.size(); index += step)
+			sublist.push_back(this->_content[index]->copy());
+		return new List(sublist);
+	}
 }
 
 Type* List::addAssign(Type* other)

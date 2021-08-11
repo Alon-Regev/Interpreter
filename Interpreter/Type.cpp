@@ -74,6 +74,11 @@ Type* Type::decrement(bool post)
     throw InvalidOperationException("-- to type \"" + this->_type + "\"");
 }
 
+Type* Type::ternary(Type* other)
+{
+    throw InvalidOperationException("? between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
 Type* Type::xorAssign(Type* other)
 {
     throw InvalidOperationException("^= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
@@ -264,6 +269,11 @@ Type* Type::toFloat()
 Type* Type::toChar()
 {
     throw InvalidOperationException("casting " + this->_type + " to char");
+}
+
+Type* Type::tryReference()
+{
+    return this->isVariable() ? new Reference(this) : this->copy();
 }
 
 bool Type::typeCompare(Type* other)

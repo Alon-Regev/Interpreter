@@ -30,6 +30,8 @@ public:
 	virtual Type* increment(bool post);
 	virtual Type* decrement(bool post);
 
+	virtual Type* ternary(Type* other);
+
 	virtual Type* bitXor (Type* other);
 	virtual Type* bitAnd (Type* other);
 	virtual Type* bitOr (Type * other);
@@ -76,6 +78,8 @@ public:
 	virtual Type* toBool();
 	virtual Type* toFloat();
 	virtual Type* toChar();
+
+	Type* tryReference();
 protected:
 	std::string _type;
 	bool _staticType;

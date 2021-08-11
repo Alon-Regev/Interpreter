@@ -4,6 +4,7 @@
 #include "Char.h"
 #include "Float.h"
 #include "Bool.h"
+#include "Undefined.h"
 
 #define STRING "string"
 
