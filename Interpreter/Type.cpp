@@ -54,11 +54,121 @@ Type* Type::mul(Type* other)
     throw InvalidOperationException("* between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
+Type* Type::mod(Type* other)
+{
+    throw InvalidOperationException("% between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::exp(Type* other)
+{
+    throw InvalidOperationException("** between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::increment(bool post)
+{
+    throw InvalidOperationException("++ to type \"" + this->_type + "\"");
+}
+
+Type* Type::decrement(bool post)
+{
+    throw InvalidOperationException("-- to type \"" + this->_type + "\"");
+}
+
+Type* Type::xorAssign(Type* other)
+{
+    throw InvalidOperationException("^= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::andAssign(Type* other)
+{
+    throw InvalidOperationException("&= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::orAssign(Type* other)
+{
+    throw InvalidOperationException("|= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::leftShiftAssign(Type* other)
+{
+    throw InvalidOperationException("<<= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::rightShiftAssign(Type* other)
+{
+    throw InvalidOperationException(">>= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::extendAssign(Type* other)
+{
+    throw InvalidOperationException("<-= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::bitXor(Type* other)
+{
+    throw InvalidOperationException("^ between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::bitAnd(Type* other)
+{
+    throw InvalidOperationException("& between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::bitOr(Type* other)
+{
+    throw InvalidOperationException("| between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::bitNot()
+{
+    throw InvalidOperationException("~ to type \"" + this->_type + "\"");
+}
+
+Type* Type::leftShift(Type* other)
+{
+    throw InvalidOperationException("<< between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::rightShift(Type* other)
+{
+    throw InvalidOperationException(">> between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
 Type* Type::assign(Type* other)
 {
     if (other->getType() == REFERENCE)
         return this->assign(((Reference*)other)->getValue());
     throw InvalidOperationException("= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::addAssign(Type* other)
+{
+    throw InvalidOperationException("+= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::subAssign(Type* other)
+{
+    throw InvalidOperationException("-= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::divAssign(Type* other)
+{
+    throw InvalidOperationException("/= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::mulAssign(Type* other)
+{
+    throw InvalidOperationException("*= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::modAssign(Type* other)
+{
+    throw InvalidOperationException("%= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::expAssign(Type* other)
+{
+    throw InvalidOperationException("**= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::call(Type* other)
@@ -129,6 +239,11 @@ Type* Type::logicOr (Type * other)
 Type* Type::logicAnd (Type* other)
 {
     throw InvalidOperationException("&& between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+}
+
+Type* Type::logicNot()
+{
+    throw InvalidOperationException("! to type \"" + this->_type + "\"");
 }
 
 Type* Type::toInt()

@@ -117,6 +117,23 @@ Type* Object::extend(Type* other)
 		return Type::extend(other);
 }
 
+Type* Object::extendAssign(Type* other)
+{
+	if (other->getType() == OBJECT || other->getType() == CLASS)
+	{
+		for (const std::pair<std::string, Type*>& pair : ((Object*)other)->_variables)
+			this->_variables[pair.first] = pair.second->copy();
+		return this;
+	}
+	else if (other->getType() == PAIR)
+	{
+		this->_variables[this->toName(((Pair*)other)->_first)] = ((Pair*)other)->_second->copy();
+		return this;
+	}
+	else
+		return Type::extend(other);
+}
+
 std::string Object::toName(Type* type, bool checkVar)
 {
 	if (type->getType() == NAME)

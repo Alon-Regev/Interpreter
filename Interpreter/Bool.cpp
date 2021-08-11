@@ -76,6 +76,11 @@ Type* Bool::logicAnd(Type* other)
 		return Type::logicAnd(other);
 }
 
+Type* Bool::logicNot()
+{
+	return new Bool(!this->_value);
+}
+
 Type* Bool::toInt()
 {
 	return new Int((int)this->_value);

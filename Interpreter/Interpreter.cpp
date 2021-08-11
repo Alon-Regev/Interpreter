@@ -1,11 +1,22 @@
 #include "Interpreter.h"
 
 std::map<std::string, Operator> Interpreter::_operators = {
-	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 12} },
-	{"-", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? b->negative() : a->sub(b); }, 12, BINARY_INFIX, true} },
-	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 13} },
-	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 13} },
-	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 15, false, true} },
+	{"+", Operator{[](Type* a, Type* b) { return a->add(b); }, 15} },
+	{"-", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? b->negative() : a->sub(b); }, 15, BINARY_INFIX, true} },
+	{"*", Operator{[](Type* a, Type* b) { return a->mul(b); }, 16} },
+	{"/", Operator{[](Type* a, Type* b) { return a->div(b); }, 16} },
+	{"%", Operator{[](Type* a, Type* b) { return a->mod(b); }, 16} },
+	{"**", Operator{[](Type* a, Type* b) { return a->exp(b); }, 17} },
+
+	{"++", Operator{[](Type* a, Type* b) { if (a == nullptr) return b->increment(false); else return a->increment(true); }, 19, BINARY_INFIX, true} },
+	{"--", Operator{[](Type* a, Type* b) { if (a == nullptr) return b->decrement(false); else return a->decrement(true); }, 19, BINARY_INFIX, true} },
+
+	{"|", Operator{[](Type* a, Type* b) { return a->bitOr(b); }, 12} },
+	{"^", Operator{[](Type* a, Type* b) { return a->bitXor(b); }, 13} },
+	{"&", Operator{[](Type* a, Type* b) { return a->bitAnd(b); }, 14} },
+	{"~", Operator{[](Type* a, Type* b) { return b->bitNot(); }, 18, UNARY_PREFIX} },
+
+	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 20, false, true} },
 
 	{"->", Operator{[](Type* a, Type* b) { return b->extend(a); }, 6} },
 	{"<-", Operator{[](Type* a, Type* b) { return a->extend(b); }, 6} },
@@ -14,14 +25,28 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 8} },
 
 	{"=", Operator{(operation)Interpreter::assign, 5} },
+	{"+=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->addAssign(b); }, 5} },
+	{"-=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->subAssign(b); }, 5} },
+	{"*=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->mulAssign(b); }, 5} },
+	{"/=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->divAssign(b); }, 5} },
+	{"%=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->modAssign(b); }, 5} },
+	{"**=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->expAssign(b); }, 5} },
+
+	{"<-=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->extendAssign(b); }, 5} },
+
+	{"^=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->xorAssign(b); }, 5} },
+	{"&=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->andAssign(b); }, 5} },
+	{"|=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->orAssign(b); }, 5} },
+	{"<<=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->leftShiftAssign(b); }, 5} },
+	{">>=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->rightShiftAssign(b); }, 5} },
 
 	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 4, UNARY_PREFIX}},
 	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 2}},
 	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3} },
 
 
-	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 16, BINARY_INFIX, false, true} },
-	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 15, BINARY_INFIX, false, true} },
+	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 21, BINARY_INFIX, false, true} },
+	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 20, BINARY_INFIX, false, true} },
 	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX}},
 	{"foreach", Operator{[](Type* a, Type* b) { return (Type*)new Foreach(b); }, 4, UNARY_PREFIX}},
 
@@ -38,11 +63,11 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{";", Operator{[](Type* a, Type* b) { return (Type*)new Undefined(); }, 1, BINARY_INFIX, true} },
 
 	// casting
-	{STRING, Operator{[](Type* a, Type* b) { return (Type*)new String(b->toString()); }, 14, UNARY_PREFIX}},
-	{FLOAT, Operator{[](Type* a, Type* b) { return b->toFloat(); } , 14, UNARY_PREFIX }},
-	{INT, Operator{[](Type* a, Type* b) { return b->toInt(); }, 14, UNARY_PREFIX}},
-	{CHAR, Operator{[](Type* a, Type* b) { return b->toChar(); }, 14, UNARY_PREFIX}},
-	{_BOOL, Operator{[](Type* a, Type* b) { return b->toBool(); }, 14, UNARY_PREFIX}},
+	{STRING, Operator{[](Type* a, Type* b) { return (Type*)new String(b->toString()); }, 19, UNARY_PREFIX}},
+	{FLOAT, Operator{[](Type* a, Type* b) { return b->toFloat(); } , 19, UNARY_PREFIX }},
+	{INT, Operator{[](Type* a, Type* b) { return b->toInt(); }, 19, UNARY_PREFIX}},
+	{CHAR, Operator{[](Type* a, Type* b) { return b->toChar(); }, 19, UNARY_PREFIX}},
+	{_BOOL, Operator{[](Type* a, Type* b) { return b->toBool(); }, 19, UNARY_PREFIX}},
 };
 std::map<std::string, Type*> Interpreter::_variables;
 std::vector<std::vector<ScopeVariable>> Interpreter::_variableScope = std::vector<std::vector<ScopeVariable>>({ std::vector<ScopeVariable>() });
@@ -238,6 +263,12 @@ Type* Interpreter::addVariable(std::string variableName, Type* variable, bool is
 			Interpreter::_variableScope.back().back().previousValue = Interpreter::_variables[variableName];
 	}
 	return Interpreter::_variables[variableName] = variable;
+}
+
+void Interpreter::checkAssign(Type* type)
+{
+	if (!type->isVariable() && type->getType() != REFERENCE)
+		throw InvalidOperationException("Assigning to a non-variable value");
 }
 
 Type* Interpreter::checkNewVariable(const std::string& str)

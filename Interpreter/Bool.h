@@ -23,6 +23,7 @@ public:
 	virtual Type* notEqual(Type* other);
 	virtual Type* logicOr(Type* other);
 	virtual Type* logicAnd(Type* other);
+	virtual Type* logicNot();
 
 	// casting
 	virtual Type* toInt();

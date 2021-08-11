@@ -148,7 +148,7 @@
       <Filter>Header Files\Types</Filter>
     </ClInclude>
     <ClInclude Include="Char.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -246,7 +246,7 @@
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="Char.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Types</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

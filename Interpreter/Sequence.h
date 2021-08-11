@@ -19,6 +19,7 @@ public:
 	// operators
 	virtual Type* assign(Type* other);
 	virtual Type* index(Type* other);
+	virtual Type* addAssign(Type* other);
 	// logic operators
 	virtual Type* equal(Type* other);
 	virtual Type* notEqual(Type* other);
@@ -66,6 +67,20 @@ inline Type* Sequence<T>::index(Type* other)
 		return this->toType(this->_content[index]);
 	else
 		throw InvalidOperationException("Index out of range");
+}
+
+template<class T>
+inline Type* Sequence<T>::addAssign(Type* other)
+{
+	if (this->typeCompare(other))
+	{
+		this->_content.insert(this->_content.end(), ((Sequence<T>*)other)->_content.begin(), ((Sequence<T>*)other)->_content.end());
+		if (!other->isVariable())
+			((Sequence<T>*)other)->_content.clear();
+		return this;
+	}
+	else
+		return Type::addAssign(other);
 }
 
 template<class T>

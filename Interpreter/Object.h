@@ -29,6 +29,7 @@ public:
 	virtual Type* point(Type* other);
 	virtual Type* assign(Type* other);
 	virtual Type* extend(Type* other);
+	virtual Type* extendAssign(Type* other);
 	std::map<std::string, Type*> _variables;
 private:
 	std::string toName(Type* type, bool checkVar = true);
