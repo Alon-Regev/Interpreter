@@ -99,9 +99,6 @@
     <ClInclude Include="Reference.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Sequence.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
     <ClInclude Include="Signal.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
@@ -198,9 +195,6 @@
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="Reference.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Sequence.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
     <ClCompile Include="Signal.cpp">

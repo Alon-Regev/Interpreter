@@ -21,7 +21,7 @@ Type* Foreach::block(Type* other)
 		throw SyntaxException("Invalid foreach syntax");
 	if (this->_container->getType() == LIST)
 	{
-		for (Type* value : ((List*)this->_container)->_content)
+		for (Type* value : ((List*)this->_container)->getContent())
 		{
 			Interpreter::assign(this->_current, value);
 			((Block*)other)->run();
@@ -29,9 +29,9 @@ Type* Foreach::block(Type* other)
 	}
 	else if (this->_container->getType() == STRING)
 	{
-		for (char value : ((String*)this->_container)->_content)
+		for (char value : ((String*)this->_container)->getContent())
 		{
-			this->_current->assign(new String(std::vector<char>{value}));
+			this->_current->assign(new String(std::string{ value }));
 			((Block*)other)->run();
 		}
 	}

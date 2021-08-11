@@ -59,11 +59,11 @@ void Object::toMethods()
 
 Type* Object::index(Type* other)
 {
-	if (((List*)other)->_content.size() > 0)
+	if (((List*)other)->getContent().size() > 0)
 	{
-		if (this->_variables.find(this->toName(((List*)other)->_content[0], false)) != this->_variables.end())
+		if (this->_variables.find(this->toName(((List*)other)->getContent()[0], false)) != this->_variables.end())
 		{
-			Type* value = this->_variables[this->toName(((List*)other)->_content[0], false)];
+			Type* value = this->_variables[this->toName(((List*)other)->getContent()[0], false)];
 			return this->isVariable() ? new Reference(value) : value->copy();
 		}
 		else
