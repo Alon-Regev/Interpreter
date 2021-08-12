@@ -8,21 +8,28 @@
 
 #define FUNCTION "function"
 
+class Interpreter;
+class Block;
+class Tuple;
+
 struct Parameter
 {
 	std::string name;
 	std::string type;
 };
 
-class Interpreter;
-class Block;
-class Tuple;
+struct FunctionInstance
+{
+	std::vector<Parameter> parameters;
+	Block* function;
+};
+
 class Function : public Type
 {
 public:
 	Function(Interpreter& interpreter);
 	Function(Type* params, Block* block);
-	Function(std::vector<Parameter>& parameters, Type* function, Interpreter& interpreter, Type* thisType);
+	Function(std::vector<FunctionInstance>& functionInstances, Interpreter& interpreter, Type* thisType);
 	virtual ~Function();
 	virtual std::string toString() const { return FUNCTION; }
 	virtual Type* copy();
@@ -30,10 +37,14 @@ public:
 	// operators
 	virtual Type* call(Type* other);
 	virtual Type* assign(Type* other);
+
+	virtual Type* add(Type* other);
+	virtual Type* addAssign(Type* other);
 private:
-	Type* _function;
+	std::vector<FunctionInstance> _functionInstances;
 	Interpreter& _interpreter;
-	std::vector<Parameter> _parameters;
 	Type* _this = nullptr;
+
+	Type* run(FunctionInstance& function, std::vector<Type*>& args);
 };
 

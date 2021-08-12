@@ -16,7 +16,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"&", Operator{[](Type* a, Type* b) { return a->bitAnd(b); }, 14} },
 	{"~", Operator{[](Type* a, Type* b) { return b->bitNot(); }, 18, UNARY_PREFIX} },
 
-	{"()", Operator{[](Type* a, Type* b) { return a->call(b); }, 20, false, true} },
+	{"(^)", Operator{[](Type* a, Type* b) { return a->call(b); }, 20, false, true} },
 
 	{"->", Operator{[](Type* a, Type* b) { return b->extend(a); }, 6} },
 	{"<-", Operator{[](Type* a, Type* b) { return a->extend(b); }, 6} },
@@ -44,11 +44,11 @@ std::map<std::string, Operator> Interpreter::_operators = {
 
 	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 4, UNARY_PREFIX}},
 	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 2}},
-	{"{}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3} },
+	{"{^}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3} },
 
 
 	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 21} },
-	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 20} },
+	{"[^]", Operator{[](Type* a, Type* b) { return a->index(b); }, 20} },
 	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX}},
 	//{"foreach", Operator{[](Type* a, Type* b) { return (Type*)new Foreach(b); }, 4, UNARY_PREFIX}},
 	{"foreach", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? (Type*)new Foreach(b) : Foreach::comprehension(a, b); }, 4, BINARY_INFIX, true} },
@@ -279,8 +279,8 @@ Type* Interpreter::checkNewVariable(const std::string& str)
 	if (str.empty())
 		return new Undefined();
 	Type* staticType = nullptr;
-	if (str.rfind("var ", 0) == 0)	// new dynamic variable
-		return Interpreter::addVariable(str.substr(4), new Undefined(), true);
+	if (str.rfind(ANY " ", 0) == 0)	// new dynamic variable
+		return Interpreter::addVariable(str.substr(strlen(ANY " ")), new Undefined(), true);
 	else if (str.rfind(INT " ", 0) == 0)
 		staticType = Interpreter::addVariable(str.substr(strlen(INT " ")), new Int(), true);
 	else if (str.rfind(FLOAT " ", 0) == 0)

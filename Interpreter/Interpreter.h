@@ -1,6 +1,8 @@
 #pragma once
 #include <regex>
 
+#define ANY "var"
+
 #include "Parser.h"
 #include "PredefinedFunctions.h"
 
