@@ -1,16 +1,18 @@
 #include "Object.h"
 #include "Function.h"
 
-Object::Object(std::map<std::string, Type*>& variables) : Type(OBJECT)
+Object::Object(std::map<std::string, Type*>& variables, std::vector<std::string>& instances) : Type(OBJECT)
 {
+	// copy variables and methods
 	for (const std::pair<std::string, Type*>& pair : variables)
 	{
 		this->_variables[pair.first] = pair.second->copy();
 		if (this->_variables[pair.first]->getType() == FUNCTION)
-		{
 			((Function*)this->_variables[pair.first])->setThis(new Reference(this), false);
-		}
 	}
+	// copy instances
+	for (const std::string& instance : instances)
+		this->_instances.push_back(instance);
 }
 
 Object::Object(Pair* pair) : Type(OBJECT)
@@ -35,6 +37,8 @@ Object::~Object()
 
 std::string Object::toString() const
 {
+	if (this->_variables.size() == 0)
+		return "{}";
 	std::string result = "{";
 	for (const std::pair<std::string, Type*>& pair : this->_variables)
 	{
@@ -47,7 +51,7 @@ std::string Object::toString() const
 
 Type* Object::copy()
 {
-	return new Object(this->_variables);
+	return new Object(this->_variables, this->_instances);
 }
 
 void Object::toMethods()
@@ -90,8 +94,12 @@ Type* Object::assign(Type* other)
 		for (std::pair<const std::string, Type*>& pair : this->_variables)
 			delete pair.second;
 		this->_variables.clear();
+		// copy variables
 		for (std::pair<const std::string, Type*>& pair : ((Object*)other)->_variables)
 			this->_variables[pair.first] = pair.second->copy();
+		// copy instances
+		for (const std::string& instance : ((Object*)other)->_instances)
+			this->_instances.push_back(instance);
 		return this;
 	}
 	else
@@ -103,8 +111,12 @@ Type* Object::extend(Type* other)
 	if (other->getType() == OBJECT || other->getType() == CLASS)
 	{
 		Object* copy = (Object*)this->copy();
+		// copy variables
 		for (const std::pair<std::string, Type*>& pair : ((Object*)other)->_variables)
 			copy->_variables[pair.first] = pair.second->copy();
+		// copy instances
+		for (const std::string& instance : ((Object*)other)->_instances)
+			copy->_instances.push_back(instance);
 		return copy;
 	}
 	else if (other->getType() == PAIR)
@@ -121,8 +133,12 @@ Type* Object::extendAssign(Type* other)
 {
 	if (other->getType() == OBJECT || other->getType() == CLASS)
 	{
+		// copy variables
 		for (const std::pair<std::string, Type*>& pair : ((Object*)other)->_variables)
 			this->_variables[pair.first] = pair.second->copy();
+		// copy instances
+		for (const std::string& instance : ((Object*)other)->_instances)
+			this->_instances.push_back(instance);
 		return this;
 	}
 	else if (other->getType() == PAIR)

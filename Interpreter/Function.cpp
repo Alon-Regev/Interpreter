@@ -17,7 +17,7 @@ Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(bl
 	else if (params->isVariable())
 	{	// one param
 		parameters.push_back(Parameter{ params->getVariable(), (params->isStaticType() ? params->getType() : "") });
-		Interpreter::removeVariable(params->getVariable());
+		Interpreter::removeVariable(params->getVariable(), false);
 	}
 
 	this->_functionInstances.push_back(FunctionInstance{ parameters, (Block*)block->copy() });
@@ -97,16 +97,20 @@ Type* Function::assign(Type* other)
 		return Type::assign(other);
 }
 
-Type* Function::add(Type* other)
-{
-	return nullptr;
-}
-
-Type* Function::addAssign(Type* other)
+Type* Function::extend(Type* other)
 {
 	if (other->getType() != FUNCTION)
-		return Type::addAssign(other);
-	
+		return Type::extendAssign(other);
+	return this->copy()->extendAssign(other);
+}
+
+Type* Function::extendAssign(Type* other)
+{
+	if (other->getType() != FUNCTION)
+		return Type::extendAssign(other);
+	for(FunctionInstance& functionInstance : ((Function*)other)->_functionInstances)
+		this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->copy() });
+	return this;
 }
 
 Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)

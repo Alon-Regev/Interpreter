@@ -16,7 +16,7 @@ class Object : public Type
 public:
 	template<class Iterator>
 	Object(Iterator begin, Iterator end);
-	Object(std::map<std::string, Type*>& variables);
+	Object(std::map<std::string, Type*>& variables, std::vector<std::string>& instances);
 	Object(Pair* pair);
 	Object(const std::string& type);
 	Object();
@@ -31,6 +31,8 @@ public:
 	virtual Type* extend(Type* other);
 	virtual Type* extendAssign(Type* other);
 	std::map<std::string, Type*> _variables;
+protected:
+	std::vector<std::string> _instances;
 private:
 	std::string toName(Type* type, bool checkVar = true);
 };

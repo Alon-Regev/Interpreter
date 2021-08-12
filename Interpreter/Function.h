@@ -38,8 +38,8 @@ public:
 	virtual Type* call(Type* other);
 	virtual Type* assign(Type* other);
 
-	virtual Type* add(Type* other);
-	virtual Type* addAssign(Type* other);
+	virtual Type* extend(Type* other);
+	virtual Type* extendAssign(Type* other);
 private:
 	std::vector<FunctionInstance> _functionInstances;
 	Interpreter& _interpreter;
