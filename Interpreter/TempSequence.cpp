@@ -45,3 +45,8 @@ void TempSequence::clear()
 {
     this->_values.clear();
 }
+
+std::vector<Type*>& TempSequence::getValues()
+{
+    return this->_values;
+}

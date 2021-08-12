@@ -34,3 +34,10 @@ Node& Node::operator=(const Node& other)
 	
 	return *this;
 }
+
+Node* Node::copy()
+{
+	Node* newCopy = new Node("");
+	*newCopy = *this;
+	return newCopy;
+}

@@ -50,7 +50,9 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 21} },
 	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 20} },
 	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX}},
-	{"foreach", Operator{[](Type* a, Type* b) { return (Type*)new Foreach(b); }, 4, UNARY_PREFIX}},
+	//{"foreach", Operator{[](Type* a, Type* b) { return (Type*)new Foreach(b); }, 4, UNARY_PREFIX}},
+	{"foreach", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? (Type*)new Foreach(b) : Foreach::comprehension(a, b); }, 4, BINARY_INFIX, true} },
+	{"for", Operator{[](Type* a, Type* b) { return (Type*)new For(b); }, 4, UNARY_PREFIX}},
 
 	// logic operators
 	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 11} },
@@ -65,11 +67,11 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{";", Operator{[](Type* a, Type* b) { return (Type*)new Undefined(); }, 1, BINARY_INFIX, true} },
 
 	// casting
-	{STRING, Operator{[](Type* a, Type* b) { return (Type*)new String(b->toString()); }, 19, UNARY_PREFIX}},
-	{FLOAT, Operator{[](Type* a, Type* b) { return b->toFloat(); } , 19, UNARY_PREFIX }},
-	{INT, Operator{[](Type* a, Type* b) { return b->toInt(); }, 19, UNARY_PREFIX}},
-	{CHAR, Operator{[](Type* a, Type* b) { return b->toChar(); }, 19, UNARY_PREFIX}},
-	{_BOOL, Operator{[](Type* a, Type* b) { return b->toBool(); }, 19, UNARY_PREFIX}},
+	{"(" STRING ")", Operator{[](Type* a, Type* b) { return (Type*)new String(b->toString()); }, 19, UNARY_PREFIX}},
+	{"(" FLOAT ")", Operator{[](Type* a, Type* b) { return b->toFloat(); } , 19, UNARY_PREFIX }},
+	{"(" INT ")", Operator{[](Type* a, Type* b) { return b->toInt(); }, 19, UNARY_PREFIX}},
+	{"(" CHAR ")", Operator{[](Type* a, Type* b) { return b->toChar(); }, 19, UNARY_PREFIX}},
+	{"(" _BOOL ")", Operator{[](Type* a, Type* b) { return b->toBool(); }, 19, UNARY_PREFIX}},
 };
 std::map<std::string, Type*> Interpreter::_variables;
 std::vector<std::vector<ScopeVariable>> Interpreter::_variableScope = std::vector<std::vector<ScopeVariable>>({ std::vector<ScopeVariable>() });
@@ -177,10 +179,10 @@ Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
 	return value;
 }
 
-void Interpreter::handleTempTypes(Type* a, Type* b, Type* res)
+void Interpreter::handleTempTypes(Type* a, Type* b, Type* res, const std::string& op)
 {
 	// if not variables, delete after being used in operator
-	bool flag = res->getType() == TEMP_SEQUENCE;
+	bool flag = res->getType() == TEMP_SEQUENCE && op == ",";	// sequence creation
 	if (a && !a->isVariable() && !flag && a != res)
 		delete a;
 	if (b && !b->isVariable() && !flag && b != res)
@@ -272,7 +274,6 @@ void Interpreter::checkAssign(Type* type)
 	if (!type->isVariable() && type->getType() != REFERENCE)
 		throw InvalidOperationException("Assigning to a non-variable value");
 }
-
 Type* Interpreter::checkNewVariable(const std::string& str)
 {
 	if (str.empty())

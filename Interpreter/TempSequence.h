@@ -16,6 +16,7 @@ public:
 	virtual std::vector<Type*>::iterator begin();
 	virtual std::vector<Type*>::iterator end();
 	virtual void clear();
+	std::vector<Type*>& getValues();
 private:
 	std::vector<Type*> _values;
 };
