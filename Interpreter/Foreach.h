@@ -8,6 +8,7 @@ class Foreach : public Type
 {
 public:
 	Foreach(Type* parameters);
+	virtual ~Foreach();
 	virtual std::string toString() const { return FOREACH; }
 	virtual Type* copy() { return nullptr; }
 	// operators

@@ -276,6 +276,12 @@ Type* Type::tryReference()
     return this->isVariable() ? new Reference(this) : this->copy();
 }
 
+void Type::tryDelete()
+{
+    if (!this->isVariable())
+        delete this;
+}
+
 bool Type::typeCompare(Type* other)
 {
     return this->_type == other->_type;

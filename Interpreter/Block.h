@@ -16,6 +16,7 @@ public:
 	Node* getCode();
 	Interpreter& getInterpreter();
 	Type* run(bool openScope = true);
+	std::vector<Node*> split();
 private:
 	Node* _code;
 	Interpreter& _interpreter;

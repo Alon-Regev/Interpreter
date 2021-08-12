@@ -150,6 +150,15 @@ std::vector<Node*> Parser<EvaluationType>::tokenize(const std::string& expressio
     {
         if (*it == ' ' || *it == '\n' || *it == '\t')    // white space
             continue;
+        // check if char is start of an operator
+        op = this->findOperator(std::string(it, expression.end()));
+        if (op != "")   // not an operator, and not value
+        {
+            expr.push_back(new Node(op));
+            it += op.size() - 1;
+            expectingOperator = false;
+            continue;
+        }
         // check if char is value
         std::string value = this->getValue(std::string(it, expression.end()));
         if (value != "")
@@ -171,18 +180,7 @@ std::vector<Node*> Parser<EvaluationType>::tokenize(const std::string& expressio
             expectingOperator = true;
         }
         else
-        {
-            // check if char is start of an operator
-            op = this->findOperator(std::string(it, expression.end()));
-            if (op != "")   // not an operator, and not value
-            {
-                expr.push_back(new Node(op));
-                it += op.size() - 1;
-                expectingOperator = false;
-            }
-            else
-                throw SyntaxException(std::string("Unknown value ") + *it + " at index " + std::to_string(it - expression.begin()));
-        }
+            throw SyntaxException(std::string("Unknown value ") + *it + " at index " + std::to_string(it - expression.begin()));
     }
     // remove empties
     for (int i = 0; i < expr.size(); i++)

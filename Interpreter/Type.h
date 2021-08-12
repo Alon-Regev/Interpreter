@@ -80,6 +80,7 @@ public:
 	virtual Type* toChar();
 
 	Type* tryReference();
+	void tryDelete();
 protected:
 	std::string _type;
 	bool _staticType;

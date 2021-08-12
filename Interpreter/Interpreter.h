@@ -21,6 +21,7 @@
 #include "String.h"
 #include "While.h"
 #include "Foreach.h"
+#include "For.h"
 #include "Reference.h"
 #include "Pair.h"
 #include "Object.h"

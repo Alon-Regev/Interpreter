@@ -8,11 +8,16 @@ Foreach::Foreach(Type* parameters) : Type(FOREACH)
 		if (containerType == LIST || containerType == STRING || containerType == TUPLE)
 		{
 			this->_current = ((Tuple*)parameters)->getValues()[0];
-			this->_container = ((Tuple*)parameters)->getValues()[1];
+			this->_container = ((Tuple*)parameters)->getValues()[1]->copy();
 			return;
 		}
 	}
 	throw SyntaxException("Invalid foreach parameters");
+}
+
+Foreach::~Foreach()
+{
+	delete this->_container;
 }
 
 Type* Foreach::block(Type* other)
@@ -24,7 +29,7 @@ Type* Foreach::block(Type* other)
 		for (Type* value : ((List*)this->_container)->getContent())
 		{
 			Interpreter::assign(this->_current, value);
-			((Block*)other)->run();
+			delete ((Block*)other)->run();
 		}
 	}
 	else if (this->_container->getType() == STRING)
@@ -32,7 +37,7 @@ Type* Foreach::block(Type* other)
 		for (char value : ((String*)this->_container)->getContent())
 		{
 			this->_current->assign(new String(std::string{ value }));
-			((Block*)other)->run();
+			delete ((Block*)other)->run();
 		}
 	}
 	else if (this->_container->getType() == TUPLE)
@@ -40,7 +45,7 @@ Type* Foreach::block(Type* other)
 		for (Type* value : *((Tuple*)this->_container))
 		{
 			this->_current->assign(value);
-			((Block*)other)->run();
+			delete ((Block*)other)->run();
 		}
 	}
 	return new Undefined();

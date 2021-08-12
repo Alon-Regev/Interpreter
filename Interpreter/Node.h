@@ -12,6 +12,7 @@ public:
 	bool isLeaf() { return this->_left == nullptr && this->_right == nullptr; }
 
 	Node& operator=(const Node& other);
+	Node* copy();
 
 	char _block;
 };

@@ -51,6 +51,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"[]", Operator{[](Type* a, Type* b) { return a->index(b); }, 20} },
 	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX}},
 	{"foreach", Operator{[](Type* a, Type* b) { return (Type*)new Foreach(b); }, 4, UNARY_PREFIX}},
+	{"for", Operator{[](Type* a, Type* b) { return (Type*)new For(b); }, 4, UNARY_PREFIX}},
 
 	// logic operators
 	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 11} },
@@ -65,11 +66,11 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{";", Operator{[](Type* a, Type* b) { return (Type*)new Undefined(); }, 1, BINARY_INFIX, true} },
 
 	// casting
-	{STRING, Operator{[](Type* a, Type* b) { return (Type*)new String(b->toString()); }, 19, UNARY_PREFIX}},
-	{FLOAT, Operator{[](Type* a, Type* b) { return b->toFloat(); } , 19, UNARY_PREFIX }},
-	{INT, Operator{[](Type* a, Type* b) { return b->toInt(); }, 19, UNARY_PREFIX}},
-	{CHAR, Operator{[](Type* a, Type* b) { return b->toChar(); }, 19, UNARY_PREFIX}},
-	{_BOOL, Operator{[](Type* a, Type* b) { return b->toBool(); }, 19, UNARY_PREFIX}},
+	{"(" STRING ")", Operator{[](Type* a, Type* b) { return (Type*)new String(b->toString()); }, 19, UNARY_PREFIX}},
+	{"(" FLOAT ")", Operator{[](Type* a, Type* b) { return b->toFloat(); } , 19, UNARY_PREFIX }},
+	{"(" INT ")", Operator{[](Type* a, Type* b) { return b->toInt(); }, 19, UNARY_PREFIX}},
+	{"(" CHAR ")", Operator{[](Type* a, Type* b) { return b->toChar(); }, 19, UNARY_PREFIX}},
+	{"(" _BOOL ")", Operator{[](Type* a, Type* b) { return b->toBool(); }, 19, UNARY_PREFIX}},
 };
 std::map<std::string, Type*> Interpreter::_variables;
 std::vector<std::vector<ScopeVariable>> Interpreter::_variableScope = std::vector<std::vector<ScopeVariable>>({ std::vector<ScopeVariable>() });
