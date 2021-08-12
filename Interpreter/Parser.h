@@ -40,7 +40,7 @@ protected:
     virtual EvaluationType evaluateBlock(Node* node) = 0;
     virtual std::string getValue(const std::string& expression) = 0;
     virtual EvaluationType handleParentheses(EvaluationType value, char parenthesesType) { return value; }
-    virtual void handleTempTypes(EvaluationType, EvaluationType, EvaluationType) {}
+    virtual void handleTempTypes(EvaluationType, EvaluationType, EvaluationType, const std::string& op) {}
 private:
 	std::vector<Node*> tokenize(const std::string& expression);
 	Node* parse(std::vector<Node*>& expr, bool removeParentheses=true);
@@ -129,7 +129,7 @@ EvaluationType Parser<EvaluationType>::evaluate(Node* node)
             throw SyntaxException(INVALID_OPERATOR_USE(op));
 
         EvaluationType temp = this->_operators.at(op).func(lv, rv);
-        this->handleTempTypes(lv, rv, temp);
+        this->handleTempTypes(lv, rv, temp, op);
         if (node->_block != 0)
             temp = this->handleParentheses(temp, node->_block);
         return temp;

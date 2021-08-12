@@ -55,7 +55,7 @@ protected:
 	virtual Type* evaluateBlock(Node* node);
 	virtual std::string getValue(const std::string& expression);
 	virtual Type* handleParentheses(Type* value, char parenthesesType);
-	virtual void handleTempTypes(Type* a, Type* b, Type* res);
+	virtual void handleTempTypes(Type* a, Type* b, Type* res, const std::string& op);
 private:
 	static std::map<std::string, Operator> _operators;
 	static std::map<std::string, Type*> _variables;
