@@ -1,6 +1,8 @@
 #pragma once
 #include <regex>
 
+#define ANY "var"
+
 #include "Parser.h"
 #include "PredefinedFunctions.h"
 
@@ -45,7 +47,7 @@ public:
 	std::string run(const std::string& code);
 	void importFunctions(const std::map<std::string, staticFunction>&);
 	static Type* assign(Type* a, Type* b);
-	static void removeVariable(const std::string& name);
+	static void removeVariable(const std::string& name, bool deleteValue = true);
 	static void openScope();
 	static void closeScope();
 	static Type* addVariable(std::string variableName, Type* variable, bool isNew = false, bool setScope = false);

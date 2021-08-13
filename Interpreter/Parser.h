@@ -145,6 +145,7 @@ std::vector<Node*> Parser<EvaluationType>::tokenize(const std::string& expressio
     std::string::const_iterator it;
     std::string op = "";
     bool expectingOperator = false;
+
     // copy string chars as nodes
     for (it = expression.begin(); it != expression.end(); it++)
     {
@@ -334,11 +335,11 @@ template<class EvaluationType>
 inline std::string Parser<EvaluationType>::getParentheses(char c)
 {
     if (c == '(' || c == ')')
-        return "()";
+        return "(^)";
     else if (c == '{' || c == '}')
-        return "{}";
+        return "{^}";
     else if (c == '[' || c == ']')
-        return "[]";
+        return "[^]";
 }
 
 template<class EvaluationType>
