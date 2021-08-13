@@ -25,6 +25,7 @@ public:
 	virtual Type* copy();
 	void toMethods();
 	std::map<std::string, Type*>& getVariables();
+	std::vector<std::string>& getInstances();
 	// operators
 	virtual Type* index(Type* other);
 	virtual Type* point(Type* other);

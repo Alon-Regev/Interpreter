@@ -69,6 +69,11 @@ std::map<std::string, Type*>& Object::getVariables()
 	return this->_variables;
 }
 
+std::vector<std::string>& Object::getInstances()
+{
+	return this->_instances;
+}
+
 Type* Object::index(Type* other)
 {
 	if (((List*)other)->getContent().size() > 0)

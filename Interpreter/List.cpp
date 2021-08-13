@@ -67,9 +67,14 @@ Type* List::notEqual(Type* other)
 		return Type::notEqual(other);
 }
 
-const std::vector<Type*>& List::getContent()
+std::vector<Type*>& List::getContent()
 {
 	return this->_content;
+}
+
+void List::push(Type* other)
+{
+	this->_content.push_back(other);
 }
 
 Type* List::add(Type* other)

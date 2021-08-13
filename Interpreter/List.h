@@ -26,7 +26,9 @@ public:
 	// logic operators
 	virtual Type* equal(Type* other);
 	virtual Type* notEqual(Type* other);
-	const std::vector<Type*>& getContent();
+
+	std::vector<Type*>& getContent();
+	void push(Type* other);
 private:
 	std::vector<Type*> _content;
 };
