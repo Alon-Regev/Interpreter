@@ -208,12 +208,12 @@ Type* Type::negative()
 
 Type* Type::equal(Type* other)
 {
-    throw InvalidOperationException("== between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+    return new Bool(false);
 }
 
 Type* Type::notEqual(Type* other)
 {
-    throw InvalidOperationException("!= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
+    return new Bool(true);
 }
 
 Type* Type::greater(Type* other)
