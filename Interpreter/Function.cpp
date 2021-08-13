@@ -124,7 +124,11 @@ Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
 	if (this->_this)
 		Interpreter::addVariable("this", new Reference(this->_this), false, true);
 	// run and close scope
-	Type* ret = function.function->run(false);
+	Type* ret = nullptr;
+	if (function.function->getType() == BLOCK)
+		ret = function.function->run(false);
+	else
+		ret = new Undefined();
 	Interpreter::closeScope();
 	return ret;
 }

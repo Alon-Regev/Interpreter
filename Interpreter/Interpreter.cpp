@@ -142,7 +142,7 @@ Type* Interpreter::evaluateBlock(Node* node)
 
 std::string Interpreter::getValue(const std::string& expression)
 {
-	std::regex r(R"(^((?=[\d\.]*?\d)\d*\.?\d*(e-?\d+)?|[a-zA-Z_](\w*( \w)?)*|".*?[^\\]"|'.'))");	// int, float, name, string or char
+	std::regex r(R"~(^((?=[\d\.]*?\d)\d*\.?\d*(e-?\d+)?|[a-zA-Z_](\w*( \w)?)*|""|".*?[^\\]"|'.'))~");	// int, float, name, string or char
 	std::smatch match;
 	return std::regex_search(expression, match, r) ? match.str() : "";
 }

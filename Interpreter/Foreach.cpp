@@ -51,7 +51,7 @@ Type* Foreach::block(Type* other)
 	}
 	else if(this->_container->getType() == OBJECT)
 	{
-		for (const std::pair<std::string, Type*>& pair : ((Object*)this->_container)->_variables)
+		for (const std::pair<std::string, Type*>& pair : ((Object*)this->_container)->getVariables())
 		{
 			Type* temp = new String(pair.first);
 			this->_current->assign(temp);
@@ -105,7 +105,7 @@ Type* Foreach::comprehension(Type* a, Type* b)
 	}
 	else if (container->getType() == OBJECT)
 	{
-		for (const std::pair<std::string, Type*>& pair : ((Object*)container)->_variables)
+		for (const std::pair<std::string, Type*>& pair : ((Object*)container)->getVariables())
 		{
 			Type* temp = new String(pair.first);
 			current->assign(temp);

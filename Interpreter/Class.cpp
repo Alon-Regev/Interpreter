@@ -28,7 +28,7 @@ Type* Class::call(Type* other)
 
 		// call constructor and set temporary variable this
 		newCopy->setVariable("this");
-		delete newCopy->_variables[this->_variable]->call(other);
+		delete newCopy->getVariables()[this->_variable]->call(other);
 		newCopy->setVariable("");
 
 		// delete constructors
@@ -36,8 +36,8 @@ Type* Class::call(Type* other)
 		{
 			if (this->_variables.find(instance) != this->_variables.end())
 			{
-				delete newCopy->_variables[instance];
-				newCopy->_variables.erase(instance);
+				delete newCopy->getVariables()[instance];
+				newCopy->getVariables().erase(instance);
 			}
 		}
 		return newCopy;
