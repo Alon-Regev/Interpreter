@@ -401,9 +401,17 @@ Type* Int::toChar()
 Type* Int::div(Type* other)
 {
 	if (other->getType() == INT)
+	{
+		if (((Int*)other)->getValue() == 0)
+			throw InvalidOperationException("Division by zero");
 		return new Int(this->_value / ((Int*)other)->_value);
+	}
 	else if (other->getType() == FLOAT)
+	{
+		if (((Float*)other)->getValue() == 0)
+			throw InvalidOperationException("Division by zero");
 		return new Float(this->_value / ((Float*)other)->getValue());
+	}
 	else
 		Type::div(other);
 }

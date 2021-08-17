@@ -64,8 +64,8 @@ Type* Parser::evaluate(Node* node)
         }
         catch (...)
         {
-            if (!lv->isVariable())
-                delete lv;
+            if (lv)
+                lv->tryDelete();
             throw;
         }
         std::string op = node->_value;
@@ -73,7 +73,13 @@ Type* Parser::evaluate(Node* node)
             throw SyntaxException("Can't parse operators");
         Operator _operator = this->_operators.at(op);
         if (!_operator.allowNulls && (rv == nullptr && _operator.type == UNARY_PREFIX || lv == nullptr && _operator.type == UNARY_POSTFIX || (lv == nullptr || rv == nullptr) && _operator.type == BINARY_INFIX))
+        {
+            if(rv)
+                rv->tryDelete();
+            if (lv)
+                lv->tryDelete();
             throw SyntaxException(INVALID_OPERATOR_USE(op));
+        }
 
         Type* temp = nullptr;
         try
@@ -82,10 +88,10 @@ Type* Parser::evaluate(Node* node)
         }
         catch (...)
         {
-            if (!rv->isVariable())
-                delete rv;
-            if (!lv->isVariable())
-                delete lv;
+            if (rv)
+                rv->tryDelete();
+            if (lv)
+                lv->tryDelete();
             throw;
         }
         this->handleTempTypes(lv, rv, temp, op);
