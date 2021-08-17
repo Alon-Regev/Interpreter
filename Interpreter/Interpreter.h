@@ -39,7 +39,7 @@ struct ScopeVariable
 class Function;
 class Block;
 class Tuple;
-class Interpreter : public Parser<Type*>
+class Interpreter : public Parser
 {
 public:
 	Interpreter();

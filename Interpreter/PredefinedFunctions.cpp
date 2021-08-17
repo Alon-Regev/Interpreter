@@ -255,5 +255,5 @@ Type* ret(Type* other)
 
 Type* throwFunc(Type* other)
 {
-	throw other;
+	throw other->copy();
 }

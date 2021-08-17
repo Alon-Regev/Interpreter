@@ -28,9 +28,19 @@ Interpreter& Block::getInterpreter()
 
 Type* Block::run(bool openScope)
 {
-	if(openScope)
+	if (openScope)
 		Interpreter::openScope();
-	Type* res = this->_interpreter.value(this->_code);
+	Type* res;
+	try
+	{
+		res = this->_interpreter.value(this->_code);
+	}
+	catch (...)
+	{
+		if (openScope)
+			Interpreter::closeScope();
+		throw;
+	}
 	if(openScope)
 		Interpreter::closeScope();
 	return res;

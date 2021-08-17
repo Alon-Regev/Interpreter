@@ -80,6 +80,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PackageManager.cpp" />
     <ClCompile Include="Pair.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="PredefinedFunctions.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="Reference.cpp" />
