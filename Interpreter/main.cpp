@@ -15,7 +15,7 @@
 #define NAME "<nameless interpreter>"
 
 std::string codeInput();
-void runInterpreter();
+int runInterpreter();
 int runFile(std::string& fileName);
 
 int main(int argc, char** argv)
@@ -26,10 +26,7 @@ int main(int argc, char** argv)
 	srand(time(NULL));
 
 	if (argc == 1)
-	{
-		runInterpreter();
-		return 0;
-	}
+		return runInterpreter();
 	std::string command(argv[1]);
 	if (command == "--help")
 		std::cout <<
@@ -93,7 +90,7 @@ std::string codeInput()
 }
 
 // accepts code input from user and runs it
-void runInterpreter()
+int runInterpreter()
 {
 	std::cout << "Welcome to " << NAME << " version " << VERSION << "!" << std::endl << std::endl;
 
@@ -121,7 +118,15 @@ void runInterpreter()
 		{
 			std::cout << e.what() << std::endl;
 		}
+		catch (ReturnException& e) 
+		{
+			Type* retType = e.getValue();
+			int retValue = retType->getType() == INT ? ((Int*)retType)->getValue() : 0;
+			delete retType;
+			return retValue;
+		}
 	} while (input != "quit");
+	return 0;
 }
 
 // function runs code file
@@ -140,5 +145,12 @@ int runFile(std::string& fileName)
 	{
 		std::cout << e.what() << std::endl;
 		return 1;
+	}
+	catch (ReturnException& e)
+	{
+		Type* retType = e.getValue();
+		int retValue = retType->getType() == INT ? ((Int*)retType)->getValue() : 0;
+		delete retType;
+		return retValue;
 	}
 }

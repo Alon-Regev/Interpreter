@@ -150,6 +150,9 @@
     <ClInclude Include="For.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
+    <ClInclude Include="ReturnException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

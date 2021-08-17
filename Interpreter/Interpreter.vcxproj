@@ -45,6 +45,7 @@
     <ClInclude Include="Preprocessor.h" />
     <ClInclude Include="PreprocessorException.h" />
     <ClInclude Include="Reference.h" />
+    <ClInclude Include="ReturnException.h" />
     <ClInclude Include="Signal.h" />
     <ClInclude Include="StaticFunction.h" />
     <ClInclude Include="String.h" />

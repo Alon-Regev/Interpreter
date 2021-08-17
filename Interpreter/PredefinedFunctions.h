@@ -6,6 +6,8 @@
 #include "Tuple.h"
 #include "Void.h"
 
+#include "ReturnException.h"
+
 void initVariables(std::map<std::string, Type*>&);
 void setVariable(const std::string& name, Type* type, std::map<std::string, Type*>& variables);
 
@@ -23,3 +25,5 @@ Type* sort(Type*);
 
 Type* lower(Type*);
 Type* upper(Type*);
+
+Type* ret(Type*);

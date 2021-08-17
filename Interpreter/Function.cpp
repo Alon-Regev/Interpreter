@@ -126,7 +126,16 @@ Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
 	// run and close scope
 	Type* ret = nullptr;
 	if (function.function->getType() == BLOCK)
-		ret = function.function->run(false);
+	{
+		try
+		{
+			ret = function.function->run(false);
+		}
+		catch (ReturnException& e)
+		{
+			ret = e.getValue();
+		}
+	}
 	else
 		ret = new Undefined();
 	Interpreter::closeScope();
