@@ -1,11 +1,14 @@
 #pragma once
-#include "Sequence.h"
+#include <vector>
+#include "Type.h"
+#include "Bool.h"
 #include "SyntaxException.h"
 #include "Reference.h"
+#include "Undefined.h"
 
 #define LIST "list"
 
-class List : public Sequence<Type*>
+class List : public Type
 {
 public:
 	List();
@@ -16,14 +19,22 @@ public:
 	virtual std::string toString() const;
 	virtual Type* copy();
 	// operators
-	virtual Type* equal(Type* other);
 	virtual Type* add(Type* other);
-protected:
-	virtual Type* toType(Type* value);
+	virtual Type* assign(Type* other);
+	virtual Type* index(Type* other);
+	virtual Type* addAssign(Type* other);
+	// logic operators
+	virtual Type* equal(Type* other);
+	virtual Type* notEqual(Type* other);
+
+	std::vector<Type*>& getContent();
+	void push(Type* other);
+private:
+	std::vector<Type*> _content;
 };
 
 template<class Iterator>
-inline List::List(Iterator begin, Iterator end) : Sequence(LIST)
+inline List::List(Iterator begin, Iterator end) : Type(LIST)
 {
 	for (Iterator it = begin; it != end; it++)
 	{

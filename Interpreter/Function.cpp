@@ -1,44 +1,44 @@
 #include "Function.h"
 
-Function::Function(Interpreter& interpreter) : Type(FUNCTION), _interpreter(interpreter), _function(nullptr)  {}
+Function::Function(Interpreter& interpreter) : Type(FUNCTION), _interpreter(interpreter), _functionInstances{}  {}
 
-Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(block->getInterpreter()), _function(block->copy())
+Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(block->getInterpreter()), _functionInstances{}
 {
+	std::vector<Parameter> parameters;
 	if (params->getType() == TUPLE && ((Tuple*)params)->isVariableTuple())
 	{	// multiple params
 		for (Type* param : ((Tuple*)params)->getValues())
 		{
-			this->_parameters.push_back(Parameter{ param->getVariable(), param->getType() });
+			parameters.push_back(Parameter{ param->getVariable(), param->getType() });
 			Interpreter::removeVariable(param->getVariable());
 		}
 		((Tuple*)params)->getValues().clear();
-		delete params;
 	}
 	else if (params->isVariable())
 	{	// one param
-		this->_parameters.push_back(Parameter{ params->getVariable(), (params->isStaticType() ? params->getType() : "") });
-		Interpreter::removeVariable(params->getVariable());
+		parameters.push_back(Parameter{ params->getVariable(), (params->isStaticType() ? params->getType() : "") });
+		Interpreter::removeVariable(params->getVariable(), false);
 	}
-	else
-	{
-		// zero params
-		delete params;
-	}
+
+	this->_functionInstances.push_back(FunctionInstance{ parameters, (Block*)block->copy() });
 }
 
-Function::Function(std::vector<Parameter>& parameters, Type* function, Interpreter& interpreter, Type* thisType) : Type(FUNCTION), _parameters(parameters), _function(function->copy()), _interpreter(interpreter), _this(thisType ? thisType->copy() : nullptr)
+Function::Function(std::vector<FunctionInstance>& functionInstances, Interpreter& interpreter, Type* thisType) : Type(FUNCTION), _functionInstances{}, _interpreter(interpreter), _this(thisType ? thisType->copy() : nullptr)
 {
+	for (FunctionInstance& functionInstance : functionInstances)
+		this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->copy() });
 }
 
 Function::~Function()
 {
-	delete this->_function;
+	for (FunctionInstance& functionInstance : this->_functionInstances)
+		delete functionInstance.function;
 	delete this->_this;
 }
 
 Type* Function::copy()
 {
-	return new Function(this->_parameters, this->_function, this->_interpreter, this->_this);
+	return new Function(this->_functionInstances, this->_interpreter, this->_this);
 }
 
 void Function::setThis(Type* value, bool deletePrev)
@@ -50,51 +50,94 @@ void Function::setThis(Type* value, bool deletePrev)
 
 Type* Function::call(Type* other)
 {
-	if (other)
+	// get other to vector
+	std::vector<Type*> args;
+	if (other->getType() != UNDEFINED && other->getType() != VOID)
 	{
-		if (this->_parameters.empty() && other->getType() != UNDEFINED)
-			throw InvalidOperationException("arguments to a function with no parameters");
-
-		Interpreter::openScope();
-		if (this->_parameters.size() == 1)
+		if (other->getType() == TUPLE)
+			args.assign(((Tuple*)other)->getValues().begin(), ((Tuple*)other)->getValues().end());
+		else
+			args.push_back(other);
+	}
+	// choose fitting function instance
+	FunctionInstance* fittingFunctionInstance = nullptr;
+	for (FunctionInstance& functionInstance : this->_functionInstances)
+	{
+		// check arg count
+		if (args.size() != functionInstance.parameters.size())
+			continue;
+		// check arg types
+		bool stopped = false;
+		for (int i = 0; i < args.size() && !stopped; i++)
 		{
-			Interpreter::addVariable(this->_parameters[0].name, this->_parameters[0].type == REFERENCE ? new Reference(other) : other, false, true);
+			// check if type doesn't fit
+			if (args[i]->getType() != functionInstance.parameters[i].type && functionInstance.parameters[i].type != ANY && functionInstance.parameters[i].type != REFERENCE)
+				stopped = true;
 		}
-		else if (this->_parameters.size() != 0)
+		if (!stopped)
 		{
-			// other doesn't have multiple arguments
-			if (other->getType() != TUPLE || ((Tuple*)other)->getValues().size() != this->_parameters.size())
-				throw InvalidOperationException("Invalid argument count");
-			for (int i = 0; i < this->_parameters.size(); i++)
-			{
-				Type* value = ((Tuple*)other)->getValues()[i];
-				Interpreter::addVariable(this->_parameters[i].name, this->_parameters[i].type == REFERENCE ? new Reference(value) : value, false, true);
-			}
-			((Tuple*)other)->getValues().clear();
+			fittingFunctionInstance = &functionInstance;
+			break;
 		}
 	}
-	else
-		Interpreter::openScope();
-	if (this->_this)
-		Interpreter::addVariable("this", new Reference(this->_this), false, true);
-
-	Type* ret = nullptr;
-	if (this->_function->getType() != BLOCK)
-		ret = this->_function->copy();
-	else
-		ret = ((Block*)this->_function)->run(false);
-	Interpreter::closeScope();
-	return ret;
+	if (fittingFunctionInstance == nullptr)
+		throw SyntaxException("Arguments don't fit any of the overloaded functions");
+	return this->run(*fittingFunctionInstance, args);
 }
 
 Type* Function::assign(Type* other)
 {
 	if (other->getType() == FUNCTION)
 	{
-		this->_function = ((Function*)other)->_function->copy();
-		this->_parameters = ((Function*)other)->_parameters;
+		for (FunctionInstance& functionInstance : ((Function*)other)->_functionInstances)
+			this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->copy() });
 		return this;
 	}
 	else
 		return Type::assign(other);
+}
+
+Type* Function::extend(Type* other)
+{
+	if (other->getType() != FUNCTION)
+		return Type::extendAssign(other);
+	return this->copy()->extendAssign(other);
+}
+
+Type* Function::extendAssign(Type* other)
+{
+	if (other->getType() != FUNCTION)
+		return Type::extendAssign(other);
+	for(FunctionInstance& functionInstance : ((Function*)other)->_functionInstances)
+		this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->copy() });
+	return this;
+}
+
+Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
+{
+	// add temporary paramter variables
+	Interpreter::openScope();
+	for (int i = 0; i < args.size(); i++)
+	{
+		Interpreter::addVariable(function.parameters[i].name, function.parameters[i].type == REFERENCE ? new Reference(args[i]) : args[i], false, true);
+	}
+	if (this->_this)
+		Interpreter::addVariable("this", new Reference(this->_this), false, true);
+	// run and close scope
+	Type* ret = nullptr;
+	if (function.function->getType() == BLOCK)
+	{
+		try
+		{
+			ret = function.function->run(false);
+		}
+		catch (ReturnException& e)
+		{
+			ret = e.getValue();
+		}
+	}
+	else
+		ret = new Undefined();
+	Interpreter::closeScope();
+	return ret;
 }

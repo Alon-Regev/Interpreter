@@ -99,9 +99,6 @@
     <ClInclude Include="Reference.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Sequence.h">
-      <Filter>Header Files\Types</Filter>
-    </ClInclude>
     <ClInclude Include="Signal.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
@@ -143,6 +140,18 @@
     </ClInclude>
     <ClInclude Include="..\PackageManagerServer\SocketFileIO.h">
       <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Float.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Char.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="For.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="ReturnException.h">
+      <Filter>Header Files\Exceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,9 +203,6 @@
     <ClCompile Include="Reference.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
-    <ClCompile Include="Sequence.cpp">
-      <Filter>Source Files\Types</Filter>
-    </ClCompile>
     <ClCompile Include="Signal.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
@@ -235,6 +241,18 @@
     </ClCompile>
     <ClCompile Include="..\PackageManagerServer\SocketFileIO.cpp">
       <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="Float.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Char.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="For.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>Source Files\Interpreter</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

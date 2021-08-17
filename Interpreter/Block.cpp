@@ -1,8 +1,8 @@
 #include "Block.h"
 
-Block::Block(Interpreter& interpreter, Node* node) : Type(BLOCK), _interpreter(interpreter), _code(new Node(""))
+Block::Block(Interpreter& interpreter, Node* node) : Type(BLOCK), _interpreter(interpreter)
 {
-	*this->_code = *node;
+	this->_code = node->copy();
 	this->_code->_block = false;	// block -> executable tree
 }
 
@@ -28,10 +28,34 @@ Interpreter& Block::getInterpreter()
 
 Type* Block::run(bool openScope)
 {
-	if(openScope)
+	if (openScope)
 		Interpreter::openScope();
-	Type* res = this->_interpreter.value(this->_code);
+	Type* res;
+	try
+	{
+		res = this->_interpreter.value(this->_code);
+	}
+	catch (...)
+	{
+		if (openScope)
+			Interpreter::closeScope();
+		throw;
+	}
 	if(openScope)
 		Interpreter::closeScope();
 	return res;
+}
+
+std::vector<Node*> Block::split()
+{
+	Node* current = this->_code;
+	std::vector<Node*> result;
+	while (current && current->_value == ";")
+	{
+		result.push_back(current->_right);
+		current = current->_left;
+	}
+	if (current)
+		result.push_back(current);
+	return result;
 }

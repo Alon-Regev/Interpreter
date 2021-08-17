@@ -9,6 +9,9 @@ Type* Class::assign(Type* other)
 	if (other->getType() == OBJECT)
 	{
 		Object::assign(other);
+		// check constructor
+		if (this->_variables.find(this->_variable) != this->_variables.end())
+			this->_instances.push_back(this->_variable);
 		return this;
 	}
 	else
@@ -21,12 +24,24 @@ Type* Class::call(Type* other)
 	if (this->_variables.find(this->_variable) != this->_variables.end())
 	{
 		Object* newCopy = (Object*)this->copy();
-		//newCopy->toMethods();
-		delete newCopy->_variables[this->_variable]->call(other);
-		delete newCopy->_variables[this->_variable];
-		newCopy->_variables.erase(this->_variable);
+		newCopy->toMethods();
+
+		// call constructor and set temporary variable this
+		newCopy->setVariable("this");
+		delete newCopy->getVariables()[this->_variable]->call(other);
+		newCopy->setVariable("");
+
+		// delete constructors
+		for (const std::string& instance : this->_instances)
+		{
+			if (this->_variables.find(instance) != this->_variables.end())
+			{
+				delete newCopy->getVariables()[instance];
+				newCopy->getVariables().erase(instance);
+			}
+		}
 		return newCopy;
 	}
 	else
-		throw SyntaxException("Constructing class with no constructor");
+		throw SyntaxException("Constructing static class (with no constructor)");
 }

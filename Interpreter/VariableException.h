@@ -6,4 +6,3 @@ class VariableException : public InterpreterException
 public:
     VariableException(const std::string& message) : InterpreterException("TypeError: " + message) {}
 };
-

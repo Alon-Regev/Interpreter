@@ -22,7 +22,10 @@
     <ClInclude Include="..\PackageManagerServer\SocketFileIO.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Bool.h" />
+    <ClInclude Include="Char.h" />
     <ClInclude Include="Class.h" />
+    <ClInclude Include="Float.h" />
+    <ClInclude Include="For.h" />
     <ClInclude Include="Foreach.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Helper.h" />
@@ -42,7 +45,7 @@
     <ClInclude Include="Preprocessor.h" />
     <ClInclude Include="PreprocessorException.h" />
     <ClInclude Include="Reference.h" />
-    <ClInclude Include="Sequence.h" />
+    <ClInclude Include="ReturnException.h" />
     <ClInclude Include="Signal.h" />
     <ClInclude Include="StaticFunction.h" />
     <ClInclude Include="String.h" />
@@ -60,7 +63,10 @@
     <ClCompile Include="..\PackageManagerServer\SocketFileIO.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Bool.cpp" />
+    <ClCompile Include="Char.cpp" />
     <ClCompile Include="Class.cpp" />
+    <ClCompile Include="Float.cpp" />
+    <ClCompile Include="For.cpp" />
     <ClCompile Include="Foreach.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Helper.cpp" />
@@ -74,10 +80,10 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PackageManager.cpp" />
     <ClCompile Include="Pair.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="PredefinedFunctions.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="Reference.cpp" />
-    <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="Signal.cpp" />
     <ClCompile Include="StaticFunction.cpp" />
     <ClCompile Include="String.cpp" />
