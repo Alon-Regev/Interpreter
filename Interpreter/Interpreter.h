@@ -52,6 +52,7 @@ public:
 	static void closeScope();
 	static Type* addVariable(std::string variableName, Type* variable, bool isNew = false, bool setScope = false);
 	static void checkAssign(Type* type);
+	static Type* catchBlock(Type* a, Type* b);
 protected:
 	virtual Type* valueOf(const std::string& str);
 	virtual Type* evaluateBlock(Node* node);

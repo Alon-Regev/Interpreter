@@ -46,6 +46,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 2}},
 	{"{^}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3} },
 
+	{"catch", Operator{[](Type* a, Type* b) { return Interpreter::catchBlock(a, b); }, 2}},
 
 	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 22} },
 	{"[^]", Operator{[](Type* a, Type* b) { return a->index(b); }, 21} },
@@ -281,6 +282,27 @@ void Interpreter::checkAssign(Type* type)
 	if (!type->isVariable() && type->getType() != REFERENCE)
 		throw InvalidOperationException("Assigning to a non-variable value");
 }
+
+Type* Interpreter::catchBlock(Type* a, Type* b)
+{
+	try
+	{
+		if (a->getType() == BLOCK)
+			delete ((Block*)a)->run();
+		return new Void();
+	}
+	catch (Type* e)
+	{
+		if (b->getType() == BLOCK)
+		{
+			Interpreter::addVariable("e", e, true);
+			delete ((Block*)b)->run();
+			Interpreter::removeVariable("e");
+		}
+		return new Void();
+	}
+}
+
 Type* Interpreter::checkNewVariable(const std::string& str)
 {
 	if (str.empty())

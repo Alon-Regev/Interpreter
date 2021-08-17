@@ -27,3 +27,5 @@ Type* lower(Type*);
 Type* upper(Type*);
 
 Type* ret(Type*);
+
+Type* throwFunc(Type*);

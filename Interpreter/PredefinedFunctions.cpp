@@ -18,6 +18,7 @@ void initVariables(std::map<std::string, Type*>& variables)
 	setVariable("upper", new StaticFunction(upper), variables);
 
 	setVariable("return", new StaticFunction(ret), variables);
+	setVariable("throw", new StaticFunction(throwFunc), variables);
 }
 
 void setVariable(const std::string& name, Type* type, std::map<std::string, Type*>& variables)
@@ -250,4 +251,9 @@ Type* upper(Type* other)
 Type* ret(Type* other)
 {
 	throw ReturnException(other);
+}
+
+Type* throwFunc(Type* other)
+{
+	throw other;
 }
