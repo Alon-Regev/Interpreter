@@ -62,9 +62,17 @@ Type* Float::sub(Type* other)
 Type* Float::div(Type* other)
 {
 	if (other->getType() == FLOAT)
+	{
+		if (((Float*)other)->getValue() == 0)
+			throw InvalidOperationException("Division by zero");
 		return new Float(this->_value / ((Float*)other)->getValue());
+	}
 	else if (other->getType() == INT)
+	{
+		if (((Int*)other)->getValue() == 0)
+			throw InvalidOperationException("Division by zero");
 		return new Float(this->_value / ((Int*)other)->getValue());
+	}
 	else
 		return Type::div(other);
 }

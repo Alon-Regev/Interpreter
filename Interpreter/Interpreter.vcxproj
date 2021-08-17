@@ -45,6 +45,7 @@
     <ClInclude Include="Preprocessor.h" />
     <ClInclude Include="PreprocessorException.h" />
     <ClInclude Include="Reference.h" />
+    <ClInclude Include="ReturnException.h" />
     <ClInclude Include="Signal.h" />
     <ClInclude Include="StaticFunction.h" />
     <ClInclude Include="String.h" />
@@ -79,6 +80,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PackageManager.cpp" />
     <ClCompile Include="Pair.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="PredefinedFunctions.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
     <ClCompile Include="Reference.cpp" />
