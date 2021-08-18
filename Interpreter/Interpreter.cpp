@@ -312,6 +312,34 @@ Type* Interpreter::catchBlock(Type* a, Type* b)
 	}
 }
 
+std::vector<Type*> Interpreter::getArgs(Type* other, bool checkList)
+{
+	if (other->getType() == TUPLE)
+		return ((Tuple*)other)->getValues();
+	else if (checkList && other->getType() == LIST)
+		return ((List*)other)->getContent();
+	else
+		return std::vector<Type*>{other};
+}
+
+double Interpreter::getNumber(Type* other)
+{
+	if (other->getType() == INT)
+		return ((Int*)other)->getValue();
+	else if (other->getType() == FLOAT)
+		return ((Float*)other)->getValue();
+	else
+		throw InvalidOperationException("argument not a number");
+}
+
+void Interpreter::printVariables()
+{
+	for (std::pair<std::string, Type*> v : this->_variables)
+	{
+		std::cout << v.first << ": " << v.second->toString() << std::endl;
+	}
+}
+
 Type* Interpreter::checkNewVariable(const std::string& str)
 {
 	if (str.empty())

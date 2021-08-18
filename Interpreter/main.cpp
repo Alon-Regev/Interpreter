@@ -108,9 +108,22 @@ int runInterpreter()
 			system("cls");
 			continue;
 		}
+		else if (input == "list variables" || input == "var list")
+		{
+			interpreter.printVariables();
+			continue;
+		}
 		// process input
 		try
 		{
+			// preprocess
+			Preprocessor p;
+			p.process(input);
+			interpreter.importFunctions(p.getImportedFunctions());
+			interpreter.importVariables(p.getImportedVariables());
+			if (input.find_first_not_of(" \t\n\v\f\r") == std::string::npos)
+				continue;
+			// run
 			std::string returnString = interpreter.run(input);
 			std::cout << returnString << std::endl;
 		}
