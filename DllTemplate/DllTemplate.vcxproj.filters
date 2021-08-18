@@ -84,9 +84,6 @@
     <ClInclude Include="..\Interpreter\Reference.h">
       <Filter>InterpreterFiles</Filter>
     </ClInclude>
-    <ClInclude Include="..\Interpreter\Sequence.h">
-      <Filter>InterpreterFiles</Filter>
-    </ClInclude>
     <ClInclude Include="..\Interpreter\Signal.h">
       <Filter>InterpreterFiles</Filter>
     </ClInclude>
@@ -121,6 +118,24 @@
       <Filter>InterpreterFiles</Filter>
     </ClInclude>
     <ClInclude Include="..\Interpreter\While.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Char.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\Float.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\For.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\PackageManager.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Interpreter\ReturnException.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PackageManagerServer\SocketFileIO.h">
       <Filter>InterpreterFiles</Filter>
     </ClInclude>
   </ItemGroup>
@@ -179,9 +194,6 @@
     <ClCompile Include="..\Interpreter\Reference.cpp">
       <Filter>InterpreterFiles</Filter>
     </ClCompile>
-    <ClCompile Include="..\Interpreter\Sequence.cpp">
-      <Filter>InterpreterFiles</Filter>
-    </ClCompile>
     <ClCompile Include="..\Interpreter\Signal.cpp">
       <Filter>InterpreterFiles</Filter>
     </ClCompile>
@@ -207,6 +219,27 @@
       <Filter>InterpreterFiles</Filter>
     </ClCompile>
     <ClCompile Include="..\Interpreter\While.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Char.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Float.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\For.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\main.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\PackageManager.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Parser.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PackageManagerServer\SocketFileIO.cpp">
       <Filter>InterpreterFiles</Filter>
     </ClCompile>
   </ItemGroup>

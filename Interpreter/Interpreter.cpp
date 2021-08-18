@@ -106,6 +106,15 @@ void Interpreter::importFunctions(const std::map<std::string, staticFunction>& f
 	}
 }
 
+void Interpreter::importVariables(const std::map<std::string, Type*>& variables)
+{
+	for (const std::pair<std::string, Type*>& pair : variables)
+	{
+		this->_variables[pair.first] = pair.second;
+		this->_variables[pair.first]->setVariable(pair.first);
+	}
+}
+
 Type* Interpreter::valueOf(const std::string& str)
 {
 	// is a variable

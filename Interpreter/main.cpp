@@ -139,6 +139,7 @@ int runFile(std::string& fileName)
 		p.process(code);
 		Interpreter i;
 		i.importFunctions(p.getImportedFunctions());
+		i.importVariables(p.getImportedVariables());
 		i.run(code);
 	}
 	catch (InterpreterException& e)
