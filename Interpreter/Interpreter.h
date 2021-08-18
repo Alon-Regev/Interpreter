@@ -46,6 +46,7 @@ public:
 	~Interpreter();
 	std::string run(const std::string& code);
 	void importFunctions(const std::map<std::string, staticFunction>&);
+	void importVariables(const std::map<std::string, Type*>&);
 	static Type* assign(Type* a, Type* b);
 	static void removeVariable(const std::string& name, bool deleteValue = true);
 	static void openScope();

@@ -18,6 +18,11 @@ const std::map<std::string, staticFunction>& Preprocessor::getImportedFunctions(
 	return this->_importedFunctions;
 }
 
+const std::map<std::string, Type*>& Preprocessor::getImportedVariables()
+{
+	return this->_importedVariables;
+}
+
 void Preprocessor::command(std::string& code, const std::string& command)
 {
 	std::vector<std::string> splitCommand = Helper::split(command, ' ');
@@ -62,6 +67,10 @@ void Preprocessor::importDll(const std::string& path)
 	const std::vector<std::string>* functions = (const std::vector<std::string>*)GetProcAddress(library, "functions");
 	if (!functions)
 		throw PreprocessorException("Included dll " + path + " has an invalid functions list");
+	const std::map<std::string, Type*>* variables = (const std::map<std::string, Type*>*)GetProcAddress(library, "variables");
+	if (!variables)
+		throw PreprocessorException("Included dll " + path + " has an invalid variable list");
+	this->_importedVariables = *variables;
 
 	for (const std::string& function : *functions)
 	{
