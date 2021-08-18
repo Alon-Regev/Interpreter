@@ -54,6 +54,11 @@ public:
 	static Type* addVariable(std::string variableName, Type* variable, bool isNew = false, bool setScope = false);
 	static void checkAssign(Type* type);
 	static Type* catchBlock(Type* a, Type* b);
+
+	static std::vector<Type*> getArgs(Type* other, bool checkList = false);
+	static double getNumber(Type* other);
+
+	void printVariables();
 protected:
 	virtual Type* valueOf(const std::string& str);
 	virtual Type* evaluateBlock(Node* node);

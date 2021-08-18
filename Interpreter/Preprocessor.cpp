@@ -4,7 +4,7 @@
 void Preprocessor::process(std::string& code)
 {
 	std::smatch match;
-	std::regex regex("#(.*)\n");
+	std::regex regex("^#(.*)$");
 	while (std::regex_search(code, match, regex))
 	{
 		this->command(code, match.str(1));
@@ -77,6 +77,6 @@ void Preprocessor::importDll(const std::string& path)
 		staticFunction pf = (staticFunction)GetProcAddress(library, function.c_str());
 		if (!pf)
 			throw PreprocessorException("Function " + function + " from dll " + path);
-		this->_importedFunctions[function] = pf;
+		this->_importedFunctions[function.substr(function.find_first_not_of('_'))] = pf;
 	}
 }
