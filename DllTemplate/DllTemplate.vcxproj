@@ -96,6 +96,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,6 +116,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,6 +165,7 @@
     <ClInclude Include="..\Interpreter\Bool.h" />
     <ClInclude Include="..\Interpreter\Char.h" />
     <ClInclude Include="..\Interpreter\Class.h" />
+    <ClInclude Include="..\Interpreter\Data.h" />
     <ClInclude Include="..\Interpreter\Float.h" />
     <ClInclude Include="..\Interpreter\For.h" />
     <ClInclude Include="..\Interpreter\Foreach.h" />
@@ -205,6 +208,7 @@
     <ClCompile Include="..\Interpreter\Bool.cpp" />
     <ClCompile Include="..\Interpreter\Char.cpp" />
     <ClCompile Include="..\Interpreter\Class.cpp" />
+    <ClCompile Include="..\Interpreter\Data.cpp" />
     <ClCompile Include="..\Interpreter\Float.cpp" />
     <ClCompile Include="..\Interpreter\For.cpp" />
     <ClCompile Include="..\Interpreter\Foreach.cpp" />

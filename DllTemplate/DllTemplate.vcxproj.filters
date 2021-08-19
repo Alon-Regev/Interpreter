@@ -138,6 +138,9 @@
     <ClInclude Include="..\PackageManagerServer\SocketFileIO.h">
       <Filter>InterpreterFiles</Filter>
     </ClInclude>
+    <ClInclude Include="..\Interpreter\Data.h">
+      <Filter>InterpreterFiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Implementation.cpp">
@@ -240,6 +243,9 @@
       <Filter>InterpreterFiles</Filter>
     </ClCompile>
     <ClCompile Include="..\PackageManagerServer\SocketFileIO.cpp">
+      <Filter>InterpreterFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Interpreter\Data.cpp">
       <Filter>InterpreterFiles</Filter>
     </ClCompile>
   </ItemGroup>

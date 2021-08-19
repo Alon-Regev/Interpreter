@@ -44,7 +44,7 @@ Type* Function::copy()
 void Function::setThis(Type* value, bool deletePrev)
 {
 	//if(deletePrev)
-		delete this->_this;
+	delete this->_this;
 	this->_this = value;
 }
 
