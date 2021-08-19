@@ -4,6 +4,16 @@ Class::Class() : Object(CLASS)
 {
 }
 
+Class::Class(const std::string name, std::map<std::string, Type*> variables) : Object(CLASS)
+{
+	// copy variables
+	for (std::pair<const std::string, Type*>& pair : variables)
+		this->_variables[pair.first] = pair.second;
+	// check constructor
+	if (this->_variables.find(name) != this->_variables.end())
+		this->_instances.push_back(name);
+}
+
 Type* Class::assign(Type* other)
 {
 	if (other->getType() == OBJECT)

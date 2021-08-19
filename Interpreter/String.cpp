@@ -122,3 +122,8 @@ const std::string& String::getContent()
 {
     return this->_content;
 }
+
+void String::setContent(const std::string& content)
+{
+    this->_content = content;
+}

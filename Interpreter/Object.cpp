@@ -9,6 +9,8 @@ Object::Object(std::map<std::string, Type*>& variables, std::vector<std::string>
 		this->_variables[pair.first] = pair.second->copy();
 		if (this->_variables[pair.first]->getType() == FUNCTION)
 			((Function*)this->_variables[pair.first])->setThis(new Reference(this), false);
+		else if (this->_variables[pair.first]->getType() == STATIC_FUNCTION)
+			((StaticFunction*)this->_variables[pair.first])->setThis(this, false);
 	}
 	// copy instances
 	for (const std::string& instance : instances)
@@ -60,8 +62,12 @@ Type* Object::copy()
 void Object::toMethods()
 {
 	for (const std::pair<std::string, Type*>& pair : this->_variables)
+	{
 		if (pair.second->getType() == FUNCTION)
 			((Function*)pair.second)->setThis(new Reference(this));
+		else if (pair.second->getType() == STATIC_FUNCTION)
+			((StaticFunction*)pair.second)->setThis(this, false);
+	}
 }
 
 std::map<std::string, Type*>& Object::getVariables()

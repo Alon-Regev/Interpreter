@@ -1,5 +1,6 @@
 #pragma once
 #include <regex>
+#include <map>
 
 #define ANY "var"
 
@@ -29,6 +30,8 @@
 #include "Object.h"
 #include "Name.h"
 #include "Class.h"
+
+typedef Type* (*staticFunction)(Type*);
 
 struct ScopeVariable
 {
