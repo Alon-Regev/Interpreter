@@ -89,6 +89,11 @@ Type* Function::assign(Type* other)
 {
 	if (other->getType() == FUNCTION)
 	{
+		// delete current function instances
+		for (FunctionInstance& functionInstance : this->_functionInstances)
+			delete functionInstance.function;
+		this->_functionInstances.clear();
+		// copy new function instances
 		for (FunctionInstance& functionInstance : ((Function*)other)->_functionInstances)
 			this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->copy() });
 		return this;
@@ -116,13 +121,12 @@ Type* Function::extendAssign(Type* other)
 Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
 {
 	// add temporary paramter variables
-	Interpreter::openScope();
 	for (int i = 0; i < args.size(); i++)
 	{
-		Interpreter::addVariable(function.parameters[i].name, function.parameters[i].type == REFERENCE ? new Reference(args[i]) : args[i], false, true);
+		Interpreter::addVariable(function.parameters[i].name, function.function->getVariables(), function.parameters[i].type == REFERENCE ? new Reference(args[i]) : args[i], false, true);
 	}
 	if (this->_this)
-		Interpreter::addVariable("this", new Reference(this->_this), false, true);
+		Interpreter::addVariable("this", function.function->getVariables(),new Reference(this->_this), false, true);
 	// run and close scope
 	Type* ret = nullptr;
 	if (function.function->getType() == BLOCK)
@@ -138,6 +142,5 @@ Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
 	}
 	else
 		ret = new Undefined();
-	Interpreter::closeScope();
 	return ret;
 }
