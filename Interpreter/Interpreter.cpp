@@ -22,7 +22,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"<-", Operator{[](Type* a, Type* b) { return a->extend(b); }, 8} },
 	{":", Operator{[](Type* a, Type* b) { return (Type*)new Pair(a->isVariable() ? a : a->copy(), b->isVariable() ? b : b->copy()); }, 7}},
 	{",", Operator{(operation)Interpreter::sequenceExtension, 6} },
-	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 9} },
+	{"=>", Operator{(operation)Interpreter::createFunction, 9, BINARY_INFIX, false, true, true} },
 
 	{"=", Operator{(operation)Interpreter::assign, 5, BINARY_INFIX, false, false, true} },
 	{"+=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->addAssign(b); }, 5, BINARY_INFIX, false, false} },
@@ -222,13 +222,13 @@ Type* Interpreter::assign(Type* a, Type* b, std::map<std::string, Type*>& variab
 	return Interpreter::addVariable(a->getVariable(), variables, b->copy());
 }
 
-void Interpreter::removeVariable(const std::string& name, bool deleteValue)
+void Interpreter::removeVariable(const std::string& name, std::map<std::string, Type*>& variables, bool deleteValue)
 {
 	if (deleteValue)
-		delete Interpreter::_variables[name];
+		delete variables[name];
 	else
-		Interpreter::_variables[name]->setVariable("");
-	Interpreter::_variables.erase(name);
+		variables[name]->setVariable("");
+	variables.erase(name);
 }
 
 Type* Interpreter::addVariable(std::string variableName, std::map<std::string, Type*>& variables, Type* variable, bool isNew, bool setScope)
@@ -270,7 +270,7 @@ Type* Interpreter::catchBlock(Type* a, Type* b, std::map<std::string, Type*>& va
 		{
 			Interpreter::addVariable("e", variables, e, true);
 			delete ((Block*)b)->run();
-			Interpreter::removeVariable("e");
+			Interpreter::removeVariable("e", variables);
 		}
 		return new Void();
 	}
@@ -302,6 +302,11 @@ void Interpreter::printVariables()
 	{
 		std::cout << v.first << ": " << v.second->toString() << std::endl;
 	}
+}
+
+Type* Interpreter::createFunction(Type* a, Type* b, std::map<std::string, Type*>& variables)
+{
+	return (Type*)new Function(a, (Block*)b, variables);
 }
 
 Type* Interpreter::checkNewVariable(const std::string& str, std::map<std::string, Type*>& variables)

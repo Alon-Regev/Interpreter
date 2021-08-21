@@ -68,6 +68,7 @@ int main(int argc, char** argv)
 	}
 	else
 		return runFile(command);
+	return 0;
 }
 
 // function gets code input, spanning multiple lines if there's ';' on the end (expecting another line)

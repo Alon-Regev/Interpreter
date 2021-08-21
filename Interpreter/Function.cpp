@@ -2,7 +2,7 @@
 
 Function::Function(Interpreter& interpreter) : Type(FUNCTION), _interpreter(interpreter), _functionInstances{}  {}
 
-Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(block->getInterpreter()), _functionInstances{}
+Function::Function(Type* params, Block* block, std::map<std::string, Type*>& variables) : Type(FUNCTION), _interpreter(block->getInterpreter()), _functionInstances{}
 {
 	std::vector<Parameter> parameters;
 	if (params->getType() == TUPLE && ((Tuple*)params)->isVariableTuple())
@@ -10,14 +10,17 @@ Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(bl
 		for (Type* param : ((Tuple*)params)->getValues())
 		{
 			parameters.push_back(Parameter{ param->getVariable(), param->getType() });
-			Interpreter::removeVariable(param->getVariable());
+			Interpreter::removeVariable(param->getVariable(), block->getVariables());
 		}
 		((Tuple*)params)->getValues().clear();
 	}
 	else if (params->isVariable())
 	{	// one param
 		parameters.push_back(Parameter{ params->getVariable(), (params->isStaticType() ? params->getType() : "") });
-		Interpreter::removeVariable(params->getVariable(), false);
+		std::string name = params->getVariable();
+		// delete variable at parent and at the block
+		Interpreter::removeVariable(name, block->getVariables(), false);
+		Interpreter::removeVariable(name, variables, false);
 	}
 
 	this->_functionInstances.push_back(FunctionInstance{ parameters, (Block*)block->copy() });
