@@ -1,6 +1,8 @@
 #pragma once
 #include <map>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 #include "StaticFunction.h"
 #include "Tuple.h"
@@ -29,3 +31,5 @@ Type* upper(Type*);
 Type* ret(Type*);
 
 Type* throwFunc(Type*);
+
+Type* sleep(Type*);

@@ -2,7 +2,7 @@
 
 Function::Function(Interpreter& interpreter) : Type(FUNCTION), _interpreter(interpreter), _functionInstances{}  {}
 
-Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(block->getInterpreter()), _functionInstances{}
+Function::Function(Type* params, Block* block, std::map<std::string, Type*>& variables) : Type(FUNCTION), _interpreter(block->getInterpreter()), _functionInstances{}
 {
 	std::vector<Parameter> parameters;
 	if (params->getType() == TUPLE && ((Tuple*)params)->isVariableTuple())
@@ -10,14 +10,17 @@ Function::Function(Type* params, Block* block) : Type(FUNCTION), _interpreter(bl
 		for (Type* param : ((Tuple*)params)->getValues())
 		{
 			parameters.push_back(Parameter{ param->getVariable(), param->getType() });
-			Interpreter::removeVariable(param->getVariable());
+			Interpreter::removeVariable(param->getVariable(), block->getVariables());
 		}
 		((Tuple*)params)->getValues().clear();
 	}
 	else if (params->isVariable())
 	{	// one param
 		parameters.push_back(Parameter{ params->getVariable(), (params->isStaticType() ? params->getType() : "") });
-		Interpreter::removeVariable(params->getVariable(), false);
+		std::string name = params->getVariable();
+		// delete variable at parent and at the block
+		Interpreter::removeVariable(name, block->getVariables(), false);
+		Interpreter::removeVariable(name, variables, false);
 	}
 
 	this->_functionInstances.push_back(FunctionInstance{ parameters, (Block*)block->copy() });
@@ -89,6 +92,11 @@ Type* Function::assign(Type* other)
 {
 	if (other->getType() == FUNCTION)
 	{
+		// delete current function instances
+		for (FunctionInstance& functionInstance : this->_functionInstances)
+			delete functionInstance.function;
+		this->_functionInstances.clear();
+		// copy new function instances
 		for (FunctionInstance& functionInstance : ((Function*)other)->_functionInstances)
 			this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->copy() });
 		return this;
@@ -116,13 +124,12 @@ Type* Function::extendAssign(Type* other)
 Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
 {
 	// add temporary paramter variables
-	Interpreter::openScope();
 	for (int i = 0; i < args.size(); i++)
 	{
-		Interpreter::addVariable(function.parameters[i].name, function.parameters[i].type == REFERENCE ? new Reference(args[i]) : args[i], false, true);
+		Interpreter::addVariable(function.parameters[i].name, function.function->getVariables(), function.parameters[i].type == REFERENCE ? new Reference(args[i]) : args[i], false, true);
 	}
 	if (this->_this)
-		Interpreter::addVariable("this", new Reference(this->_this), false, true);
+		Interpreter::addVariable("this", function.function->getVariables(),new Reference(this->_this), false, true);
 	// run and close scope
 	Type* ret = nullptr;
 	if (function.function->getType() == BLOCK)
@@ -138,6 +145,5 @@ Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
 	}
 	else
 		ret = new Undefined();
-	Interpreter::closeScope();
 	return ret;
 }

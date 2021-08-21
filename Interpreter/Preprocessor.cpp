@@ -11,6 +11,17 @@ void Preprocessor::process(std::string& code)
 	}
 	// delete comments
 	code = std::regex_replace(code, std::regex("(//.*)|(/\\*[\\S\\s]*\\*/)"), "");
+	// remove newlines
+	std::string::size_type i = 0;
+	// go over string
+	while (i < code.length())
+	{
+		// go to next newline
+		i = code.find('\n', i);
+		if (i == std::string::npos)
+			break;	// no more newlines
+		code.erase(i, 1);
+	}
 }
 
 const std::map<std::string, staticFunction>& Preprocessor::getImportedFunctions()

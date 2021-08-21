@@ -19,6 +19,8 @@ void initVariables(std::map<std::string, Type*>& variables)
 
 	setVariable("return", new StaticFunction(ret), variables);
 	setVariable("throw", new StaticFunction(throwFunc), variables);
+
+	setVariable("sleep", new StaticFunction(sleep), variables);
 }
 
 void setVariable(const std::string& name, Type* type, std::map<std::string, Type*>& variables)
@@ -59,7 +61,7 @@ Type* deleteVariable(Type* type)
 {
 	if (type->isVariable())
 	{
-		Interpreter::removeVariable(type->getVariable());
+		//Interpreter::removeVariable(type->getVariable());
 	}
 	else
 		throw InvalidOperationException("Deleting a non-variable value");
@@ -256,4 +258,12 @@ Type* ret(Type* other)
 Type* throwFunc(Type* other)
 {
 	throw other->copy();
+}
+
+Type* sleep(Type* other)
+{
+	if (other->getType() != INT)
+		throw InvalidOperationException("sleep expects 1 int argument");
+	std::this_thread::sleep_for(std::chrono::milliseconds(((Int*)other)->getValue()));
+	return new Void();
 }

@@ -7,9 +7,9 @@ For::For(Type* param) : Type(FOR)
 		std::vector<Node*> lines = ((Block*)param)->split();
 		if (lines.size() != 3)
 			throw SyntaxException("Invalid for loop syntax");
-		this->_start = new Block(((Block*)param)->getInterpreter(), lines[2]);
-		this->_condition = new Block(((Block*)param)->getInterpreter(), lines[1]);
-		this->_end = new Block(((Block*)param)->getInterpreter(), lines[0]);
+		this->_start = new Block(((Block*)param)->getInterpreter(), lines[2], ((Block*)param)->getVariables());
+		this->_condition = new Block(((Block*)param)->getInterpreter(), lines[1], ((Block*)param)->getVariables());
+		this->_end = new Block(((Block*)param)->getInterpreter(), lines[0], ((Block*)param)->getVariables());
 	}
 }
 
@@ -24,10 +24,8 @@ Type* For::block(Type* other)
 {
 	if(other->getType() != BLOCK)
 		throw SyntaxException("Invalid for loop syntax");
-	Interpreter::openScope();
 	for (this->_start->run(false)->tryDelete(); this->runCondition(); this->_end->run(false)->tryDelete())
 		delete ((Block*)other)->run();
-	Interpreter::closeScope();
 	return new Undefined();
 }
 

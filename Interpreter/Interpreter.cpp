@@ -22,9 +22,9 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"<-", Operator{[](Type* a, Type* b) { return a->extend(b); }, 8} },
 	{":", Operator{[](Type* a, Type* b) { return (Type*)new Pair(a->isVariable() ? a : a->copy(), b->isVariable() ? b : b->copy()); }, 7}},
 	{",", Operator{(operation)Interpreter::sequenceExtension, 6} },
-	{"=>", Operator{[](Type* a, Type* b) { return (Type*)new Function(a, (Block*)b); }, 9} },
+	{"=>", Operator{(operation)Interpreter::createFunction, 9, BINARY_INFIX, false, true, true} },
 
-	{"=", Operator{(operation)Interpreter::assign, 5, BINARY_INFIX, false, false} },
+	{"=", Operator{(operation)Interpreter::assign, 5, BINARY_INFIX, false, false, true} },
 	{"+=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->addAssign(b); }, 5, BINARY_INFIX, false, false} },
 	{"-=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->subAssign(b); }, 5, BINARY_INFIX, false, false} },
 	{"*=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->mulAssign(b); }, 5, BINARY_INFIX, false, false} },
@@ -46,7 +46,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 2}},
 	{"{^}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3} },
 
-	{"catch", Operator{[](Type* a, Type* b) { return Interpreter::catchBlock(a, b); }, 2}},
+	{"catch", Operator{(operation)Interpreter::catchBlock, 2, false, true, true}},
 
 	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 22} },
 	{"[^]", Operator{[](Type* a, Type* b) { return a->index(b); }, 21} },
@@ -90,7 +90,7 @@ Interpreter::~Interpreter()
 
 std::string Interpreter::run(const std::string& code)
 {
-	Type* result = this->value(code);
+	Type* result = this->value(code, this->_variables);
 	std::string resultStr = result->toString();
 	if(!result->isVariable())
 		delete result;
@@ -115,11 +115,11 @@ void Interpreter::importVariables(const std::map<std::string, Type*>& variables)
 	}
 }
 
-Type* Interpreter::valueOf(const std::string& str)
+Type* Interpreter::valueOf(const std::string& str, std::map<std::string, Type*>& variables)
 {
 	// is a variable
-	if (this->_variables.find(str) != this->_variables.end())	// old variable
-		return Interpreter::_variables[str];
+	if (variables.find(str) != variables.end())	// old variable
+		return  variables[str];
 	// is a type
 	else if (Void::isType(str))
 		return new Void();
@@ -137,7 +137,7 @@ Type* Interpreter::valueOf(const std::string& str)
 		return new Char(str[1]);
 	
 	// check new variable
-	Type* newVar = this->checkNewVariable(str);
+	Type* newVar = this->checkNewVariable(str, variables);
 	if (newVar)
 		return newVar;
 	// invalid expression
@@ -145,9 +145,9 @@ Type* Interpreter::valueOf(const std::string& str)
 		throw TypeErrorException("Value \"" + str + "\" cannot be parsed");
 }
 
-Type* Interpreter::evaluateBlock(Node* node)
+Type* Interpreter::evaluateBlock(Node* node, std::map<std::string, Type*>& variables)
 {
-	return new Block(*this, node);
+	return new Block(*this, node, variables);
 }
 
 std::string Interpreter::getValue(const std::string& expression)
@@ -198,7 +198,7 @@ void Interpreter::handleTempTypes(Type* a, Type* b, Type* res, const std::string
 		delete b;
 }
 
-Type* Interpreter::assign(Type* a, Type* b)
+Type* Interpreter::assign(Type* a, Type* b, std::map<std::string, Type*>& variables)
 {
 	if (!a->isVariable())
 	{
@@ -219,71 +219,35 @@ Type* Interpreter::assign(Type* a, Type* b)
 	if (a->isStaticType() || a->getType() == REFERENCE)
 		return a->assign(b);	// assign operator
 	// replace
-	return Interpreter::addVariable(a->getVariable(), b->copy());
+	return Interpreter::addVariable(a->getVariable(), variables, b->copy());
 }
 
-void Interpreter::removeVariable(const std::string& name, bool deleteValue)
+void Interpreter::removeVariable(const std::string& name, std::map<std::string, Type*>& variables, bool deleteValue)
 {
 	if (deleteValue)
-		delete Interpreter::_variables[name];
+		delete variables[name];
 	else
-		Interpreter::_variables[name]->setVariable("");
-	Interpreter::_variables.erase(name);
+		variables[name]->setVariable("");
+	variables.erase(name);
 }
 
-void Interpreter::openScope()
-{
-	Interpreter::_variableScope.push_back(std::vector<ScopeVariable>());
-}
-
-void Interpreter::closeScope()
-{
-	for (const ScopeVariable& var : Interpreter::_variableScope.back())
-	{
-		if (var.previousValue == nullptr)
-			Interpreter::removeVariable(var.name);
-		else
-		{
-			delete Interpreter::_variables[var.name];
-			Interpreter::_variables[var.name] = var.previousValue;
-		}
-	}
-	Interpreter::_variableScope.pop_back();
-}
-
-Type* Interpreter::addVariable(std::string variableName, Type* variable, bool isNew, bool setScope)
+Type* Interpreter::addVariable(std::string variableName, std::map<std::string, Type*>& variables, Type* variable, bool isNew, bool setScope)
 {
 	Helper::trim(variableName);
 	// check if variable already exists in this scope
-	bool inThisScope = false;
-	if (Interpreter::_variables.find(variableName) != Interpreter::_variables.end())
-	{
-		for (const ScopeVariable& var : Interpreter::_variableScope.back())
-			if (var.name == variableName)
-				inThisScope = true;
-	}
-
 	if (isNew)
 	{
-		if (Interpreter::_variables.find(variableName) != Interpreter::_variables.end())
+		if (variables.find(variableName) != variables.end())
 			throw VariableException('"' + variableName + "\" already exists");
 		else if (!isVariableNameValid(variableName))
 			throw VariableException('"' + variableName + "\" is not a valid name");
-		Interpreter::_variableScope.back().push_back(ScopeVariable{ variableName, nullptr });
 	}
-	else if(setScope)
-		Interpreter::_variableScope.back().push_back(ScopeVariable{ variableName, nullptr });
 
 	variable->setVariable(variableName);
 	// if variable already exists
-	if (Interpreter::_variables.find(variableName) != Interpreter::_variables.end())
-	{
-		if(inThisScope)
-			delete Interpreter::_variables[variableName];
-		else
-			Interpreter::_variableScope.back().back().previousValue = Interpreter::_variables[variableName];
-	}
-	return Interpreter::_variables[variableName] = variable;
+	if (variables.find(variableName) != variables.end())
+		delete variables[variableName];
+	return variables[variableName] = variable;
 }
 
 void Interpreter::checkAssign(Type* type)
@@ -292,7 +256,7 @@ void Interpreter::checkAssign(Type* type)
 		throw InvalidOperationException("Assigning to a non-variable value");
 }
 
-Type* Interpreter::catchBlock(Type* a, Type* b)
+Type* Interpreter::catchBlock(Type* a, Type* b, std::map<std::string, Type*>& variables)
 {
 	try
 	{
@@ -304,9 +268,9 @@ Type* Interpreter::catchBlock(Type* a, Type* b)
 	{
 		if (b->getType() == BLOCK)
 		{
-			Interpreter::addVariable("e", e, true);
+			Interpreter::addVariable("e", variables, e, true);
 			delete ((Block*)b)->run();
-			Interpreter::removeVariable("e");
+			Interpreter::removeVariable("e", variables);
 		}
 		return new Void();
 	}
@@ -340,33 +304,38 @@ void Interpreter::printVariables()
 	}
 }
 
-Type* Interpreter::checkNewVariable(const std::string& str)
+Type* Interpreter::createFunction(Type* a, Type* b, std::map<std::string, Type*>& variables)
+{
+	return (Type*)new Function(a, (Block*)b, variables);
+}
+
+Type* Interpreter::checkNewVariable(const std::string& str, std::map<std::string, Type*>& variables)
 {
 	if (str.empty())
 		return new Undefined();
 	Type* staticType = nullptr;
 	if (str.rfind(ANY " ", 0) == 0)	// new dynamic variable
-		return Interpreter::addVariable(str.substr(strlen(ANY " ")), new Undefined(), true);
+		return Interpreter::addVariable(str.substr(strlen(ANY " ")), variables, new Undefined(), true);
 	else if (str.rfind(INT " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(INT " ")), new Int(), true);
+		staticType = Interpreter::addVariable(str.substr(strlen(INT " ")), variables, new Int(), true);
 	else if (str.rfind(FLOAT " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(FLOAT " ")), new Float(), true);
+		staticType = Interpreter::addVariable(str.substr(strlen(FLOAT " ")), variables, new Float(), true);
 	else if (str.rfind(FUNCTION " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(FUNCTION " ")), new Function(*this), true);
+		staticType = Interpreter::addVariable(str.substr(strlen(FUNCTION " ")), variables, new Function(*this), true);
 	else if (str.rfind(_BOOL " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(_BOOL " ")), new Bool());
+		staticType = Interpreter::addVariable(str.substr(strlen(_BOOL " ")), variables, new Bool(), true);
 	else if (str.rfind(LIST " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(LIST " ")), new List());
+		staticType = Interpreter::addVariable(str.substr(strlen(LIST " ")), variables, new List(), true);
 	else if (str.rfind(STRING " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(STRING " ")), new String());
+		staticType = Interpreter::addVariable(str.substr(strlen(STRING " ")), variables, new String(), true);
 	else if (str.rfind(CHAR " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(CHAR " ")), new Char());
+		staticType = Interpreter::addVariable(str.substr(strlen(CHAR " ")), variables, new Char(), true);
 	else if (str.rfind(REFERENCE " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(REFERENCE " ")), new Reference());
+		staticType = Interpreter::addVariable(str.substr(strlen(REFERENCE " ")), variables, new Reference(), true);
 	else if (str.rfind(CLASS " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(CLASS " ")), new Class());
+		staticType = Interpreter::addVariable(str.substr(strlen(CLASS " ")), variables, new Class(), true);
 	else if (str.rfind(OBJECT " ", 0) == 0)
-		staticType = Interpreter::addVariable(str.substr(strlen(OBJECT " ")), new Object());
+		staticType = Interpreter::addVariable(str.substr(strlen(OBJECT " ")), variables, new Object(), true);
 	else if(this->isVariableNameValid(str))
 		return new Name(str);
 	else

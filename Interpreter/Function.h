@@ -28,7 +28,7 @@ class Function : public Type
 {
 public:
 	Function(Interpreter& interpreter);
-	Function(Type* params, Block* block);
+	Function(Type* params, Block* block, std::map<std::string, Type*>& variables);
 	Function(std::vector<FunctionInstance>& functionInstances, Interpreter& interpreter, Type* thisType);
 	virtual ~Function();
 	virtual std::string toString() const { return FUNCTION; }

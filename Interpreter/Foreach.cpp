@@ -27,7 +27,7 @@ Type* Foreach::block(Type* other)
 	{
 		for (Type* value : ((List*)this->_container)->getContent())
 		{
-			Interpreter::assign(this->_current, value);
+			Interpreter::assign(this->_current, value, ((Block*)other)->getVariables());
 			delete ((Block*)other)->run();
 		}
 	}
@@ -81,7 +81,7 @@ Type* Foreach::comprehension(Type* a, Type* b)
 	{
 		for (Type* value : ((List*)container)->getContent())
 		{
-			Interpreter::assign(current, value);
+			Interpreter::assign(current, value, ((Block*)a)->getVariables());
 			result->sequenceExtend(((Block*)a)->run());
 		}
 	}
