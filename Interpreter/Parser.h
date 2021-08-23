@@ -18,6 +18,7 @@
 
 enum opTypes{BINARY_INFIX, UNARY_PREFIX, UNARY_POSTFIX};
 
+typedef Type* (*variablesOperation)(Type*, Type*, std::map<std::string, Type*>&);
 typedef Type*(*operation)(Type*, Type*);
 struct Operator
 {
@@ -26,17 +27,18 @@ struct Operator
 	char type = BINARY_INFIX;
     bool allowNulls = false;    // true if func checks for nulls
     bool ltr = true;   // is evaluated Left To Right or Right To Left
+    bool accessVariables = false;
 };
 
 class Parser : public Node
 {
 public:
 	Parser(const std::map<std::string, Operator>& operators);
-    Type* value(const std::string& expression); 
-    Type* value(Node* expression);
+    Type* value(const std::string& expression, std::map<std::string, Type*>& variables);
+    Type* value(Node* expression, std::map<std::string, Type*>& variables);
 protected:
-    virtual Type* valueOf(const std::string& leaf) = 0;
-    virtual Type* evaluateBlock(Node* node) = 0;
+    virtual Type* valueOf(const std::string& leaf, std::map<std::string, Type*>& variables) = 0;
+    virtual Type* evaluateBlock(Node* node, std::map<std::string, Type*>& variables) = 0;
     virtual std::string getValue(const std::string& expression) = 0;
     virtual Type* handleParentheses(Type* value, char parenthesesType) { return value; }
     virtual void handleTempTypes(Type*, Type*, Type*, const std::string& op) {}
@@ -44,7 +46,7 @@ private:
 	std::vector<Node*> tokenize(const std::string& expression);
 	Node* parse(std::vector<Node*>& expr, bool removeParentheses=true);
 	void removeParentheses(std::vector<Node*>& expr);
-	Type* evaluate(Node*);
+	Type* evaluate(Node*, std::map<std::string, Type*>& variables);
 
 	int isOperator(Node* node);
 	int isOperator(std::string s);

@@ -1,6 +1,6 @@
 #include "Helper.h"
 
-const std::string Helper::_trimmedChars = " \t\n";
+const std::string Helper::_trimmedChars = " \t\r\n";
 
 void Helper::trim(std::string& str)
 {

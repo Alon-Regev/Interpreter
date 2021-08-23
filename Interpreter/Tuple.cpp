@@ -74,7 +74,7 @@ Type* Tuple::assign(Type* other)
     if (this->_values.size() != otherTuple->_values.size())
         throw InvalidOperationException("assigning tuples in different sizes");
     // assign values one by one
-    for (int i = 0; i < this->_values.size(); i++)
-        Interpreter::assign(this->_values[i], otherTuple->_values[i]);
+    /*for (int i = 0; i < this->_values.size(); i++)
+        Interpreter::assign(this->_values[i], otherTuple->_values[i]);*/
     return this;
 }

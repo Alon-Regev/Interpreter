@@ -5,7 +5,7 @@ Parser::Parser(const std::map<std::string, Operator>& operators) : Node(""), _op
 {
 }
 
-Type* Parser::value(const std::string& expression)
+Type* Parser::value(const std::string& expression, std::map<std::string, Type*>& variables)
 {
     Node* tree = nullptr;
     Type* result = nullptr;
@@ -22,7 +22,7 @@ Type* Parser::value(const std::string& expression)
     }
     try
     {
-        result = this->evaluate(tree);
+        result = this->evaluate(tree, variables);
     }
     catch (std::exception& e)
     {
@@ -33,20 +33,20 @@ Type* Parser::value(const std::string& expression)
     return result;
 }
 
-Type* Parser::value(Node* expression)
+Type* Parser::value(Node* expression, std::map<std::string, Type*>& variables)
 {
-    return this->evaluate(expression);
+    return this->evaluate(expression, variables);
 }
 
 // function evaluates a subtree
-Type* Parser::evaluate(Node* node)
+Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
 {
     if (node == nullptr)
         return 0;
     else if (node->isLeaf())
     {
         // is a value
-        Type* temp = this->valueOf(node->_value);
+        Type* temp = this->valueOf(node->_value, variables);
         if (node->_block != 0)
             temp = this->handleParentheses(temp, node->_block);
         return temp;
@@ -54,13 +54,13 @@ Type* Parser::evaluate(Node* node)
     else
     {
         if (node->_block == '{' && !this->isObject(node))
-            return this->evaluateBlock(node);
+            return this->evaluateBlock(node, variables);
         // is an operator
-        Type* lv = evaluate(node->_left);
+        Type* lv = evaluate(node->_left, variables);
         Type* rv = nullptr;
         try
         {
-            rv = evaluate(node->_right);
+            rv = evaluate(node->_right, variables);
         }
         catch (...)
         {
@@ -84,7 +84,10 @@ Type* Parser::evaluate(Node* node)
         Type* temp = nullptr;
         try
         {
-            temp = this->_operators.at(op).func(lv, rv);
+            if(_operator.accessVariables)
+                temp = ((variablesOperation)this->_operators.at(op).func)(lv, rv, variables);
+            else
+                temp = this->_operators.at(op).func(lv, rv);
         }
         catch (...)
         {

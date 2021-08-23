@@ -1,3 +1,4 @@
+#include <winsock2.h>
 #include "Interpreter.h"
 #include "Preprocessor.h"
 #include "PackageManager.h"
@@ -11,7 +12,7 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#define VERSION "0.8"
+#define VERSION "0.9"
 #define NAME "<nameless interpreter>"
 
 std::string codeInput();
@@ -22,6 +23,9 @@ int main(int argc, char** argv)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
 	srand(time(NULL));
 
@@ -68,6 +72,7 @@ int main(int argc, char** argv)
 	}
 	else
 		return runFile(command);
+	return 0;
 }
 
 // function gets code input, spanning multiple lines if there's ';' on the end (expecting another line)
@@ -108,9 +113,22 @@ int runInterpreter()
 			system("cls");
 			continue;
 		}
+		else if (input == "list variables" || input == "var list")
+		{
+			interpreter.printVariables();
+			continue;
+		}
 		// process input
 		try
 		{
+			// preprocess
+			Preprocessor p;
+			p.process(input);
+			interpreter.importFunctions(p.getImportedFunctions());
+			interpreter.importVariables(p.getImportedVariables());
+			if (input.find_first_not_of(" \t\n\v\f\r") == std::string::npos)
+				continue;
+			// run
 			std::string returnString = interpreter.run(input);
 			std::cout << returnString << std::endl;
 		}
@@ -139,6 +157,7 @@ int runFile(std::string& fileName)
 		p.process(code);
 		Interpreter i;
 		i.importFunctions(p.getImportedFunctions());
+		i.importVariables(p.getImportedVariables());
 		i.run(code);
 	}
 	catch (InterpreterException& e)

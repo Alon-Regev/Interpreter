@@ -32,6 +32,7 @@ public:
 	virtual Type* toChar();
 
 	const std::string& getContent();
+	void setContent(const std::string& content);
 private:
 	std::string _content;
 };

@@ -4,18 +4,34 @@
 void Preprocessor::process(std::string& code)
 {
 	std::smatch match;
-	std::regex regex("#(.*)\n");
+	std::regex regex("^#(.*)$");
 	while (std::regex_search(code, match, regex))
 	{
 		this->command(code, match.str(1));
 	}
 	// delete comments
 	code = std::regex_replace(code, std::regex("(//.*)|(/\\*[\\S\\s]*\\*/)"), "");
+	// remove newlines
+	std::string::size_type i = 0;
+	// go over string
+	while (i < code.length())
+	{
+		// go to next newline
+		i = code.find('\n', i);
+		if (i == std::string::npos)
+			break;	// no more newlines
+		code.erase(i, 1);
+	}
 }
 
 const std::map<std::string, staticFunction>& Preprocessor::getImportedFunctions()
 {
 	return this->_importedFunctions;
+}
+
+const std::map<std::string, Type*>& Preprocessor::getImportedVariables()
+{
+	return this->_importedVariables;
 }
 
 void Preprocessor::command(std::string& code, const std::string& command)
@@ -62,12 +78,16 @@ void Preprocessor::importDll(const std::string& path)
 	const std::vector<std::string>* functions = (const std::vector<std::string>*)GetProcAddress(library, "functions");
 	if (!functions)
 		throw PreprocessorException("Included dll " + path + " has an invalid functions list");
+	const std::map<std::string, Type*>* variables = (const std::map<std::string, Type*>*)GetProcAddress(library, "variables");
+	if (!variables)
+		throw PreprocessorException("Included dll " + path + " has an invalid variable list");
+	this->_importedVariables = *variables;
 
 	for (const std::string& function : *functions)
 	{
 		staticFunction pf = (staticFunction)GetProcAddress(library, function.c_str());
 		if (!pf)
 			throw PreprocessorException("Function " + function + " from dll " + path);
-		this->_importedFunctions[function] = pf;
+		this->_importedFunctions[function.substr(function.find_first_not_of('_'))] = pf;
 	}
 }
