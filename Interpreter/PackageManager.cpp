@@ -52,12 +52,10 @@ void PackageManager::upload(const std::string& package)
 
 SOCKET PackageManager::connectSocket()
 {
-    WSADATA wsaData;
     SOCKET clientSocket;
     // Server/receiver address
     SOCKADDR_IN serverAddr;
     // create socket
-    WSAStartup(MAKEWORD(2, 2), &wsaData);
     clientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (clientSocket == INVALID_SOCKET)
     {
