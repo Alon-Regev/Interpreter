@@ -1,3 +1,4 @@
+#include <winsock2.h>
 #include "Interpreter.h"
 #include "Preprocessor.h"
 #include "PackageManager.h"
@@ -22,6 +23,9 @@ int main(int argc, char** argv)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
 	srand(time(NULL));
 
