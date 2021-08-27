@@ -1,10 +1,10 @@
 #include "Node.h"
 
-Node::Node() : _value(""), _left(nullptr), _right(nullptr), _parentheses(0), _lineNumber(0)
+Node::Node() : _value(""), _left(nullptr), _right(nullptr), _parentheses(0), _lineNumber(DEFAULT_LINE_NUMBER)
 {
 }
 
-Node::Node(const std::string& value) : _value(value), _left(nullptr), _right(nullptr), _parentheses(0), _lineNumber(0)
+Node::Node(const std::string& value) : _value(value), _left(nullptr), _right(nullptr), _parentheses(0), _lineNumber(DEFAULT_LINE_NUMBER)
 {
 }
 

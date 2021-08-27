@@ -28,6 +28,9 @@ struct Operator
     bool allowNulls = false;    // true if func checks for nulls
     bool ltr = true;   // is evaluated Left To Right or Right To Left
     bool accessVariables = false;
+
+    bool leftBlock = false;
+    bool rightBlock = false;
 };
 
 class Parser : public Node

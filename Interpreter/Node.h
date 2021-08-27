@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#define DEFAULT_LINE_NUMBER -1
+
 class Node
 {
 public:
