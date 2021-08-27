@@ -64,8 +64,8 @@ public:
 	static Type* createFunction(Type* a, Type* b, std::map<std::string, Type*>& variables);
 protected:
 	virtual Type* valueOf(const std::string& str, std::map<std::string, Type*>& variables);
-	virtual Type* evaluateBlock(Node* node, std::map<std::string, Type*>& variables);
 	virtual std::string getValue(const std::string& expression);
+	virtual Type* evaluateBlock(Node* node, std::map<std::string, Type*>& variables);
 	virtual Type* handleParentheses(Type* value, char parenthesesType);
 	virtual void handleTempTypes(Type* a, Type* b, Type* res, const std::string& op);
 private:

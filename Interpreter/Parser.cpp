@@ -9,6 +9,7 @@ Type* Parser::value(const std::string& expression, std::map<std::string, Type*>&
 {
     Node* tree = nullptr;
     Type* result = nullptr;
+    
     std::vector<Node*> temp = this->tokenize(expression);
     try
     {
@@ -16,16 +17,19 @@ Type* Parser::value(const std::string& expression, std::map<std::string, Type*>&
     }
     catch (std::exception& e)
     {
+        // on error clear memory
         for (Node* node : temp)
             delete node;
         throw;
     }
     try
     {
+        // evaluate tree
         result = this->evaluate(tree, variables);
     }
     catch (std::exception& e)
     {
+        // delete tree on error
         delete tree;
         throw;
     }
@@ -56,48 +60,65 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
         if (node->_block == '{' && !this->isObject(node))
             return this->evaluateBlock(node, variables);
         // is an operator
-        Type* lv = evaluate(node->_left, variables);
-        Type* rv = nullptr;
-        try
-        {
-            rv = evaluate(node->_right, variables);
-        }
-        catch (...)
-        {
-            if (lv)
-                lv->tryDelete();
-            throw;
-        }
         std::string op = node->_value;
         if (this->_operators.find(op) == this->_operators.end())
             throw SyntaxException("Can't parse operators");
         Operator _operator = this->_operators.at(op);
+
+        // evaluate left node
+        Type* lv = nullptr;
+        if(_operator.leftBlock) // evaluate as block
+            lv = evaluateBlock(node->_left, variables);
+        else    // evaluate fully
+            lv = evaluate(node->_left, variables);
+        Type* rv = nullptr;
+        try
+        {
+            if (_operator.rightBlock) // evaluate as block
+                rv = evaluateBlock(node->_right, variables);
+            else    // evaluate fully
+                rv = evaluate(node->_right, variables);
+        }
+        catch (...)
+        {
+            // error when evaluating right node, clear allocated memory
+            if (lv)
+                lv->tryDelete();
+            throw;
+        }
+
+        // check if nodes aren't null (if nulls aren't allowed)
         if (!_operator.allowNulls && (rv == nullptr && _operator.type == UNARY_PREFIX || lv == nullptr && _operator.type == UNARY_POSTFIX || (lv == nullptr || rv == nullptr) && _operator.type == BINARY_INFIX))
         {
+            // on error clear memory
             if(rv)
                 rv->tryDelete();
             if (lv)
                 lv->tryDelete();
             throw SyntaxException(INVALID_OPERATOR_USE(op));
         }
-
+        // compute operation
         Type* temp = nullptr;
         try
         {
+            // pass scope variables to operator function if needed
             if(_operator.accessVariables)
                 temp = ((variablesOperation)this->_operators.at(op).func)(lv, rv, variables);
-            else
+            else    // regular operator
                 temp = this->_operators.at(op).func(lv, rv);
         }
         catch (...)
         {
+            // clear memory on operator error
             if (rv)
                 rv->tryDelete();
             if (lv)
                 lv->tryDelete();
             throw;
         }
+        // handle temporary left and right node evaluations
         this->handleTempTypes(lv, rv, temp, op);
+        // handle special parentheses
         if (node->_block != 0)
             temp = this->handleParentheses(temp, node->_block);
         return temp;
@@ -296,6 +317,7 @@ bool Parser::isCloseParentheses(char c)
 
 std::string Parser::getParentheses(char c)
 {
+    // returns parentheses operator string
     if (c == '(' || c == ')')
         return "(^)";
     else if (c == '{' || c == '}')
@@ -306,6 +328,7 @@ std::string Parser::getParentheses(char c)
 
 bool Parser::isObject(Node* node)
 {
+    // checks whether a node contains an object initialization
     if (node->_value == ",")
     {
         if ((node->_left->_value == "," && this->isObject(node->_left) || node->_left->_value == ":") && node->_right->_value == ":")
