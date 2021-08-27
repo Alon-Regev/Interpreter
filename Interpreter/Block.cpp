@@ -3,7 +3,7 @@
 Block::Block(Interpreter& interpreter, Node* node, std::map<std::string, Type*>& parentVariables) : Type(BLOCK), _interpreter(interpreter)
 {
 	this->_code = node->copy();
-	this->_code->_block = false;	// block -> executable tree
+	this->_code->setParentheses(0);	// change into regular tree
 	// copy parentVariables into variables
 	for (const std::pair<std::string, Type*>& pair : parentVariables)
 	{

@@ -4,16 +4,23 @@
 class Node
 {
 public:
-	Node(std::string value) : _value(value), _left(nullptr), _right(nullptr), _block(0) {}
+	Node();
+	Node(const std::string& value);
+	Node(const std::string& value, int lineNumber);
 	~Node();
 	std::string _value;
 	Node* _left;
 	Node* _right;
-	bool isLeaf() { return this->_left == nullptr && this->_right == nullptr; }
+	bool isLeaf();
 
 	Node& operator=(const Node& other);
 	Node* copy();
 
-	char _block;
+	char getParentheses();
+	void setParentheses(const char c);
+	int getLineNumber();
+private:
+	char _parentheses;
+	int _lineNumber;
 };
 
