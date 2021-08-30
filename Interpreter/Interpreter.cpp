@@ -76,7 +76,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 std::map<std::string, Type*> Interpreter::_variables;
 std::vector<std::vector<ScopeVariable>> Interpreter::_variableScope = std::vector<std::vector<ScopeVariable>>({ std::vector<ScopeVariable>() });
 
-Interpreter::Interpreter() : Parser(Interpreter::_operators)
+Interpreter::Interpreter(bool debugMode) : Parser(Interpreter::_operators), _debugMode(debugMode)
 {
 	// predefined
 	initVariables(this->_variables);
@@ -149,7 +149,8 @@ std::string Interpreter::getValue(const std::string& expression)
 {
 	std::regex r(R"~(^((?=[\d\.]*?\d)\d*\.?\d*(e-?\d+)?|[a-zA-Z_](\w*( \w)?)*|""|".*?[^\\]"|'.'))~");	// int, float, name, string or char
 	std::smatch match;
-	return std::regex_search(expression, match, r) ? match.str() : "";
+	std::string firstLine = expression.substr(0, expression.find_first_of('\n'));
+	return std::regex_search(firstLine, match, r) ? match.str() : "";
 }
 
 Type* Interpreter::evaluateBlock(Node* node, std::map<std::string, Type*>& variables)
@@ -196,6 +197,24 @@ void Interpreter::handleTempTypes(Type* a, Type* b, Type* res, const std::string
 		delete a;
 	if (b && !b->isVariable() && !flag && b != res)
 		delete b;
+}
+
+void Interpreter::debug(int lineNumber, std::map<std::string, Type*>& variables)
+{
+	if(!this->_debugMode)
+		return;
+	std::cout << "\nfinished line " << lineNumber << std::endl << std::endl;
+	// print variables
+	for (auto pair : variables)
+	{
+		if (pair.second->getType() != FUNCTION && pair.second->getType() != STATIC_FUNCTION)
+		{
+			std::cout << pair.first << ": " << pair.second->toString() << std::endl;
+		}
+	}
+	// wait for input and clear screen
+	getchar();
+	system("cls");
 }
 
 Type* Interpreter::assign(Type* a, Type* b, std::map<std::string, Type*>& variables)

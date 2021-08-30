@@ -45,6 +45,7 @@ protected:
     virtual std::string getValue(const std::string& expression) = 0;
     virtual Type* handleParentheses(Type* value, char parenthesesType) { return value; }
     virtual void handleTempTypes(Type*, Type*, Type*, const std::string& op) {}
+    virtual void debug(int lineNumber, std::map<std::string, Type*>& variables) {}
 private:
 	std::vector<Node*> tokenize(const std::string& expression);
 	Node* parse(std::vector<Node*>& expr, bool removeParentheses=true);
