@@ -72,6 +72,10 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
             lv = evaluateBlock(node->_left, variables);
         else    // evaluate fully
             lv = evaluate(node->_left, variables);
+
+        if (op == ";")
+            this->debug(node->getLineNumber(), variables);
+
         Type* rv = nullptr;
         try
         {
