@@ -1,7 +1,7 @@
 #include "Parser.h"
 
 // constructor
-Parser::Parser(const std::map<std::string, Operator>& operators) : Node(""), _operators(operators)
+Parser::Parser(const std::map<std::string, Operator>& operators) : Node(), _operators(operators)
 {
 }
 
@@ -9,23 +9,28 @@ Type* Parser::value(const std::string& expression, std::map<std::string, Type*>&
 {
     Node* tree = nullptr;
     Type* result = nullptr;
+    // convert string to tokens
     std::vector<Node*> temp = this->tokenize(expression);
+    // convert tokens to tree
     try
     {
         tree = this->parse(temp);
     }
     catch (std::exception& e)
     {
+        // on error clear memory
         for (Node* node : temp)
             delete node;
         throw;
     }
     try
     {
+        // evaluate tree
         result = this->evaluate(tree, variables);
     }
     catch (std::exception& e)
     {
+        // delete tree on error
         delete tree;
         throw;
     }
@@ -47,20 +52,47 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
     {
         // is a value
         Type* temp = this->valueOf(node->_value, variables);
-        if (node->_block != 0)
-            temp = this->handleParentheses(temp, node->_block);
+        if (node->getParentheses() != 0)
+            temp = this->handleParentheses(temp, node->getParentheses());
         return temp;
     }
     else
     {
-        if (node->_block == '{' && !this->isObject(node))
+        if (node->getParentheses() == '{' && !this->isObject(node))
             return this->evaluateBlock(node, variables);
         // is an operator
-        Type* lv = evaluate(node->_left, variables);
+        std::string op = node->_value;
+        if (this->_operators.find(op) == this->_operators.end())
+            throw SyntaxException("Can't parse operators", node->getLineNumber());
+        Operator _operator = this->_operators.at(op);
+
+        // evaluate left node
+        Type* lv = nullptr;
+        if(_operator.leftBlock) // evaluate as block
+            lv = evaluateBlock(node->_left, variables);
+        else    // evaluate fully
+            lv = evaluate(node->_left, variables);
+
+        if (op == ";")
+            this->debug(node->getLineNumber(), variables);
+
         Type* rv = nullptr;
         try
         {
-            rv = evaluate(node->_right, variables);
+            if (_operator.rightBlock) // evaluate as block
+                rv = evaluateBlock(node->_right, variables);
+            else    // evaluate fully
+                rv = evaluate(node->_right, variables);
+        }
+        // error when evaluating right node, clear allocated memory
+        catch (InterpreterException& e)
+        {
+            if (lv)
+                lv->tryDelete();
+            // set line number
+            if(e.getLineNumber() == DEFAULT_LINE_NUMBER)
+                e.setLineNumber(node->getLineNumber());
+            throw;
         }
         catch (...)
         {
@@ -68,26 +100,38 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
                 lv->tryDelete();
             throw;
         }
-        std::string op = node->_value;
-        if (this->_operators.find(op) == this->_operators.end())
-            throw SyntaxException("Can't parse operators");
-        Operator _operator = this->_operators.at(op);
+
+        // check if nodes aren't null (if nulls aren't allowed)
         if (!_operator.allowNulls && (rv == nullptr && _operator.type == UNARY_PREFIX || lv == nullptr && _operator.type == UNARY_POSTFIX || (lv == nullptr || rv == nullptr) && _operator.type == BINARY_INFIX))
         {
+            // on error clear memory
             if(rv)
                 rv->tryDelete();
             if (lv)
                 lv->tryDelete();
-            throw SyntaxException(INVALID_OPERATOR_USE(op));
+            throw SyntaxException(INVALID_OPERATOR_USE(op), node->getLineNumber());
         }
-
+        // compute operation
         Type* temp = nullptr;
         try
         {
+            // pass scope variables to operator function if needed
             if(_operator.accessVariables)
                 temp = ((variablesOperation)this->_operators.at(op).func)(lv, rv, variables);
-            else
+            else    // regular operator
                 temp = this->_operators.at(op).func(lv, rv);
+        }
+        // clear memory on operator error
+        catch (InterpreterException& e)
+        {
+            if (rv)
+                rv->tryDelete();
+            if (lv)
+                lv->tryDelete();
+            // set line number
+            if (e.getLineNumber() == DEFAULT_LINE_NUMBER)
+                e.setLineNumber(node->getLineNumber());
+            throw;
         }
         catch (...)
         {
@@ -97,9 +141,11 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
                 lv->tryDelete();
             throw;
         }
+        // handle temporary left and right node evaluations
         this->handleTempTypes(lv, rv, temp, op);
-        if (node->_block != 0)
-            temp = this->handleParentheses(temp, node->_block);
+        // handle special parentheses
+        if (node->getParentheses() != 0)
+            temp = this->handleParentheses(temp, node->getParentheses());
         return temp;
     }
 }
@@ -112,17 +158,24 @@ std::vector<Node*> Parser::tokenize(const std::string& expression)
     std::string::const_iterator it;
     std::string op = "";
     bool expectingOperator = false;
+    int lineNumber = 1;
 
     // copy string chars as nodes
     for (it = expression.begin(); it != expression.end(); it++)
     {
-        if (*it == ' ' || *it == '\n' || *it == '\t')    // white space
+        // skip white space
+        if (*it == ' ' || *it == '\t')    
             continue;
+        if (*it == '\n')
+        {
+            lineNumber++;
+            continue;
+        }
         // check if char is start of an operator
         op = this->findOperator(std::string(it, expression.end()));
         if (op != "")   // not an operator, and not value
         {
-            expr.push_back(new Node(op));
+            expr.push_back(new Node(op, lineNumber));
             it += op.size() - 1;
             expectingOperator = false;
             continue;
@@ -131,27 +184,28 @@ std::vector<Node*> Parser::tokenize(const std::string& expression)
         std::string value = this->getValue(std::string(it, expression.end()));
         if (value != "")
         {
-            expr.push_back(new Node(value));
+            expr.push_back(new Node(value, lineNumber));
             it += value.size() - 1;
             expectingOperator = true;
         }
         else if (this->isOpenParentheses(*it))
         {
             if (expectingOperator)   // parentheses operator
-                expr.push_back(new Node(this->getParentheses(*it)));
-            expr.push_back(new Node(std::string(1, *it)));
+                expr.push_back(new Node(this->getParentheses(*it), lineNumber));
+            expr.push_back(new Node(std::string(1, *it), lineNumber));
             expectingOperator = false;
         }
         else if (this->isCloseParentheses(*it))
         {
-            expr.push_back(new Node(std::string(1, *it)));
+            expr.push_back(new Node(std::string(1, *it), lineNumber));
             expectingOperator = true;
         }
         else
         {
+            // clear memory and throw exception
             for (Node* n : expr)
                 delete n;
-            throw SyntaxException(std::string("Unknown value ") + *it + " at index " + std::to_string(it - expression.begin()));
+            throw SyntaxException(std::string("Unknown value ") + *it, lineNumber);
         }
     }
     // remove empties
@@ -202,47 +256,58 @@ Node* Parser::parse(std::vector<Node*>& expr, bool removeParentheses)
 // function removes parentheses from expression. It turns them into one single node.
 void Parser::removeParentheses(std::vector<Node*>& expr)
 {
+    // loop breaks when there are no more parentheses
     while (true)
     {
-        std::vector<Node*>::iterator it, lastParentheses = expr.end(); // last open parentheses '('
+        std::vector<Node*>::iterator it,
+            openParentheses = expr.end(),
+            closeParentheses;
+        // go over expression and find open and close parentheses
         for (it = expr.begin(); it != expr.end(); it++)
         {
+            // check if node is open parentheses
             if ((*it)->_value.length() == 1 && this->isOpenParentheses((*it)->_value[0]))
-                lastParentheses = it;
+                openParentheses = it;
+            // check if node is close parentheses
             else if ((*it)->_value.length() == 1 && this->isCloseParentheses((*it)->_value[0]))
                 break;  // found sub expression
         }
-        if (it == expr.end())
+        closeParentheses = it;
+        // check if parentheses were found
+        if (closeParentheses == expr.end())
         {
-            if (lastParentheses == expr.end())
+            if (openParentheses == expr.end())
                 break;  // no parentheses at all in expression
             else
-                throw SyntaxException("opening parentheses without closing parentheses");
+                throw SyntaxException("opening parentheses without closing parentheses", (*openParentheses)->getLineNumber());
         }
-        // get sub-expression
-        if (lastParentheses == expr.end())
-            throw SyntaxException("closing parentheses without opening parentheses");
-        std::vector<Node*> subExpression(lastParentheses + 1, it);
+        // check if open parentheses are valid
+        if (openParentheses == expr.end())
+            throw SyntaxException("closing parentheses without opening parentheses", (*closeParentheses)->getLineNumber());
+        // get sub expression tree in parentheses
+        std::vector<Node*> subExpression(openParentheses + 1, closeParentheses);
         Node* newNode = this->parse(subExpression);
-        // delete sub-expression from expr and insert new node
-        char lp = (*lastParentheses)->_value[0];
-        if (isOpenParentheses(lp) && newNode != nullptr)
-            newNode->_block = lp;
-        delete(*it);
-        expr.erase(lastParentheses + 1, it + 1);
+        // fill parentheses character in subtree
+        char parenthesesChar = (*openParentheses)->_value[0];
+        if (this->isOpenParentheses(parenthesesChar) && newNode != nullptr)
+            newNode->setParentheses(parenthesesChar);
 
+        // delete sub-expression from expr and insert parsed tree
+        // delete parentheses nodes
+        delete(*it); 
+        delete(*openParentheses);
+        expr.erase(openParentheses + 1, closeParentheses + 1);
+        // check if there's a subtree
         if (newNode != nullptr)
         {
-            **lastParentheses = *newNode;
-            delete newNode;
+            // copy subtree to node
+            *openParentheses = newNode;
         }
         else
-        {
-            if (*lastParentheses)
-                delete (*lastParentheses);
-            *lastParentheses = new Node("");
-            if (isOpenParentheses(lp))
-                (*lastParentheses)->_block = lp;
+        {   // no subtree
+            // put empty node instead of parentheses
+            *openParentheses = new Node();
+            (*openParentheses)->setParentheses(parenthesesChar);
         }
     }
 }
@@ -296,6 +361,7 @@ bool Parser::isCloseParentheses(char c)
 
 std::string Parser::getParentheses(char c)
 {
+    // returns parentheses operator string
     if (c == '(' || c == ')')
         return "(^)";
     else if (c == '{' || c == '}')
@@ -306,6 +372,7 @@ std::string Parser::getParentheses(char c)
 
 bool Parser::isObject(Node* node)
 {
+    // checks whether a node contains an object initialization
     if (node->_value == ",")
     {
         if ((node->_left->_value == "," && this->isObject(node->_left) || node->_left->_value == ":") && node->_right->_value == ":")

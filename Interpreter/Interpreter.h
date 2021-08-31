@@ -45,7 +45,7 @@ class Tuple;
 class Interpreter : public Parser
 {
 public:
-	Interpreter();
+	Interpreter(bool debugMode = false);
 	~Interpreter();
 	std::string run(const std::string& code);
 	void importFunctions(const std::map<std::string, staticFunction>&);
@@ -64,13 +64,15 @@ public:
 	static Type* createFunction(Type* a, Type* b, std::map<std::string, Type*>& variables);
 protected:
 	virtual Type* valueOf(const std::string& str, std::map<std::string, Type*>& variables);
-	virtual Type* evaluateBlock(Node* node, std::map<std::string, Type*>& variables);
 	virtual std::string getValue(const std::string& expression);
+	virtual Type* evaluateBlock(Node* node, std::map<std::string, Type*>& variables);
 	virtual Type* handleParentheses(Type* value, char parenthesesType);
 	virtual void handleTempTypes(Type* a, Type* b, Type* res, const std::string& op);
+	virtual void debug(int lineNumber, std::map<std::string, Type*>& variables);
 private:
 	static std::map<std::string, Operator> _operators;
 	static std::vector<std::vector<ScopeVariable>> _variableScope;
+	bool _debugMode = false;
 	Type* checkNewVariable(const std::string& str, std::map<std::string, Type*>& variables);
 	static TempSequence* sequenceExtension(Type* a, Type* b);
 	static bool isVariableNameValid(const std::string& name);

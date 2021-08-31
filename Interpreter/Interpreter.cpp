@@ -22,7 +22,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{"<-", Operator{[](Type* a, Type* b) { return a->extend(b); }, 8} },
 	{":", Operator{[](Type* a, Type* b) { return (Type*)new Pair(a->isVariable() ? a : a->copy(), b->isVariable() ? b : b->copy()); }, 7}},
 	{",", Operator{(operation)Interpreter::sequenceExtension, 6} },
-	{"=>", Operator{(operation)Interpreter::createFunction, 9, BINARY_INFIX, false, true, true} },
+	{"=>", Operator{(operation)Interpreter::createFunction, 9, BINARY_INFIX, false, true, true, false, true} },
 
 	{"=", Operator{(operation)Interpreter::assign, 5, BINARY_INFIX, false, false, true} },
 	{"+=", Operator{[](Type* a, Type* b) { Interpreter::checkAssign(a); return a->addAssign(b); }, 5, BINARY_INFIX, false, false} },
@@ -42,17 +42,17 @@ std::map<std::string, Operator> Interpreter::_operators = {
 
 	{"?", Operator{[](Type* a, Type* b) { return a->ternary(b); }, 7}},
 
-	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 4, UNARY_PREFIX}},
-	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 2}},
-	{"{^}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3} },
+	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 4, UNARY_PREFIX, false, true, false, false, true}},
+	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 2, BINARY_INFIX, false, true, false, false, true}},
+	{"{^}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3, BINARY_INFIX, false, true, false, false, true} },
 
-	{"catch", Operator{(operation)Interpreter::catchBlock, 2, false, true, true}},
+	{"catch", Operator{(operation)Interpreter::catchBlock, 2, BINARY_INFIX, false, true, true, true, true}},
 
 	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 22} },
 	{"[^]", Operator{[](Type* a, Type* b) { return a->index(b); }, 21} },
-	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX}},
-	{"foreach", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? (Type*)new Foreach(b) : Foreach::comprehension(a, b); }, 4, BINARY_INFIX, true} },
-	{"for", Operator{[](Type* a, Type* b) { return (Type*)new For(b); }, 4, UNARY_PREFIX}},
+	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX, false, true, false, false, true}},
+	{"foreach", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? (Type*)new Foreach(b) : Foreach::comprehension(a, b); }, 4, BINARY_INFIX, true, true, false, true, true} },
+	{"for", Operator{[](Type* a, Type* b) { return (Type*)new For(b); }, 4, UNARY_PREFIX, false, true, false, false, true}},
 
 	// logic operators
 	{"==", Operator{[](Type* a, Type* b) { return a->equal(b); }, 12} },
@@ -76,7 +76,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 std::map<std::string, Type*> Interpreter::_variables;
 std::vector<std::vector<ScopeVariable>> Interpreter::_variableScope = std::vector<std::vector<ScopeVariable>>({ std::vector<ScopeVariable>() });
 
-Interpreter::Interpreter() : Parser(Interpreter::_operators)
+Interpreter::Interpreter(bool debugMode) : Parser(Interpreter::_operators), _debugMode(debugMode)
 {
 	// predefined
 	initVariables(this->_variables);
@@ -145,16 +145,17 @@ Type* Interpreter::valueOf(const std::string& str, std::map<std::string, Type*>&
 		throw TypeErrorException("Value \"" + str + "\" cannot be parsed");
 }
 
-Type* Interpreter::evaluateBlock(Node* node, std::map<std::string, Type*>& variables)
-{
-	return new Block(*this, node, variables);
-}
-
 std::string Interpreter::getValue(const std::string& expression)
 {
 	std::regex r(R"~(^((?=[\d\.]*?\d)\d*\.?\d*(e-?\d+)?|[a-zA-Z_](\w*( \w)?)*|""|".*?[^\\]"|'.'))~");	// int, float, name, string or char
 	std::smatch match;
-	return std::regex_search(expression, match, r) ? match.str() : "";
+	std::string firstLine = expression.substr(0, expression.find_first_of('\n'));
+	return std::regex_search(firstLine, match, r) ? match.str() : "";
+}
+
+Type* Interpreter::evaluateBlock(Node* node, std::map<std::string, Type*>& variables)
+{
+	return new Block(*this, node, variables);
 }
 
 Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
@@ -196,6 +197,24 @@ void Interpreter::handleTempTypes(Type* a, Type* b, Type* res, const std::string
 		delete a;
 	if (b && !b->isVariable() && !flag && b != res)
 		delete b;
+}
+
+void Interpreter::debug(int lineNumber, std::map<std::string, Type*>& variables)
+{
+	if(!this->_debugMode)
+		return;
+	std::cout << "\nfinished line " << lineNumber << std::endl << std::endl;
+	// print variables
+	for (auto pair : variables)
+	{
+		if (pair.second->getType() != FUNCTION && pair.second->getType() != STATIC_FUNCTION)
+		{
+			std::cout << pair.first << ": " << pair.second->toString() << std::endl;
+		}
+	}
+	// wait for input and clear screen
+	getchar();
+	system("cls");
 }
 
 Type* Interpreter::assign(Type* a, Type* b, std::map<std::string, Type*>& variables)
@@ -269,6 +288,16 @@ Type* Interpreter::catchBlock(Type* a, Type* b, std::map<std::string, Type*>& va
 		if (b->getType() == BLOCK)
 		{
 			Interpreter::addVariable("e", variables, e, true);
+			delete ((Block*)b)->run();
+			Interpreter::removeVariable("e", variables);
+		}
+		return new Void();
+	}
+	catch (InterpreterException& e)
+	{
+		if (b->getType() == BLOCK)
+		{
+			Interpreter::addVariable("e", variables, new String(e.what()), true);
 			delete ((Block*)b)->run();
 			Interpreter::removeVariable("e", variables);
 		}

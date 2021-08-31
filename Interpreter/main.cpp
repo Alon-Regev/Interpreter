@@ -12,12 +12,12 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#define VERSION "0.9"
+#define VERSION "0.10"
 #define NAME "<nameless interpreter>"
 
 std::string codeInput();
 int runInterpreter();
-int runFile(std::string& fileName);
+int runFile(std::string& fileName, bool debug);
 
 int main(int argc, char** argv)
 {
@@ -41,7 +41,8 @@ int main(int argc, char** argv)
 		"--install <p>  : installs specified package\n"
 		"--upload <p>   : uploads specified package\n\n"
 
-		"<file>         : runs a code file\n";
+		"<file>         : runs a code file\n"
+		"<file> -d      : runs a code file in debug mode\n";
 	else if(command == "--version" || command == "-v")
 		std::cout << NAME << " " << VERSION << std::endl;
 	else if (command == "--install")
@@ -71,7 +72,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	else
-		return runFile(command);
+		return runFile(command, argc == 2 ? false : std::string(argv[2]) == "-d");
 	return 0;
 }
 
@@ -148,14 +149,14 @@ int runInterpreter()
 }
 
 // function runs code file
-int runFile(std::string& fileName)
+int runFile(std::string& fileName, bool debug)
 {
 	try
 	{
 		std::string code = Helper::readFile(fileName);
 		Preprocessor p;
 		p.process(code);
-		Interpreter i;
+		Interpreter i(debug);
 		i.importFunctions(p.getImportedFunctions());
 		i.importVariables(p.getImportedVariables());
 		i.run(code);
