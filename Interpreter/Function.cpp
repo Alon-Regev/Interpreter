@@ -126,7 +126,7 @@ Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
 	// add temporary paramter variables
 	for (int i = 0; i < args.size(); i++)
 	{
-		Interpreter::addVariable(function.parameters[i].name, function.function->getVariables(), function.parameters[i].type == REFERENCE ? new Reference(args[i]) : args[i], false, true);
+		Interpreter::addVariable(function.parameters[i].name, function.function->getVariables(), function.parameters[i].type == REFERENCE ? new Reference(args[i]) : args[i]->copy(), false, true);
 	}
 	if (this->_this)
 		Interpreter::addVariable("this", function.function->getVariables(),new Reference(this->_this), false, true);
