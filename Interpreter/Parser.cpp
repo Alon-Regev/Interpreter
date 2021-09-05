@@ -68,8 +68,13 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
 
         // evaluate left node
         Type* lv = nullptr;
-        if(_operator.leftBlock) // evaluate as block
-            lv = evaluateBlock(node->_left, variables);
+        if (_operator.leftBlock) // evaluate as block
+        {
+            if(node->_left)
+                lv = evaluateBlock(node->_left, variables);
+            else
+                throw SyntaxException(INVALID_OPERATOR_USE(op), node->getLineNumber());
+        }
         else    // evaluate fully
             lv = evaluate(node->_left, variables);
 
@@ -80,7 +85,12 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
         try
         {
             if (_operator.rightBlock) // evaluate as block
-                rv = evaluateBlock(node->_right, variables);
+            {
+                if (node->_right)
+                    rv = evaluateBlock(node->_right, variables);
+                else
+                    throw SyntaxException(INVALID_OPERATOR_USE(op), node->getLineNumber());
+            }
             else    // evaluate fully
                 rv = evaluate(node->_right, variables);
         }

@@ -136,7 +136,7 @@ Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
 	{
 		try
 		{
-			ret = function.function->run(false);
+			ret = function.function->run();
 		}
 		catch (ReturnException& e)
 		{
