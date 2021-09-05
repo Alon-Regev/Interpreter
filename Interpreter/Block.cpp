@@ -37,11 +37,16 @@ Type* Block::run()
 	if (_sameScope)
 		return res;
 	// delete variables
-	for (std::pair<std::string, Type*> p : this->_variables)
+	for (auto it = this->_variables.begin(); it != this->_variables.end();)
 	{
 		// if variable doesn't belong to parent
-		if (this->_parentVariables.find(p.first) == this->_parentVariables.end())
-			delete p.second;
+		if (this->_parentVariables.find(it->first) == this->_parentVariables.end())
+		{
+			delete it->second;
+			it = this->_variables.erase(it);
+		}
+		else
+			it = std::next(it);
 	}
 	return res;
 }
