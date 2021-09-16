@@ -11,7 +11,7 @@ Foreach::Foreach(Type* parameters) : Type(FOREACH)
 		throw SyntaxException("The second value of a foreach must be a list, string, tuple or object");
 
 	this->_current = ((Tuple*)parameters)->getValues()[0];
-	this->_container = ((Tuple*)parameters)->getValues()[1]->copy();
+	this->_container = ((Tuple*)parameters)->getValues()[1]->useValue();
 }
 
 Foreach::~Foreach()

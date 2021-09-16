@@ -6,7 +6,7 @@ Object::Object(std::map<std::string, Type*>& variables, std::vector<std::string>
 	// copy variables and methods
 	for (const std::pair<std::string, Type*>& pair : variables)
 	{
-		this->_variables[pair.first] = pair.second->copy();
+		this->_variables[pair.first] = pair.second->useValue();
 		if (this->_variables[pair.first]->getType() == FUNCTION)
 			((Function*)this->_variables[pair.first])->setThis(new Reference(this), false);
 		else if (this->_variables[pair.first]->getType() == STATIC_FUNCTION)
@@ -19,7 +19,7 @@ Object::Object(std::map<std::string, Type*>& variables, std::vector<std::string>
 
 Object::Object(Pair* pair) : Type(OBJECT)
 {
-	this->_variables[this->toName(pair->_first)] = pair->_second->copy();
+	this->_variables[this->toName(pair->_first)] = pair->_second->useValue();
 	delete pair;
 }
 
@@ -87,7 +87,7 @@ Type* Object::index(Type* other)
 		if (this->_variables.find(this->toName(((List*)other)->getContent()[0], false)) != this->_variables.end())
 		{
 			Type* value = this->_variables[this->toName(((List*)other)->getContent()[0], false)];
-			return this->isVariable() ? new Reference(value) : value->copy();
+			return this->isVariable() ? new Reference(value) : value->useValue();
 		}
 		else
 			return new Undefined();
@@ -100,7 +100,7 @@ Type* Object::point(Type* other)
 	if (this->_variables.find(this->toName(other)) != this->_variables.end())
 	{
 		Type* value = this->_variables[this->toName(other)];
-		return this->isVariable() ? new Reference(value) : value->copy();
+		return this->isVariable() ? new Reference(value) : value->useValue();
 	}
 	else
 		return new Undefined();
@@ -115,7 +115,7 @@ Type* Object::assign(Type* other)
 		this->_variables.clear();
 		// copy variables
 		for (std::pair<const std::string, Type*>& pair : ((Object*)other)->_variables)
-			this->_variables[pair.first] = pair.second->copy();
+			this->_variables[pair.first] = pair.second->useValue();
 		// copy instances
 		for (const std::string& instance : ((Object*)other)->_instances)
 			this->_instances.push_back(instance);
@@ -129,10 +129,10 @@ Type* Object::extend(Type* other)
 {
 	if (other->getType() == OBJECT || other->getType() == CLASS)
 	{
-		Object* copy = (Object*)this->copy();
+		Object* copy = (Object*)this->useValue();
 		// copy variables
 		for (const std::pair<std::string, Type*>& pair : ((Object*)other)->_variables)
-			copy->_variables[pair.first] = pair.second->copy();
+			copy->_variables[pair.first] = pair.second->useValue();
 		// copy instances
 		for (const std::string& instance : ((Object*)other)->_instances)
 			copy->_instances.push_back(instance);
@@ -140,8 +140,8 @@ Type* Object::extend(Type* other)
 	}
 	else if (other->getType() == PAIR)
 	{
-		Object* copy = (Object*)this->copy();
-		copy->_variables[this->toName(((Pair*)other)->_first)] = ((Pair*)other)->_second->copy();
+		Object* copy = (Object*)this->useValue();
+		copy->_variables[this->toName(((Pair*)other)->_first)] = ((Pair*)other)->_second->useValue();
 		return copy;
 	}
 	else
@@ -154,7 +154,7 @@ Type* Object::extendAssign(Type* other)
 	{
 		// copy variables
 		for (const std::pair<std::string, Type*>& pair : ((Object*)other)->_variables)
-			this->_variables[pair.first] = pair.second->copy();
+			this->_variables[pair.first] = pair.second->useValue();
 		// copy instances
 		for (const std::string& instance : ((Object*)other)->_instances)
 			this->_instances.push_back(instance);
@@ -162,7 +162,7 @@ Type* Object::extendAssign(Type* other)
 	}
 	else if (other->getType() == PAIR)
 	{
-		this->_variables[this->toName(((Pair*)other)->_first)] = ((Pair*)other)->_second->copy();
+		this->_variables[this->toName(((Pair*)other)->_first)] = ((Pair*)other)->_second->useValue();
 		return this;
 	}
 	else

@@ -93,7 +93,7 @@ inline Object::Object(Iterator begin, Iterator end) : Type(OBJECT)
 {
 	for (Iterator it = begin; it != end; it++)
 	{
-		this->_variables[this->toName(((Pair*)*it)->_first)] = ((Pair*)*it)->_second->copy();
+		this->_variables[this->toName(((Pair*)*it)->_first)] = ((Pair*)*it)->_second->useValue();
 		delete (*it);
 	}
 }

@@ -1,4 +1,5 @@
 #include "Node.h"
+#include "Interpreter.h"
 
 Node::Node() : _value(""), _left(nullptr), _right(nullptr), _parentheses(0), _lineNumber(DEFAULT_LINE_NUMBER)
 {
@@ -19,6 +20,12 @@ Node::~Node()
 	this->_left = nullptr;
 	delete this->_right;
 	this->_right = nullptr;
+	// check delete const
+	if (this->_const && this->_const->checkDelete())
+	{
+		delete this->_const;
+		this->_const = nullptr;
+	}
 }
 
 bool Node::isLeaf()
@@ -78,4 +85,9 @@ void Node::setParentheses(const char c)
 int Node::getLineNumber()
 {
 	return this->_lineNumber;
+}
+
+void Node::checkConst()
+{
+	this->_const = Interpreter::constValue(this->_value);
 }

@@ -20,7 +20,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 
 	{"->", Operator{[](Type* a, Type* b) { return b->extend(a); }, 8} },
 	{"<-", Operator{[](Type* a, Type* b) { return a->extend(b); }, 8} },
-	{":", Operator{[](Type* a, Type* b) { return (Type*)new Pair(a->isVariable() ? a : a->copy(), b->isVariable() ? b : b->copy()); }, 7}},
+	{":", Operator{[](Type* a, Type* b) { return (Type*)new Pair(a->isVariable() ? a : a->useValue(), b->isVariable() ? b : b->useValue()); }, 7}},
 	{",", Operator{(operation)Interpreter::sequenceExtension, 6} },
 	{"=>", Operator{(operation)Interpreter::createFunction, 9, BINARY_INFIX, false, true, true, false, true} },
 
@@ -118,13 +118,9 @@ void Interpreter::importVariables(const std::map<std::string, Type*>& variables)
 	}
 }
 
-Type* Interpreter::valueOf(const std::string& str, std::map<std::string, Type*>& variables)
+Type* Interpreter::constValue(const std::string& str)
 {
-	// is a variable
-	if (variables.find(str) != variables.end())	// old variable
-		return  variables[str];
-	// is a type
-	else if (Void::isType(str))
+	if (Void::isType(str))
 		return new Void();
 	else if (Undefined::isType(str))
 		return new Undefined();
@@ -138,6 +134,18 @@ Type* Interpreter::valueOf(const std::string& str, std::map<std::string, Type*>&
 		return new String(str.substr(1, str.size() - 2));
 	else if (Char::isType(str))
 		return new Char(str[1]);
+	return nullptr;
+}
+
+Type* Interpreter::valueOf(const std::string& str, std::map<std::string, Type*>& variables)
+{
+	// is a variable
+	if (variables.find(str) != variables.end())	// old variable
+		return variables[str];
+	// is a type
+	Type* constType = Interpreter::constValue(str);
+	if (constType)
+		return constType;
 	
 	// check new variable
 	Type* newVar = this->checkNewVariable(str, variables);
@@ -182,7 +190,7 @@ Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
 		if (value->getType() == UNDEFINED)
 			return new List();
 		else
-			return new List(std::vector<Type*>{value->isVariable() ? value->copy() : value});
+			return new List(std::vector<Type*>{value->useValue()});
 	}
 	else if (parenthesesType == '{' && value->getType() == PAIR)
 	{
@@ -196,9 +204,9 @@ void Interpreter::handleTempTypes(Type* a, Type* b, Type* res, const std::string
 {
 	// if not variables, delete after being used in operator
 	bool flag = res->getType() == TEMP_SEQUENCE && op == ",";	// sequence creation
-	if (a && !a->isVariable() && !flag && a != res)
+	if (a && a->checkDelete() && !a->isVariable() && !flag && a != res)
 		delete a;
-	if (b && !b->isVariable() && !flag && b != res)
+	if (b && b->checkDelete() && !b->isVariable() && !flag && b != res)
 		delete b;
 }
 
@@ -241,7 +249,7 @@ Type* Interpreter::assign(Type* a, Type* b, std::map<std::string, Type*>& variab
 	if (a->isStaticType() || a->getType() == REFERENCE)
 		return a->assign(b);	// assign operator
 	// replace
-	return Interpreter::addVariable(a->getVariable(), variables, b->copy());
+	return Interpreter::addVariable(a->getVariable(), variables, b->useValue());
 }
 
 void Interpreter::removeVariable(const std::string& name, std::map<std::string, Type*>& variables, bool deleteValue)

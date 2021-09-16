@@ -25,6 +25,9 @@ public:
 	void setVariable(const std::string& variableName);
 	std::string getVariable();
 	bool isVariable();
+	// method moves the responsibility on the type forward (makes sure it won't be deleted)
+	Type* useValue();
+	bool checkDelete();
 	// operators
 	virtual Type* add(Type* other);
 	virtual Type* sub(Type* other);
@@ -90,6 +93,7 @@ public:
 protected:
 	short _type;
 	bool _staticType;
+	bool _delete = true;
 	std::string _variable = "";
 
 	bool typeCompare(Type* other);

@@ -29,8 +29,6 @@ int main(int argc, char** argv)
 
 	srand(time(NULL));
 
-	std::cout << sizeof(Char) << std::endl;
-
 	if (argc == 1)
 		return runInterpreter();
 	std::string command(argv[1]);

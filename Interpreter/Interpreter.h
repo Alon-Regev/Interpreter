@@ -60,6 +60,7 @@ public:
 	void printVariables();
 	static std::map<std::string, Type*> _variables;
 	static Type* createFunction(Type* a, Type* b, std::map<std::string, Type*>& variables);
+	static Type* constValue(const std::string& str);
 protected:
 	virtual Type* valueOf(const std::string& str, std::map<std::string, Type*>& variables);
 	virtual std::string getValue(const std::string& expression);

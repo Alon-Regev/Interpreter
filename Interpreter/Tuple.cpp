@@ -30,7 +30,7 @@ Type* Tuple::copy()
     std::vector<Type*> temp;
     for (Type*& type : this->_values)
     {
-        temp.push_back(type->copy());
+        temp.push_back(type->useValue());
         temp.back()->setVariable(type->getVariable());
     }
     return new Tuple(temp.begin(), temp.end());

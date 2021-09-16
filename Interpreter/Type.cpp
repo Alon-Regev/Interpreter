@@ -35,6 +35,22 @@ bool Type::isVariable()
     return this->_variable != "";
 }
 
+Type* Type::useValue()
+{
+    if (this->isVariable())    // can't use variable
+        return this->useValue();
+    // don't delete temp immediately
+    this->_delete = false;
+    return this;
+}
+
+bool Type::checkDelete()
+{
+    bool deleteNow = this->_delete;
+    this->_delete = true;
+    return deleteNow;
+}
+
 Type* Type::add(Type* other)
 {
     if (other->getType() == STRING)
@@ -276,7 +292,7 @@ Type* Type::toChar()
 
 Type* Type::tryReference()
 {
-    return this->isVariable() ? new Reference(this) : this->copy();
+    return this->isVariable() ? new Reference(this) : this->useValue();
 }
 
 void Type::tryDelete()

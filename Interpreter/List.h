@@ -36,7 +36,7 @@ inline List::List(Iterator begin, Iterator end) : Type(LIST)
 {
 	for (Iterator it = begin; it != end; it++)
 	{
-		this->_content.push_back((*it)->copy());
+		this->_content.push_back((*it)->useValue());
 		delete (*it);
 	}
 }

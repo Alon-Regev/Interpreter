@@ -19,5 +19,5 @@ std::string Pair::toString() const
 
 Type* Pair::copy()
 {
-	return new Pair(this->_first->copy(), this->_second->copy());
+	return new Pair(this->_first->useValue(), this->_second->useValue());
 }

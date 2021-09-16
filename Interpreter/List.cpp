@@ -31,7 +31,7 @@ Type* List::copy()
 {
 	std::vector<Type*> temp;
 	for (Type*& type : this->_content)
-		temp.push_back(type->copy());
+		temp.push_back(type->useValue());
 	return new List(temp);
 }
 
@@ -84,10 +84,10 @@ Type* List::add(Type* other)
 		std::vector<Type*> temp;
 		// copy this values
 		for (Type*& type : this->_content)
-			temp.push_back(type->copy());
+			temp.push_back(type->useValue());
 		// copy other's values
 		for (Type*& type : ((List*)other)->_content)
-			temp.push_back(type->copy());
+			temp.push_back(type->useValue());
 		return new List(temp);
 	}
 	else
@@ -95,9 +95,9 @@ Type* List::add(Type* other)
 		std::vector<Type*> temp;
 		// copy this values
 		for (Type*& type : this->_content)
-			temp.push_back(type->copy());
+			temp.push_back(type->useValue());
 		// add other
-		temp.push_back(other->copy());
+		temp.push_back(other->useValue());
 		return new List(temp);
 	}
 }
@@ -107,7 +107,7 @@ Type* List::assign(Type* other)
 	if (other->getType() == LIST)
 	{
 		for (Type*& type : ((List*)other)->_content)
-			this->_content.push_back(type->copy());
+			this->_content.push_back(type->useValue());
 		return this;
 	}
 	else
@@ -135,7 +135,7 @@ Type* List::index(Type* other)
 		if (index < 0)
 			index += this->_content.size();
 		if (0 <= index && index < this->_content.size())
-			return this->isVariable() ? new Reference(this->_content[index]) : this->_content[index]->copy();
+			return this->tryReference();
 		else
 			throw InvalidOperationException("String index out of range");
 	}
@@ -154,7 +154,7 @@ Type* List::index(Type* other)
 			throw SyntaxException("Substring step can't be zero");
 		std::vector<Type*> sublist;
 		for (int index = start; (step > 0 ? index < end : index > end) && 0 <= index && index < this->_content.size(); index += step)
-			sublist.push_back(this->_content[index]->copy());
+			sublist.push_back(this->_content[index]->useValue());
 		return new List(sublist);
 	}
 }
@@ -165,13 +165,13 @@ Type* List::addAssign(Type* other)
 	{
 		// add other's values
 		for (Type*& type : ((List*)other)->_content)
-			this->_content.push_back(type->copy());
+			this->_content.push_back(type->useValue());
 		return this;
 	}
 	else
 	{
 		// add other
-		this->_content.push_back(other->copy());
+		this->_content.push_back(other->useValue());
 		return this;
 	}
 }

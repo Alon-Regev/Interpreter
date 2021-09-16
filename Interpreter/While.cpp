@@ -1,6 +1,6 @@
 #include "While.h"
 
-While::While(Type* condition) : Type(WHILE), _condition(condition->copy())
+While::While(Type* condition) : Type(WHILE), _condition(condition->useValue())
 {	
 }
 

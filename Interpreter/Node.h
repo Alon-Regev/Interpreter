@@ -3,6 +3,7 @@
 
 #define DEFAULT_LINE_NUMBER -1
 
+class Type;
 class Node
 {
 public:
@@ -13,6 +14,7 @@ public:
 	std::string _value;
 	Node* _left;
 	Node* _right;
+	Type* _const = nullptr;
 	bool isLeaf();
 
 	Node& operator=(const Node& other);
@@ -21,6 +23,8 @@ public:
 	char getParentheses();
 	void setParentheses(const char c);
 	int getLineNumber();
+
+	void checkConst();
 private:
 	char _parentheses;
 	int _lineNumber;

@@ -51,7 +51,7 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
     else if (node->isLeaf())
     {
         // is a value
-        Type* temp = this->valueOf(node->_value, variables);
+        Type* temp = node->_const ? node->_const->useValue() : this->valueOf(node->_value, variables);
         if (node->getParentheses() != 0)
             temp = this->handleParentheses(temp, node->getParentheses());
         return temp;
@@ -183,18 +183,19 @@ std::vector<Node*> Parser::tokenize(const std::string& expression)
         }
         // check if char is start of an operator
         op = this->findOperator(std::string(it, expression.end()));
-        if (op != "")   // not an operator, and not value
+        if (op != "") 
         {
             expr.push_back(new Node(op, lineNumber));
             it += op.size() - 1;
             expectingOperator = false;
             continue;
         }
-        // check if char is value
+        // check value
         std::string value = this->getValue(std::string(it, expression.end()));
         if (value != "")
         {
             expr.push_back(new Node(value, lineNumber));
+            expr.back()->checkConst();
             it += value.size() - 1;
             expectingOperator = true;
         }

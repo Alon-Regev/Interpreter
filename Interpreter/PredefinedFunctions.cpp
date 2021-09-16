@@ -252,12 +252,12 @@ Type* upper(Type* other)
 
 Type* ret(Type* other)
 {
-	throw ReturnException(other->copy());
+	throw ReturnException(other->useValue());
 }
 
 Type* throwFunc(Type* other)
 {
-	throw other->copy();
+	throw other->useValue();
 }
 
 Type* sleep(Type* other)

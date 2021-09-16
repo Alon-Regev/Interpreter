@@ -33,7 +33,7 @@ Type* Class::call(Type* other)
 	// call constructor
 	if (this->_variables.find(this->_variable) != this->_variables.end())
 	{
-		Object* newCopy = (Object*)this->copy();
+		Object* newCopy = (Object*)this->useValue();
 		newCopy->toMethods();
 
 		// call constructor and set temporary variable this

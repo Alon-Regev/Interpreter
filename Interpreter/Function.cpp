@@ -23,13 +23,13 @@ Function::Function(Type* params, Block* block, std::map<std::string, Type*>& var
 		Interpreter::removeVariable(name, variables, false);
 	}
 
-	this->_functionInstances.push_back(FunctionInstance{ parameters, (Block*)block->copy() });
+	this->_functionInstances.push_back(FunctionInstance{ parameters, (Block*)block->useValue() });
 }
 
-Function::Function(std::vector<FunctionInstance>& functionInstances, Interpreter& interpreter, Type* thisType) : Type(FUNCTION), _functionInstances{}, _interpreter(interpreter), _this(thisType ? thisType->copy() : nullptr)
+Function::Function(std::vector<FunctionInstance>& functionInstances, Interpreter& interpreter, Type* thisType) : Type(FUNCTION), _functionInstances{}, _interpreter(interpreter), _this(thisType ? thisType->useValue() : nullptr)
 {
 	for (FunctionInstance& functionInstance : functionInstances)
-		this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->copy() });
+		this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->useValue() });
 }
 
 Function::~Function()
@@ -98,7 +98,7 @@ Type* Function::assign(Type* other)
 		this->_functionInstances.clear();
 		// copy new function instances
 		for (FunctionInstance& functionInstance : ((Function*)other)->_functionInstances)
-			this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->copy() });
+			this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->useValue() });
 		return this;
 	}
 	else
@@ -109,7 +109,7 @@ Type* Function::extend(Type* other)
 {
 	if (other->getType() != FUNCTION)
 		return Type::extendAssign(other);
-	return this->copy()->extendAssign(other);
+	return this->useValue()->extendAssign(other);
 }
 
 Type* Function::extendAssign(Type* other)
@@ -117,7 +117,7 @@ Type* Function::extendAssign(Type* other)
 	if (other->getType() != FUNCTION)
 		return Type::extendAssign(other);
 	for(FunctionInstance& functionInstance : ((Function*)other)->_functionInstances)
-		this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->copy() });
+		this->_functionInstances.push_back({ functionInstance.parameters, (Block*)functionInstance.function->useValue() });
 	return this;
 }
 
@@ -126,7 +126,7 @@ Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
 	// add temporary paramter variables
 	for (int i = 0; i < args.size(); i++)
 	{
-		Interpreter::addVariable(function.parameters[i].name, function.function->getVariables(), function.parameters[i].type == REFERENCE ? new Reference(args[i]) : args[i]->copy(), false, true);
+		Interpreter::addVariable(function.parameters[i].name, function.function->getVariables(), function.parameters[i].type == REFERENCE ? new Reference(args[i]) : args[i]->useValue(), false, true);
 	}
 	if (this->_this)
 		Interpreter::addVariable("this", function.function->getVariables(),new Reference(this->_this), false, true);
