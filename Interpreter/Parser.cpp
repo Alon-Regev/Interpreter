@@ -47,7 +47,7 @@ Type* Parser::value(Node* expression, std::map<std::string, Type*>& variables)
 Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
 {
     if (node == nullptr)
-        return 0;
+        return nullptr;
     else if (node->isLeaf())
     {
         // is a value
@@ -58,12 +58,8 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
     }
     else
     {
-        if (node->getParentheses() == '{' && !this->isObject(node))
-            return this->evaluateBlock(node, variables);
         // is an operator
         std::string op = node->_value;
-        if (this->_operators.find(op) == this->_operators.end())
-            throw SyntaxException("Can't parse operators", node->getLineNumber());
         Operator _operator = this->_operators.at(op);
 
         // evaluate left node
@@ -112,7 +108,7 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
         }
 
         // check if nodes aren't null (if nulls aren't allowed)
-        if (!_operator.allowNulls && (rv == nullptr && _operator.type == UNARY_PREFIX || lv == nullptr && _operator.type == UNARY_POSTFIX || (lv == nullptr || rv == nullptr) && _operator.type == BINARY_INFIX))
+        if ((lv == nullptr || rv == nullptr) && !_operator.allowNulls && (_operator.type == BINARY_INFIX || rv == nullptr && _operator.type == UNARY_PREFIX || lv == nullptr && _operator.type == UNARY_POSTFIX))
         {
             // on error clear memory
             if(rv)
@@ -127,9 +123,9 @@ Type* Parser::evaluate(Node* node, std::map<std::string, Type*>& variables)
         {
             // pass scope variables to operator function if needed
             if(_operator.accessVariables)
-                temp = ((variablesOperation)this->_operators.at(op).func)(lv, rv, variables);
+                temp = ((variablesOperation)_operator.func)(lv, rv, variables);
             else    // regular operator
-                temp = this->_operators.at(op).func(lv, rv);
+                temp = _operator.func(lv, rv);
         }
         // clear memory on operator error
         catch (InterpreterException& e)

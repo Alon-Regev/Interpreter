@@ -2,7 +2,7 @@
 
 Block::Block(Interpreter& interpreter, Node* node, std::map<std::string, Type*>& parentVariables, bool sameScope) : Type(BLOCK), _interpreter(interpreter), _sameScope(sameScope), _parentVariables(parentVariables)
 {
-	this->_code = node->copy();
+	this->_code = node;
 	this->_code->setParentheses(0);	// change into regular tree
 	// copy parentVariables into variables
 	if(!sameScope)
@@ -12,7 +12,6 @@ Block::Block(Interpreter& interpreter, Node* node, std::map<std::string, Type*>&
 
 Block::~Block()
 {
-	delete this->_code;
 }
 
 Type* Block::copy()

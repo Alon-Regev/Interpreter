@@ -203,10 +203,11 @@ Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
 void Interpreter::handleTempTypes(Type* a, Type* b, Type* res, const std::string& op)
 {
 	// if not variables, delete after being used in operator
-	bool flag = res->getType() == TEMP_SEQUENCE && op == ",";	// sequence creation
-	if (a && a->checkDelete() && !a->isVariable() && !flag && a != res)
+	if (res->getType() == TEMP_SEQUENCE && op == ",")
+		return;
+	if (a && a->checkDelete() && !a->isVariable())
 		delete a;
-	if (b && b->checkDelete() && !b->isVariable() && !flag && b != res)
+	if (b && b->checkDelete() && !b->isVariable())
 		delete b;
 }
 
