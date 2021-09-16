@@ -2,8 +2,6 @@
 #include "Type.h"
 #include "Int.h"
 
-#define CHAR "char"
-
 class Char : public Type
 {
 public:

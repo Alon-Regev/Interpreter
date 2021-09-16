@@ -3,8 +3,6 @@
 #include <vector>
 #include "Interpreter.h"
 
-#define TUPLE "tuple"
-
 class Tuple : public Type
 {
 public:

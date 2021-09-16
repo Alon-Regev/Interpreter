@@ -1,8 +1,6 @@
 #pragma once
 #include "Type.h"
 
-#define PAIR "pair"
-
 class Pair : public Type
 {
 public:

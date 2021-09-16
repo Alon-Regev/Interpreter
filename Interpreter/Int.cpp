@@ -1,14 +1,14 @@
 #include "Int.h"
 
-Int::Int(const std::string& value) : Type(INT)
+Int::Int(const std::string& value) : Type(_INT)
 {
 	if (Int::isType(value))
 		this->_value = std::stoi(value);
 	else
 		throw InvalidOperationException("casting value of \"" + value + "\" to int");
 }
-Int::Int(const int value) : Type(INT), _value(value) {}
-Int::Int() : Type(INT), _value(INT_DEFAULT_VALUE) {}
+Int::Int(const int value) : Type(_INT), _value(value) {}
+Int::Int() : Type(_INT), _value(INT_DEFAULT_VALUE) {}
 
 std::string Int::toString() const
 {
@@ -32,11 +32,11 @@ int Int::getValue()
 
 Type* Int::add(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Int(this->_value + ((Int*)other)->_value);
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 		return new Float(this->_value + ((Float*)other)->getValue());
-	else if (other->getType() == CHAR)
+	else if (other->getType() == _CHAR)
 		return new Char(this->_value + ((Char*)other)->getValue());
 	else
 		Type::add(other);
@@ -44,9 +44,9 @@ Type* Int::add(Type* other)
 
 Type* Int::sub(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Int(this->_value - ((Int*)other)->_value);
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 		return new Float(this->_value - ((Float*)other)->getValue());
 	else
 		Type::sub(other);
@@ -54,9 +54,9 @@ Type* Int::sub(Type* other)
 
 Type* Int::mul(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Int(this->_value * ((Int*)other)->_value);
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 		return new Float(this->_value * ((Float*)other)->getValue());
 	else
 		Type::mul(other);
@@ -69,7 +69,7 @@ Type* Int::negative()
 
 Type* Int::mod(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Int(this->_value % ((Int*)other)->_value);
 	else
 		Type::mod(other);
@@ -77,9 +77,9 @@ Type* Int::mod(Type* other)
 
 Type* Int::exp(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Float(pow(this->_value, ((Int*)other)->_value));
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 		return new Float(pow(this->_value, ((Float*)other)->getValue()));
 	else
 		Type::exp(other);
@@ -107,9 +107,9 @@ Type* Int::decrement(bool post)
 
 Type* Int::bitXor(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Int(this->_value ^ ((Int*)other)->_value);
-	else if (other->getType() == CHAR)
+	else if (other->getType() == _CHAR)
 		return new Char(this->_value ^ ((Char*)other)->getValue());
 	else
 		Type::bitXor(other);
@@ -117,9 +117,9 @@ Type* Int::bitXor(Type* other)
 
 Type* Int::bitAnd(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Int(this->_value & ((Int*)other)->_value);
-	else if (other->getType() == CHAR)
+	else if (other->getType() == _CHAR)
 		return new Char(this->_value & ((Char*)other)->getValue());
 	else
 		Type::bitAnd(other);
@@ -127,9 +127,9 @@ Type* Int::bitAnd(Type* other)
 
 Type* Int::bitOr(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Int(this->_value | ((Int*)other)->_value);
-	else if (other->getType() == CHAR)
+	else if (other->getType() == _CHAR)
 		return new Char(this->_value | ((Char*)other)->getValue());
 	else
 		Type::bitOr(other);
@@ -142,7 +142,7 @@ Type* Int::bitNot()
 
 Type* Int::leftShift(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Int(this->_value << ((Int*)other)->_value);
 	else
 		Type::leftShift(other);
@@ -150,7 +150,7 @@ Type* Int::leftShift(Type* other)
 
 Type* Int::rightShift(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Int(this->_value >> ((Int*)other)->_value);
 	else
 		Type::rightShift(other);
@@ -158,17 +158,17 @@ Type* Int::rightShift(Type* other)
 
 Type* Int::assign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value = ((Int*)other)->_value;
 		return this;
 	}
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 	{
 		this->_value = ((Float*)other)->getValue();
 		return this;
 	}
-	else if (other->getType() == CHAR)
+	else if (other->getType() == _CHAR)
 	{
 		this->_value = ((Char*)other)->getValue();
 		return this;
@@ -179,12 +179,12 @@ Type* Int::assign(Type* other)
 
 Type* Int::addAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value += ((Int*)other)->_value;
 		return this;
 	}
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 	{
 		this->_value += ((Float*)other)->getValue();
 		return this;
@@ -195,12 +195,12 @@ Type* Int::addAssign(Type* other)
 
 Type* Int::subAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value -= ((Int*)other)->_value;
 		return this;
 	}
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 	{
 		this->_value -= ((Float*)other)->getValue();
 		return this;
@@ -211,12 +211,12 @@ Type* Int::subAssign(Type* other)
 
 Type* Int::divAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value /= ((Int*)other)->_value;
 		return this;
 	}
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 	{
 		this->_value /= ((Float*)other)->getValue();
 		return this;
@@ -227,12 +227,12 @@ Type* Int::divAssign(Type* other)
 
 Type* Int::mulAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value *= ((Int*)other)->_value;
 		return this;
 	}
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 	{
 		this->_value *= ((Float*)other)->getValue();
 		return this;
@@ -243,7 +243,7 @@ Type* Int::mulAssign(Type* other)
 
 Type* Int::modAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value %= ((Int*)other)->_value;
 		return this;
@@ -254,12 +254,12 @@ Type* Int::modAssign(Type* other)
 
 Type* Int::expAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value = pow(this->_value, ((Int*)other)->_value);
 		return this;
 	}
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 	{
 		this->_value = pow(this->_value, ((Float*)other)->getValue());
 		return this;
@@ -270,7 +270,7 @@ Type* Int::expAssign(Type* other)
 
 Type* Int::xorAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value ^= ((Int*)other)->_value;
 		return this;
@@ -281,7 +281,7 @@ Type* Int::xorAssign(Type* other)
 
 Type* Int::andAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value &= ((Int*)other)->_value;
 		return this;
@@ -292,7 +292,7 @@ Type* Int::andAssign(Type* other)
 
 Type* Int::orAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value |= ((Int*)other)->_value;
 		return this;
@@ -303,7 +303,7 @@ Type* Int::orAssign(Type* other)
 
 Type* Int::leftShiftAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value <<= ((Int*)other)->_value;
 		return this;
@@ -314,7 +314,7 @@ Type* Int::leftShiftAssign(Type* other)
 
 Type* Int::rightShiftAssign(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		this->_value >>= ((Int*)other)->_value;
 		return this;
@@ -325,9 +325,9 @@ Type* Int::rightShiftAssign(Type* other)
 
 Type* Int::equal(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Bool(this->_value == ((Int*)other)->_value);
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 		return new Bool(this->_value == ((Float*)other)->getValue());
 	else
 		Type::equal(other);
@@ -335,9 +335,9 @@ Type* Int::equal(Type* other)
 
 Type* Int::notEqual(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Bool(this->_value != ((Int*)other)->_value);
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 		return new Bool(this->_value != ((Float*)other)->getValue());
 	else
 		Type::notEqual(other);
@@ -345,9 +345,9 @@ Type* Int::notEqual(Type* other)
 
 Type* Int::greater(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Bool(this->_value > ((Int*)other)->_value);
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 		return new Bool(this->_value > ((Float*)other)->getValue());
 	else
 		Type::greater(other);
@@ -355,9 +355,9 @@ Type* Int::greater(Type* other)
 
 Type* Int::less(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Bool(this->_value < ((Int*)other)->_value);
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 		return new Bool(this->_value < ((Float*)other)->getValue());
 	else
 		Type::less(other);
@@ -365,9 +365,9 @@ Type* Int::less(Type* other)
 
 Type* Int::greaterEqual(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Bool(this->_value >= ((Int*)other)->_value);
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 		return new Bool(this->_value >= ((Float*)other)->getValue());
 	else
 		Type::greaterEqual(other);
@@ -375,9 +375,9 @@ Type* Int::greaterEqual(Type* other)
 
 Type* Int::lessEqual(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 		return new Bool(this->_value <= ((Int*)other)->_value);
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 		return new Bool(this->_value <= ((Float*)other)->getValue());
 	else
 		Type::lessEqual(other);
@@ -400,13 +400,13 @@ Type* Int::toChar()
 
 Type* Int::div(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		if (((Int*)other)->getValue() == 0)
 			throw InvalidOperationException("Division by zero");
 		return new Int(this->_value / ((Int*)other)->_value);
 	}
-	else if (other->getType() == FLOAT)
+	else if (other->getType() == _FLOAT)
 	{
 		if (((Float*)other)->getValue() == 0)
 			throw InvalidOperationException("Division by zero");

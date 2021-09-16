@@ -3,8 +3,6 @@
 #include "Int.h"
 #include <sstream>
 
-#define FLOAT "float"
-
 class Float : public Type
 {
 public:

@@ -4,14 +4,13 @@
 #include "Block.h"
 #include "Signal.h"
 
-#define IF "if"
-#define ELSE_SIGNAL "elseSignal"
+#define ELSE_SIGNAL 1
 
 class If : public Type
 {
 public:
 	If(Type* condition);
-	virtual std::string toString() const { return IF; }
+	virtual std::string toString() const { return typeNames[IF]; }
 	virtual Type* copy() { return nullptr; }
 	static bool isType(const std::string& value) { return false; }
 	// operators

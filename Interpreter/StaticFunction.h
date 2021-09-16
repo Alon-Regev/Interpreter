@@ -2,8 +2,6 @@
 #include "Type.h"
 #include "Tuple.h"
 
-#define STATIC_FUNCTION "staticFunction"
-
 typedef Type* (*staticFunction)(Type*);
 typedef Type*(*staticMethod)(Type*, Type*);
 
@@ -11,7 +9,7 @@ class StaticFunction : public Type
 {
 public:
 	StaticFunction(staticFunction function);
-	virtual std::string toString() const { return STATIC_FUNCTION; }
+	virtual std::string toString() const { return typeNames[STATIC_FUNCTION]; }
 	virtual Type* copy();
 	static bool isType(const std::string& value) { return false; }
 	void setThis(Type* value, bool deletePrev = true);

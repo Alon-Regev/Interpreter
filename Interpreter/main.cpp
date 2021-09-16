@@ -29,6 +29,8 @@ int main(int argc, char** argv)
 
 	srand(time(NULL));
 
+	std::cout << sizeof(Char) << std::endl;
+
 	if (argc == 1)
 		return runInterpreter();
 	std::string command(argv[1]);
@@ -140,7 +142,7 @@ int runInterpreter()
 		catch (ReturnException& e) 
 		{
 			Type* retType = e.getValue();
-			int retValue = retType->getType() == INT ? ((Int*)retType)->getValue() : 0;
+			int retValue = retType->getType() == _INT ? ((Int*)retType)->getValue() : 0;
 			delete retType;
 			return retValue;
 		}
@@ -169,7 +171,7 @@ int runFile(std::string& fileName, bool debug)
 	catch (ReturnException& e)
 	{
 		Type* retType = e.getValue();
-		int retValue = retType->getType() == INT ? ((Int*)retType)->getValue() : 0;
+		int retValue = retType->getType() == _INT ? ((Int*)retType)->getValue() : 0;
 		delete retType;
 		return retValue;
 	}

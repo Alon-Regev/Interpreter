@@ -121,7 +121,7 @@ Type* List::index(Type* other)
 	// check if list is only integers
 	for (Type* type : ((List*)other)->getContent())
 	{
-		if (type->getType() != INT && type->getType() != UNDEFINED)
+		if (type->getType() != _INT && type->getType() != UNDEFINED)
 			throw SyntaxException("Invalid index syntax");
 	}
 	if (((List*)other)->getContent().size() > 3)

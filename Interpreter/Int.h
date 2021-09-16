@@ -5,7 +5,6 @@
 #include "Float.h"
 #include "Char.h"
 
-#define INT "int"
 #define INT_DEFAULT_VALUE 0
 
 class Int : public Type

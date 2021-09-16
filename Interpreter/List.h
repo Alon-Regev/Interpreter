@@ -6,8 +6,6 @@
 #include "Reference.h"
 #include "Undefined.h"
 
-#define LIST "list"
-
 class List : public Type
 {
 public:

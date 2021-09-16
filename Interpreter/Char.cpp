@@ -1,11 +1,11 @@
 #include "Char.h"
 #include "String.h"
 
-Char::Char(const char value) : Type(CHAR), _value(value)
+Char::Char(const char value) : Type(_CHAR), _value(value)
 {
 }
 
-Char::Char() : Type(CHAR), _value(0)
+Char::Char() : Type(_CHAR), _value(0)
 {
 }
 
@@ -31,9 +31,9 @@ char Char::getValue()
 
 Type* Char::add(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
         return new Char(this->_value + ((Int*)other)->getValue());
-    if (other->getType() == CHAR)
+    if (other->getType() == _CHAR)
         return new String(std::string{ this->_value, ((Char*)other)->getValue() });
     else
         return Type::add(other);
@@ -41,9 +41,9 @@ Type* Char::add(Type* other)
 
 Type* Char::sub(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
         return new Char(this->_value - ((Int*)other)->getValue());
-    else if (other->getType() == CHAR)
+    else if (other->getType() == _CHAR)
         return new Int(this->_value - ((Char*)other)->getValue());
     else
         return Type::sub(other);
@@ -51,9 +51,9 @@ Type* Char::sub(Type* other)
 
 Type* Char::bitXor(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
         return new Char(this->_value ^ ((Int*)other)->getValue());
-    else if (other->getType() == CHAR)
+    else if (other->getType() == _CHAR)
         return new Int(this->_value ^ ((Char*)other)->getValue());
     else
         return Type::bitXor(other);
@@ -61,9 +61,9 @@ Type* Char::bitXor(Type* other)
 
 Type* Char::bitAnd(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
         return new Char(this->_value & ((Int*)other)->getValue());
-    else if (other->getType() == CHAR)
+    else if (other->getType() == _CHAR)
         return new Int(this->_value & ((Char*)other)->getValue());
     else
         return Type::bitAnd(other);
@@ -71,9 +71,9 @@ Type* Char::bitAnd(Type* other)
 
 Type* Char::bitOr(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
         return new Char(this->_value | ((Int*)other)->getValue());
-    else if (other->getType() == CHAR)
+    else if (other->getType() == _CHAR)
         return new Int(this->_value | ((Char*)other)->getValue());
     else
         return Type::bitOr(other);
@@ -86,12 +86,12 @@ Type* Char::bitNot()
 
 Type* Char::assign(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
     {
         this->_value = ((Int*)other)->getValue();
         return this;
     }
-    else if (other->getType() == CHAR)
+    else if (other->getType() == _CHAR)
     {
         this->_value = ((Char*)other)->getValue();
         return this;
@@ -102,7 +102,7 @@ Type* Char::assign(Type* other)
 
 Type* Char::addAssign(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
     {
         this->_value += ((Int*)other)->getValue();
         return this;
@@ -113,7 +113,7 @@ Type* Char::addAssign(Type* other)
 
 Type* Char::subAssign(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
     {
         this->_value -= ((Int*)other)->getValue();
         return this;
@@ -124,7 +124,7 @@ Type* Char::subAssign(Type* other)
 
 Type* Char::xorAssign(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
     {
         this->_value ^= ((Int*)other)->getValue();
         return this;
@@ -135,7 +135,7 @@ Type* Char::xorAssign(Type* other)
 
 Type* Char::andAssign(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
     {
         this->_value &= ((Int*)other)->getValue();
         return this;
@@ -146,7 +146,7 @@ Type* Char::andAssign(Type* other)
 
 Type* Char::orAssign(Type* other)
 {
-    if (other->getType() == INT)
+    if (other->getType() == _INT)
     {
         this->_value |= ((Int*)other)->getValue();
         return this;
@@ -157,7 +157,7 @@ Type* Char::orAssign(Type* other)
 
 Type* Char::equal(Type* other)
 {
-    if (other->getType() == CHAR)
+    if (other->getType() == _CHAR)
         return new Bool(this->_value == ((Char*)other)->getValue());
     else
         Type::equal(other);
@@ -165,7 +165,7 @@ Type* Char::equal(Type* other)
 
 Type* Char::notEqual(Type* other)
 {
-    if (other->getType() == CHAR)
+    if (other->getType() == _CHAR)
         return new Bool(this->_value != ((Char*)other)->getValue());
     else
         Type::notEqual(other);
@@ -173,7 +173,7 @@ Type* Char::notEqual(Type* other)
 
 Type* Char::greater(Type* other)
 {
-    if (other->getType() == CHAR)
+    if (other->getType() == _CHAR)
         return new Bool(this->_value > ((Char*)other)->getValue());
     else
         Type::greater(other);
@@ -181,7 +181,7 @@ Type* Char::greater(Type* other)
 
 Type* Char::less(Type* other)
 {
-    if (other->getType() == CHAR)
+    if (other->getType() == _CHAR)
         return new Bool(this->_value < ((Char*)other)->getValue());
     else
         Type::less(other);
@@ -189,7 +189,7 @@ Type* Char::less(Type* other)
 
 Type* Char::greaterEqual(Type* other)
 {
-    if (other->getType() == CHAR)
+    if (other->getType() == _CHAR)
         return new Bool(this->_value >= ((Char*)other)->getValue());
     else
         Type::greaterEqual(other);
@@ -197,7 +197,7 @@ Type* Char::greaterEqual(Type* other)
 
 Type* Char::lessEqual(Type* other)
 {
-    if (other->getType() == CHAR)
+    if (other->getType() == _CHAR)
         return new Bool(this->_value <= ((Char*)other)->getValue());
     else
         Type::lessEqual(other);

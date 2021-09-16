@@ -1,8 +1,6 @@
 #pragma once
 #include "Type.h"
 
-#define UNDEFINED "undefined"
-
 class Undefined : public Type
 {
 public:

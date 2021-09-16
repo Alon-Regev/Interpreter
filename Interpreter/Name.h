@@ -2,8 +2,6 @@
 #include "Type.h"
 #include "Undefined.h"
 
-#define NAME "name"
-
 class Name : public Type
 {
 public:

@@ -6,7 +6,7 @@ Foreach::Foreach(Type* parameters) : Type(FOREACH)
 		throw SyntaxException("Foreach must get 2 values");
 	if (!((Tuple*)parameters)->getValues()[0]->isVariable())
 		throw SyntaxException("The first value of a foreach isn't a variable");
-	std::string containerType = ((Tuple*)parameters)->getValues()[1]->getType();
+	short containerType = ((Tuple*)parameters)->getValues()[1]->getType();
 	if (containerType != LIST && containerType != STRING && containerType != TUPLE && containerType != OBJECT)
 		throw SyntaxException("The second value of a foreach must be a list, string, tuple or object");
 
@@ -70,7 +70,7 @@ Type* Foreach::comprehension(Type* a, Type* b)
 		throw SyntaxException("Foreach must get 2 values");
 	if (!((Tuple*)b)->getValues()[0]->isVariable())
 		throw SyntaxException("The first value of a foreach isn't a variable");
-	std::string containerType = ((Tuple*)b)->getValues()[1]->getType();
+	short containerType = ((Tuple*)b)->getValues()[1]->getType();
 	if (containerType != LIST && containerType != STRING && containerType != TUPLE && containerType != OBJECT)
 		throw SyntaxException("The second value of a foreach must be a list, string, tuple or object");
 	Type* current = a->getType() == TUPLE ? ((Tuple*)b)->getValues()[0] : ((TempSequence*)b)->getValues()[0];

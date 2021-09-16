@@ -70,7 +70,7 @@ Type* deleteVariable(Type* type)
 
 Type* typeof(Type* other)
 {
-	return new String(other->getType());
+	return new String(typeNames[other->getType()]);
 }
 
 Type* instanceof(Type* other)
@@ -84,7 +84,7 @@ Type* instanceof(Type* other)
 
 	if (args[0]->getType() != OBJECT && args[0]->getType() != CLASS)
 		// check type
-		return new Bool(args[0]->getType() == args[1]->toString());
+		return new Bool(typeNames[args[0]->getType()] == args[1]->toString());
 	else
 	{	// check instance
 		std::vector<std::string>& instances = ((Object*)args[0])->getInstances();
@@ -111,12 +111,12 @@ Type* length(Type* other)
 	else if (other->getType() == OBJECT)
 		return new Int(((Object*)other)->getVariables().size());
 	else
-		throw InvalidOperationException("Can't get length of type \"" + other->getType() + "\"");
+		throw InvalidOperationException("Can't get length of type \"" + std::string(typeNames[other->getType()]) + "\"");
 }
 
 Type* random(Type* other)
 {
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		if (((Int*)other)->getValue() > RAND_MAX)
 			throw InvalidOperationException("Can't produce random numbers in a range larger than " + std::to_string(RAND_MAX));
@@ -128,7 +128,7 @@ Type* random(Type* other)
 		// check arguments
 		if(args.size() != 2)
 			throw SyntaxException("Random function can only get 1 or 2 arguments");
-		if(args[0]->getType() != INT || args[1]->getType() != INT)
+		if(args[0]->getType() != _INT || args[1]->getType() != _INT)
 			throw SyntaxException("Random function only gets int arguments");
 		if(((Int*)args[0])->getValue() >= ((Int*)args[1])->getValue())
 			throw InvalidOperationException("Random function got min value bigger of equal to max");
@@ -144,7 +144,7 @@ Type* random(Type* other)
 Type* range(Type* other)
 {
 	std::vector<int> args;
-	if (other->getType() == INT)
+	if (other->getType() == _INT)
 	{
 		args.push_back(0);
 		args.push_back(((Int*)other)->getValue());
@@ -154,7 +154,7 @@ Type* range(Type* other)
 	{
 		for (Type* type : ((Tuple*)other)->getValues())
 		{
-			if (type->getType() != INT)
+			if (type->getType() != _INT)
 				throw InvalidOperationException("Range function only gets ints");
 			args.push_back(((Int*)type)->getValue());
 		}
@@ -177,7 +177,7 @@ Type* find(Type* other)
 	Type* findIn = ((Tuple*)other)->getValues()[1];
 	if (findIn->getType() == STRING)
 	{
-		if (toFind->getType() == CHAR)
+		if (toFind->getType() == _CHAR)
 			return new Bool(((String*)findIn)->getContent().find(((Char*)toFind)->getValue()) != std::string::npos);
 		else if (toFind->getType() == STRING)
 			return new Bool(((String*)findIn)->getContent().find(((String*)toFind)->getContent()) != std::string::npos);
@@ -199,7 +199,7 @@ Type* find(Type* other)
 	else if (findIn->getType() == OBJECT)
 		return new Bool(((Object*)findIn)->getVariables().find(toFind->toString()) != ((Object*)findIn)->getVariables().end());
 	else
-		throw SyntaxException("Can't search in type \"" + findIn->getType() + "\"");
+		throw SyntaxException("Can't search in type \"" + std::string(typeNames[findIn->getType()]) + "\"");
 }
 
 bool compare(Type* a, Type* b)
@@ -207,7 +207,7 @@ bool compare(Type* a, Type* b)
 	Type* ret = a->less(b);
 	bool result = false;
 	if (ret->getType() != _BOOL)
-		throw InvalidOperationException("Can't compare types \"" + a->getType() + "\" and \"" + b->getType() + "\"");
+		throw InvalidOperationException("Can't compare types \"" + std::string(typeNames[a->getType()]) + "\" and \"" + std::string(typeNames[b->getType()]) + "\"");
 	result = ((Bool*)ret)->getValue();
 	delete ret;
 	return result;
@@ -222,7 +222,7 @@ Type* sort(Type* other)
 
 Type* lower(Type* other)
 {
-	if (other->getType() == CHAR)
+	if (other->getType() == _CHAR)
 		return new Char(tolower(((Char*)other)->getValue()));
 	else if (other->getType() == STRING)
 	{
@@ -237,7 +237,7 @@ Type* lower(Type* other)
 
 Type* upper(Type* other)
 {
-	if (other->getType() == CHAR)
+	if (other->getType() == _CHAR)
 		return new Char(toupper(((Char*)other)->getValue()));
 	else if (other->getType() == STRING)
 	{
@@ -262,7 +262,7 @@ Type* throwFunc(Type* other)
 
 Type* sleep(Type* other)
 {
-	if (other->getType() != INT)
+	if (other->getType() != _INT)
 		throw InvalidOperationException("sleep expects 1 int argument");
 	std::this_thread::sleep_for(std::chrono::milliseconds(((Int*)other)->getValue()));
 	return new Void();

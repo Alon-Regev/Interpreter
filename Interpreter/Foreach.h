@@ -2,14 +2,12 @@
 #include "Type.h"
 #include "Tuple.h"
 
-#define FOREACH "foreach"
-
 class Foreach : public Type
 {
 public:
 	Foreach(Type* parameters);
 	virtual ~Foreach();
-	virtual std::string toString() const { return FOREACH; }
+	virtual std::string toString() const { return typeNames[FOREACH]; }
 	virtual Type* copy() { return nullptr; }
 	// operators
 	virtual Type* block(Type* other);

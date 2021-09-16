@@ -2,8 +2,6 @@
 #include <regex>
 #include <map>
 
-#define ANY "var"
-
 #include "Parser.h"
 #include "PredefinedFunctions.h"
 
@@ -52,7 +50,7 @@ public:
 	void importVariables(const std::map<std::string, Type*>&);
 	static Type* assign(Type* a, Type* b, std::map<std::string, Type*>& variables);
 	static void removeVariable(const std::string& name, std::map<std::string, Type*>& variables, bool deleteValue = true);
-	static Type* addVariable(std::string variableName, std::map<std::string, Type*>& variables, Type* variable, bool isNew = false, bool setScope = false);
+	static Type* addVariable(std::string variableName, std::map<std::string, Type*>& variables, Type* variable, bool isNew = false, bool setScope = false, bool setStatic = true);
 	static void checkAssign(Type* type);
 	static Type* catchBlock(Type* a, Type* b, std::map<std::string, Type*>& variables);
 

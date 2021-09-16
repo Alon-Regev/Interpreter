@@ -1,19 +1,25 @@
 #pragma once
 #include <string>
+#include <map>
 #include "InvalidOperationException.h"
 
 #ifdef _DEBUG
 	#define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
 #endif
 
+#define TYPES 24
+enum typeId { _INT, _CHAR, _BOOL, _FLOAT, STRING, LIST, REFERENCE, OBJECT, CLASS, PAIR, BLOCK, FOR, FOREACH, FUNCTION, IF, NAME, SIGNAL, STATIC_FUNCTION, TEMP_SEQUENCE, TUPLE, UNDEFINED, _VOID, WHILE, ANY };
+extern const char* typeNames[];
+extern std::map<std::string, short> nameTypes;
+
 class Type
 {
 public:
-	Type(std::string type, bool staticType=false) : _type(type), _staticType(staticType) {}
+	Type(short type, bool staticType=false) : _type(type), _staticType(staticType) {}
 	virtual ~Type() = default;
 	virtual std::string toString() const = 0;
 	virtual Type* copy() = 0;
-	const std::string& getType() const;
+	short getType() const;
 	bool isStaticType() const;
 	void setStatic();
 	void setVariable(const std::string& variableName);
@@ -82,7 +88,7 @@ public:
 	Type* tryReference();
 	void tryDelete();
 protected:
-	std::string _type;
+	short _type;
 	bool _staticType;
 	std::string _variable = "";
 

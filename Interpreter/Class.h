@@ -3,8 +3,6 @@
 #include "Reference.h"
 #include "Function.h"
 
-#define CLASS "class"
-
 class Class : public Object
 {
 public:

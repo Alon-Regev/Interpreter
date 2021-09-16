@@ -1,8 +1,6 @@
 #pragma once
 #include "Type.h"
 
-#define VOID "void"
-
 class Void : public Type
 {
 public:

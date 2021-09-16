@@ -1,12 +1,12 @@
 #include "Signal.h"
 
-Signal::Signal(const std::string& value) : Type(SIGNAL), _value(value)
+Signal::Signal(short value) : Type(SIGNAL), _value(value)
 {
 }
 
 std::string Signal::toString() const
 {
-	return this->_value;
+	return std::to_string(this->_value);
 }
 
 Type* Signal::copy()
@@ -14,7 +14,7 @@ Type* Signal::copy()
 	return new Signal(this->_value);
 }
 
-const std::string& Signal::getValue()
+short Signal::getValue() const
 {
 	return this->_value;
 }

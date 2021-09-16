@@ -16,7 +16,7 @@ Function::Function(Type* params, Block* block, std::map<std::string, Type*>& var
 	}
 	else if (params->isVariable())
 	{	// one param
-		parameters.push_back(Parameter{ params->getVariable(), (params->isStaticType() ? params->getType() : "") });
+		parameters.push_back(Parameter{ params->getVariable(), (params->isStaticType() ? params->getType() : ANY) });
 		std::string name = params->getVariable();
 		// delete variable at parent and at the block
 		Interpreter::removeVariable(name, block->getVariables(), false);
@@ -55,7 +55,7 @@ Type* Function::call(Type* other)
 {
 	// get other to vector
 	std::vector<Type*> args;
-	if (other->getType() != UNDEFINED && other->getType() != VOID)
+	if (other->getType() != UNDEFINED && other->getType() != _VOID)
 	{
 		if (other->getType() == TUPLE)
 			args.assign(((Tuple*)other)->getValues().begin(), ((Tuple*)other)->getValues().end());

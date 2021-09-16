@@ -2,15 +2,13 @@
 #include "Type.h"
 #include "Interpreter.h"
 
-#define BLOCK "block"
-
 class Interpreter;
 class Block : public Type
 {
 public:
 	Block(Interpreter& interpreter, Node* node, std::map<std::string, Type*>& parentVariables, bool sameScope=false);
 	virtual ~Block();
-	virtual std::string toString() const { return BLOCK; }
+	virtual std::string toString() const { return typeNames[BLOCK]; }
 	virtual Type* copy();
 	static bool isType(const std::string& value) { return false; }
 	Node* getCode();

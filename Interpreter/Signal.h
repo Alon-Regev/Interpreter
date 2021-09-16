@@ -1,16 +1,14 @@
 #pragma once
 #include "Type.h"
 
-#define SIGNAL "signal"
-
 class Signal : public Type
 {
 public:
-	Signal(const std::string& value);
+	Signal(short value);
 	virtual std::string toString() const;
 	virtual Type* copy();
-	const std::string& getValue();
+	short getValue() const;
 private:
-	std::string _value;
+	short _value;
 };
 

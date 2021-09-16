@@ -2,8 +2,6 @@
 #include "Type.h"
 #include "VariableException.h"
 
-#define REFERENCE "ref"
-
 class Reference : public Type
 {
 public:

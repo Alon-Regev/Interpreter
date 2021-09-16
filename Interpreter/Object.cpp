@@ -23,7 +23,7 @@ Object::Object(Pair* pair) : Type(OBJECT)
 	delete pair;
 }
 
-Object::Object(const std::string& type) : Type(type)
+Object::Object(short type) : Type(type)
 {
 }
 

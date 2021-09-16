@@ -4,7 +4,6 @@
 #include "Float.h"
 #include "Pair.h"
 
-#define _BOOL "bool"	// _BOOL for solving conflict with WinAPI
 #define _FALSE "false"
 #define _TRUE "true"
 

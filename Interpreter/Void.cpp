@@ -1,6 +1,6 @@
 #include "Void.h"
 
-Void::Void() : Type(VOID)
+Void::Void() : Type(_VOID)
 {
 }
 

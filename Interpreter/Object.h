@@ -8,9 +8,6 @@
 #include "Name.h"
 #include <map>
 
-#define OBJECT "object"
-#define CLASS "class"
-
 class Object : public Type
 {
 public:
@@ -18,7 +15,7 @@ public:
 	Object(Iterator begin, Iterator end);
 	Object(std::map<std::string, Type*>& variables, std::vector<std::string>& instances);
 	Object(Pair* pair);
-	Object(const std::string& type);
+	Object(short type);
 	Object();
 	virtual ~Object();
 	virtual std::string toString() const;

@@ -6,8 +6,6 @@
 #include "Bool.h"
 #include "Undefined.h"
 
-#define STRING "string"
-
 class String : public Type
 {
 public:

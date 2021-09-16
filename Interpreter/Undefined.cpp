@@ -6,7 +6,7 @@ Undefined::Undefined() : Type(UNDEFINED)
 
 std::string Undefined::toString() const
 {
-	return UNDEFINED;
+	return typeNames[UNDEFINED];
 }
 
 Type* Undefined::copy()
@@ -16,5 +16,5 @@ Type* Undefined::copy()
 
 bool Undefined::isType(const std::string& value)
 {
-	return value == UNDEFINED || value == "_";
+	return value == typeNames[UNDEFINED] || value == "_";
 }

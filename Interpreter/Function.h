@@ -6,8 +6,6 @@
 #include "Block.h"
 #include "TypeErrorException.h"
 
-#define FUNCTION "function"
-
 class Interpreter;
 class Block;
 class Tuple;
@@ -15,7 +13,7 @@ class Tuple;
 struct Parameter
 {
 	std::string name;
-	std::string type;
+	short type;
 };
 
 struct FunctionInstance
@@ -31,7 +29,7 @@ public:
 	Function(Type* params, Block* block, std::map<std::string, Type*>& variables);
 	Function(std::vector<FunctionInstance>& functionInstances, Interpreter& interpreter, Type* thisType);
 	virtual ~Function();
-	virtual std::string toString() const { return FUNCTION; }
+	virtual std::string toString() const { return typeNames[FUNCTION]; }
 	virtual Type* copy();
 	void setThis(Type* value, bool deletePrev = true);
 	// operators

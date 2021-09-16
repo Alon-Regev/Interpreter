@@ -2,8 +2,6 @@
 #include <vector>
 #include "Type.h"
 
-#define TEMP_SEQUENCE "ts"
-
 class TempSequence : public Type
 {
 public:

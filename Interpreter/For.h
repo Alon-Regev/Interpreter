@@ -2,14 +2,12 @@
 #include "Type.h"
 #include "Block.h"
 
-#define FOR "for"
-
 class For : public Type
 {
 public:
 	For(Type* param);
 	virtual ~For();
-	virtual std::string toString() const { return FOR; }
+	virtual std::string toString() const { return typeNames[FOR]; }
 	virtual Type* copy() { return nullptr; }
 	// operators
 	virtual Type* block(Type* other);

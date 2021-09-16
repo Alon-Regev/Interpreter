@@ -6,7 +6,7 @@ Name::Name(const std::string& str) : Type(NAME), _name(str)
 
 std::string Name::toString() const
 {
-	return UNDEFINED;
+	return typeNames[UNDEFINED];
 }
 
 Type* Name::copy()
