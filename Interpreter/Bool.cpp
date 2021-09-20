@@ -120,6 +120,6 @@ Type* Bool::toInt()
 
 Type* Bool::toFloat()
 {
-	int res = (double)this->_value;
+	double res = (double)this->_value;
 	return TempMemory<Float>::set(&res);
 }

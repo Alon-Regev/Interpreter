@@ -49,7 +49,7 @@ Type* Int::add(Type* other)
 	}
 	else if (other->getType() == _FLOAT)
 	{
-		int res = this->_value + ((Float*)other)->getValue();
+		double res = this->_value + ((Float*)other)->getValue();
 		return TempMemory<Float>::set(&res);
 	}
 	else if (other->getType() == _CHAR)
@@ -67,7 +67,7 @@ Type* Int::sub(Type* other)
 	}
 	else if (other->getType() == _FLOAT)
 	{
-		int res = this->_value - ((Float*)other)->getValue();
+		double res = this->_value - ((Float*)other)->getValue();
 		return TempMemory<Float>::set(&res);
 	}
 	else
@@ -83,7 +83,7 @@ Type* Int::mul(Type* other)
 	}
 	else if (other->getType() == _FLOAT)
 	{
-		int res = this->_value * ((Float*)other)->getValue();
+		double res = this->_value * ((Float*)other)->getValue();
 		return TempMemory<Float>::set(&res);
 	}
 	else
@@ -111,12 +111,12 @@ Type* Int::exp(Type* other)
 {
 	if (other->getType() == _INT)
 	{
-		int res = pow(this->_value, ((Int*)other)->_value);
+		double res = pow(this->_value, ((Int*)other)->_value);
 		return TempMemory<Float>::set(&res);
 	}
 	else if (other->getType() == _FLOAT)
 	{
-		int res = pow(this->_value, ((Float*)other)->getValue());
+		double res = pow(this->_value, ((Float*)other)->getValue());
 		return TempMemory<Float>::set(&res);
 	}
 	else
@@ -490,7 +490,7 @@ Type* Int::toBool()
 
 Type* Int::toFloat()
 {
-	int res = (double)this->_value;
+	double res = (double)this->_value;
 	return TempMemory<Float>::set(&res);
 }
 
@@ -512,7 +512,7 @@ Type* Int::div(Type* other)
 	{
 		if (((Float*)other)->getValue() == 0)
 			throw InvalidOperationException("Division by zero");
-		int res = this->_value / ((Float*)other)->getValue();
+		double res = this->_value / ((Float*)other)->getValue();
 		return TempMemory<Float>::set(&res);
 	}
 	else

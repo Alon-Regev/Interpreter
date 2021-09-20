@@ -29,8 +29,8 @@ std::string Float::toString() const
 
 Type* Float::copy()
 {
-	{int res = this->_value;
-	return TempMemory<Float>::set(&res); }
+	double res = this->_value;
+	return TempMemory<Float>::set(&res);
 }
 
 bool Float::isType(const std::string& value)
@@ -52,12 +52,12 @@ Type* Float::add(Type* other)
 {
 	if (other->getType() == _FLOAT)
 	{
-		int res = this->_value + ((Float*)other)->getValue();
+		double res = this->_value + ((Float*)other)->getValue();
 		return TempMemory<Float>::set(&res);
 	}
 	else if (other->getType() == _INT)
 	{
-		int res = this->_value + ((Int*)other)->getValue();
+		double res = this->_value + ((Int*)other)->getValue();
 		return TempMemory<Float>::set(&res);
 	}
 	else
@@ -68,12 +68,12 @@ Type* Float::sub(Type* other)
 {
 	if (other->getType() == _FLOAT)
 	{
-		int res = this->_value - ((Float*)other)->getValue();
+		double res = this->_value - ((Float*)other)->getValue();
 		return TempMemory<Float>::set(&res);
 	}
 	else if (other->getType() == _INT)
 	{
-		int res = this->_value - ((Int*)other)->getValue();
+		double res = this->_value - ((Int*)other)->getValue();
 		return TempMemory<Float>::set(&res);
 	}
 	else
@@ -86,15 +86,15 @@ Type* Float::div(Type* other)
 	{
 		if (((Float*)other)->getValue() == 0)
 			throw InvalidOperationException("Division by zero");
-		{int res = this->_value / ((Float*)other)->getValue();
-		return TempMemory<Float>::set(&res); }
+		double res = this->_value / ((Float*)other)->getValue();
+		return TempMemory<Float>::set(&res);
 	}
 	else if (other->getType() == _INT)
 	{
 		if (((Int*)other)->getValue() == 0)
 			throw InvalidOperationException("Division by zero");
-		{int res = this->_value / ((Int*)other)->getValue();
-		return TempMemory<Float>::set(&res); }
+		double res = this->_value / ((Int*)other)->getValue();
+		return TempMemory<Float>::set(&res);
 	}
 	else
 		return Type::div(other);
@@ -104,12 +104,12 @@ Type* Float::mul(Type* other)
 {
 	if (other->getType() == _FLOAT)
 	{
-		int res = this->_value * ((Float*)other)->getValue();
+		double res = this->_value * ((Float*)other)->getValue();
 		return TempMemory<Float>::set(&res);
 	}
 	else if (other->getType() == _INT)
 	{
-		int res = this->_value * ((Int*)other)->getValue();
+		double res = this->_value * ((Int*)other)->getValue();
 		return TempMemory<Float>::set(&res);
 	}
 	else
@@ -120,12 +120,12 @@ Type* Float::exp(Type* other)
 {
 	if (other->getType() == _FLOAT)
 	{
-		int res = pow(this->_value, ((Float*)other)->getValue());
+		double res = pow(this->_value, ((Float*)other)->getValue());
 		return TempMemory<Float>::set(&res);
 	}
 	else if (other->getType() == _INT)
 	{
-		int res = pow(this->_value, ((Int*)other)->getValue());
+		double res = pow(this->_value, ((Int*)other)->getValue());
 		return TempMemory<Float>::set(&res);
 	}
 	else
@@ -134,8 +134,8 @@ Type* Float::exp(Type* other)
 
 Type* Float::negative()
 {
-	{int res = -this->_value;
-	return TempMemory<Float>::set(&res); }
+	double res = -this->_value;
+	return TempMemory<Float>::set(&res);
 }
 
 Type* Float::assign(Type* other)
