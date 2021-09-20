@@ -35,6 +35,12 @@ bool Type::isVariable()
     return this->_variable != "";
 }
 
+Type* Type::temp()
+{
+    this->_temp = true;
+    return this;
+}
+
 Type* Type::useValue()
 {
     if (this->isVariable())    // can't use variable
@@ -297,7 +303,7 @@ Type* Type::tryReference()
 
 void Type::tryDelete()
 {
-    if (!this->isVariable())
+    if (!this->_temp && !this->isVariable())
         delete this;
 }
 

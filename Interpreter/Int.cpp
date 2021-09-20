@@ -1,4 +1,8 @@
 #include "Int.h"
+#include "TempMemory.h"
+
+unsigned int TempMemory<Int>::_i = 0;
+Int TempMemory<Int>::_memory[MEMORY_CELLS] = { *(Int*)Int().temp(), *(Int*)Int().temp(), *(Int*)Int().temp() };
 
 Int::Int(const std::string& value) : Type(_INT)
 {
@@ -17,7 +21,8 @@ std::string Int::toString() const
 
 Type* Int::copy()
 {
-	return new Int(this->_value);
+	int res = this->_value;
+	return TempMemory<Int>::set(&res);
 }
 
 bool Int::isType(const std::string& value)
@@ -30,12 +35,23 @@ int Int::getValue()
 	return this->_value;
 }
 
+void Int::set(void* arg)
+{
+	this->_value = *(int*)arg;
+}
+
 Type* Int::add(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Int(this->_value + ((Int*)other)->_value);
+	{
+		int res = this->_value + ((Int*)other)->_value;
+		return TempMemory<Int>::set(&res);
+	}
 	else if (other->getType() == _FLOAT)
-		return new Float(this->_value + ((Float*)other)->getValue());
+	{
+		int res = this->_value + ((Float*)other)->getValue();
+		return TempMemory<Float>::set(&res);
+	}
 	else if (other->getType() == _CHAR)
 		return new Char(this->_value + ((Char*)other)->getValue());
 	else
@@ -45,9 +61,15 @@ Type* Int::add(Type* other)
 Type* Int::sub(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Int(this->_value - ((Int*)other)->_value);
+	{
+		int res = this->_value - ((Int*)other)->_value;
+		return TempMemory<Int>::set(&res);
+	}
 	else if (other->getType() == _FLOAT)
-		return new Float(this->_value - ((Float*)other)->getValue());
+	{
+		int res = this->_value - ((Float*)other)->getValue();
+		return TempMemory<Float>::set(&res);
+	}
 	else
 		Type::sub(other);
 }
@@ -55,22 +77,32 @@ Type* Int::sub(Type* other)
 Type* Int::mul(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Int(this->_value * ((Int*)other)->_value);
+	{
+		int res = this->_value * ((Int*)other)->_value;
+		return TempMemory<Int>::set(&res);
+	}
 	else if (other->getType() == _FLOAT)
-		return new Float(this->_value * ((Float*)other)->getValue());
+	{
+		int res = this->_value * ((Float*)other)->getValue();
+		return TempMemory<Float>::set(&res);
+	}
 	else
 		Type::mul(other);
 }
 
 Type* Int::negative()
 {
-	return new Int(-this->_value);
+	int res = -this->_value;
+	return TempMemory<Int>::set(&res);
 }
 
 Type* Int::mod(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Int(this->_value % ((Int*)other)->_value);
+	{
+		int res = this->_value % ((Int*)other)->_value;
+		return TempMemory<Int>::set(&res);
+	}
 	else
 		Type::mod(other);
 }
@@ -78,9 +110,15 @@ Type* Int::mod(Type* other)
 Type* Int::exp(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Float(pow(this->_value, ((Int*)other)->_value));
+	{
+		int res = pow(this->_value, ((Int*)other)->_value);
+		return TempMemory<Float>::set(&res);
+	}
 	else if (other->getType() == _FLOAT)
-		return new Float(pow(this->_value, ((Float*)other)->getValue()));
+	{
+		int res = pow(this->_value, ((Float*)other)->getValue());
+		return TempMemory<Float>::set(&res);
+	}
 	else
 		Type::exp(other);
 }
@@ -90,9 +128,12 @@ Type* Int::increment(bool post)
 	if (!this->isVariable())
 		throw InvalidOperationException("Incrementing (++) non-variable value");
 	if (post)
-		return new Int(this->_value++);
+	{
+		int v = this->_value++;
+		return TempMemory<Int>::set(&v);
+	}
 	else
-		return new Int(++this->_value);
+		return TempMemory<Int>::set(&++this->_value);
 }
 
 Type* Int::decrement(bool post)
@@ -100,15 +141,24 @@ Type* Int::decrement(bool post)
 	if (!this->isVariable())
 		throw InvalidOperationException("Decrementing (++) non-variable value");
 	if (post)
-		return new Int(this->_value--);
+	{
+		int res = this->_value--;
+		return TempMemory<Int>::set(&res);
+	}
 	else
-		return new Int(--this->_value);
+	{
+		int res = --this->_value;
+		return TempMemory<Int>::set(&res);
+	}
 }
 
 Type* Int::bitXor(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Int(this->_value ^ ((Int*)other)->_value);
+	{
+		int res = this->_value ^ ((Int*)other)->_value;
+		return TempMemory<Int>::set(&res);
+	}
 	else if (other->getType() == _CHAR)
 		return new Char(this->_value ^ ((Char*)other)->getValue());
 	else
@@ -118,7 +168,10 @@ Type* Int::bitXor(Type* other)
 Type* Int::bitAnd(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Int(this->_value & ((Int*)other)->_value);
+	{
+		int res = this->_value & ((Int*)other)->_value;
+		return TempMemory<Int>::set(&res);
+	}
 	else if (other->getType() == _CHAR)
 		return new Char(this->_value & ((Char*)other)->getValue());
 	else
@@ -128,7 +181,10 @@ Type* Int::bitAnd(Type* other)
 Type* Int::bitOr(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Int(this->_value | ((Int*)other)->_value);
+	{
+		int res = this->_value | ((Int*)other)->_value;
+		return TempMemory<Int>::set(&res);
+	}
 	else if (other->getType() == _CHAR)
 		return new Char(this->_value | ((Char*)other)->getValue());
 	else
@@ -137,13 +193,17 @@ Type* Int::bitOr(Type* other)
 
 Type* Int::bitNot()
 {
-	return new Int(~this->_value);
+	{int res = ~this->_value;
+	return TempMemory<Int>::set(&res); }
 }
 
 Type* Int::leftShift(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Int(this->_value << ((Int*)other)->_value);
+	{
+		int res = this->_value << ((Int*)other)->_value;
+		return TempMemory<Int>::set(&res);
+	}
 	else
 		Type::leftShift(other);
 }
@@ -151,7 +211,10 @@ Type* Int::leftShift(Type* other)
 Type* Int::rightShift(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Int(this->_value >> ((Int*)other)->_value);
+	{
+		int res = this->_value >> ((Int*)other)->_value;
+		return TempMemory<Int>::set(&res);
+	}
 	else
 		Type::rightShift(other);
 }
@@ -326,9 +389,15 @@ Type* Int::rightShiftAssign(Type* other)
 Type* Int::equal(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Bool(this->_value == ((Int*)other)->_value);
+	{
+		int res = this->_value == ((Int*)other)->_value;
+		return TempMemory<Bool>::set(&res);
+	}
 	else if (other->getType() == _FLOAT)
-		return new Bool(this->_value == ((Float*)other)->getValue());
+	{
+		int res = this->_value == ((Float*)other)->getValue();
+		return TempMemory<Bool>::set(&res);
+	}
 	else
 		Type::equal(other);
 }
@@ -336,9 +405,15 @@ Type* Int::equal(Type* other)
 Type* Int::notEqual(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Bool(this->_value != ((Int*)other)->_value);
+	{
+		int res = this->_value != ((Int*)other)->_value;
+		return TempMemory<Bool>::set(&res);
+	}
 	else if (other->getType() == _FLOAT)
-		return new Bool(this->_value != ((Float*)other)->getValue());
+	{
+		int res = this->_value != ((Float*)other)->getValue();
+		return TempMemory<Bool>::set(&res);
+	}
 	else
 		Type::notEqual(other);
 }
@@ -346,9 +421,15 @@ Type* Int::notEqual(Type* other)
 Type* Int::greater(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Bool(this->_value > ((Int*)other)->_value);
+	{
+		int res = this->_value > ((Int*)other)->_value;
+		return TempMemory<Bool>::set(&res);
+	}
 	else if (other->getType() == _FLOAT)
-		return new Bool(this->_value > ((Float*)other)->getValue());
+	{
+		int res = this->_value > ((Float*)other)->getValue();
+		return TempMemory<Bool>::set(&res);
+	}
 	else
 		Type::greater(other);
 }
@@ -356,9 +437,15 @@ Type* Int::greater(Type* other)
 Type* Int::less(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Bool(this->_value < ((Int*)other)->_value);
+	{
+		int res = this->_value < ((Int*)other)->_value;
+		return TempMemory<Bool>::set(&res);
+	}
 	else if (other->getType() == _FLOAT)
-		return new Bool(this->_value < ((Float*)other)->getValue());
+	{
+		int res = this->_value < ((Float*)other)->getValue();
+		return TempMemory<Bool>::set(&res);
+	}
 	else
 		Type::less(other);
 }
@@ -366,9 +453,15 @@ Type* Int::less(Type* other)
 Type* Int::greaterEqual(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Bool(this->_value >= ((Int*)other)->_value);
+	{
+		int res = this->_value >= ((Int*)other)->_value;
+		return TempMemory<Bool>::set(&res);
+	}
 	else if (other->getType() == _FLOAT)
-		return new Bool(this->_value >= ((Float*)other)->getValue());
+	{
+		int res = this->_value >= ((Float*)other)->getValue();
+		return TempMemory<Bool>::set(&res);
+	}
 	else
 		Type::greaterEqual(other);
 }
@@ -376,21 +469,29 @@ Type* Int::greaterEqual(Type* other)
 Type* Int::lessEqual(Type* other)
 {
 	if (other->getType() == _INT)
-		return new Bool(this->_value <= ((Int*)other)->_value);
+	{
+		bool res = this->_value <= ((Int*)other)->_value;
+		return TempMemory<Bool>::set(&res);
+	}
 	else if (other->getType() == _FLOAT)
-		return new Bool(this->_value <= ((Float*)other)->getValue());
+	{
+		int res = this->_value <= ((Float*)other)->getValue();
+		return TempMemory<Bool>::set(&res);
+	}
 	else
 		Type::lessEqual(other);
 }
 
 Type* Int::toBool()
 {
-	return new Bool((bool)this->_value);
+	int res = (bool)this->_value;
+	return TempMemory<Bool>::set(&res);
 }
 
 Type* Int::toFloat()
 {
-	return new Float((double)this->_value);
+	int res = (double)this->_value;
+	return TempMemory<Float>::set(&res);
 }
 
 Type* Int::toChar()
@@ -404,13 +505,15 @@ Type* Int::div(Type* other)
 	{
 		if (((Int*)other)->getValue() == 0)
 			throw InvalidOperationException("Division by zero");
-		return new Int(this->_value / ((Int*)other)->_value);
+		int res = this->_value / ((Int*)other)->_value;
+		return TempMemory<Int>::set(&res);
 	}
 	else if (other->getType() == _FLOAT)
 	{
 		if (((Float*)other)->getValue() == 0)
 			throw InvalidOperationException("Division by zero");
-		return new Float(this->_value / ((Float*)other)->getValue());
+		int res = this->_value / ((Float*)other)->getValue();
+		return TempMemory<Float>::set(&res);
 	}
 	else
 		Type::div(other);

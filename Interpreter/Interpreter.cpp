@@ -95,8 +95,7 @@ std::string Interpreter::run(const std::string& code)
 {
 	Type* result = this->value(code, this->_variables);
 	std::string resultStr = result->toString();
-	if(!result->isVariable())
-		delete result;
+	result->tryDelete();
 	return resultStr;
 }
 
@@ -142,18 +141,19 @@ Type* Interpreter::valueOf(const std::string& str, std::map<std::string, Type*>&
 	// is a variable
 	if (variables.find(str) != variables.end())	// old variable
 		return variables[str];
+	// check new variable
+	Type* newVar = this->checkNewVariable(str, variables);
+	if (newVar && newVar->getType() != NAME)
+		return newVar;
 	// is a type
 	Type* constType = Interpreter::constValue(str);
 	if (constType)
 		return constType;
-	
-	// check new variable
-	Type* newVar = this->checkNewVariable(str, variables);
-	if (newVar)
+	// name
+	if (newVar && newVar->getType() == NAME)
 		return newVar;
 	// invalid expression
-	else
-		throw TypeErrorException("Value \"" + str + "\" cannot be parsed");
+	throw TypeErrorException("Value \"" + str + "\" cannot be parsed");
 }
 
 std::string Interpreter::getValue(const std::string& expression)
@@ -203,12 +203,10 @@ Type* Interpreter::handleParentheses(Type* value, char parenthesesType)
 void Interpreter::handleTempTypes(Type* a, Type* b, Type* res, const std::string& op)
 {
 	// if not variables, delete after being used in operator
-	if (res->getType() == TEMP_SEQUENCE && op == ",")
-		return;
-	if (a && a->checkDelete() && !a->isVariable())
-		delete a;
-	if (b && b->checkDelete() && !b->isVariable())
-		delete b;
+	if (a && a->checkDelete())
+		a->tryDelete();
+	if (b && b->checkDelete())
+		b->tryDelete();
 }
 
 void Interpreter::debug(int lineNumber, std::map<std::string, Type*>& variables)

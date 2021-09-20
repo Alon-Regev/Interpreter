@@ -1,4 +1,8 @@
 #include "Bool.h"
+#include "TempMemory.h"
+
+unsigned int TempMemory<Bool>::_i = 0;
+Bool TempMemory<Bool>::_memory[MEMORY_CELLS] = { *(Bool*)Bool().temp(), *(Bool*)Bool().temp(), *(Bool*)Bool().temp() };
 
 Bool::Bool(const std::string& value) : Type(_BOOL)
 {
@@ -20,7 +24,8 @@ std::string Bool::toString() const
 
 Type* Bool::copy()
 {
-	return new Bool(this->_value);
+	int res = this->_value;
+	return TempMemory<Bool>::set(&res);
 }
 
 bool Bool::isType(const std::string& value)
@@ -31,6 +36,11 @@ bool Bool::isType(const std::string& value)
 bool Bool::getValue()
 {
 	return this->_value;
+}
+
+void Bool::set(void* arg)
+{
+	this->_value = *(bool*)arg;
 }
 
 Type* Bool::assign(Type* other)
@@ -47,7 +57,10 @@ Type* Bool::assign(Type* other)
 Type* Bool::equal(Type* other)
 {
 	if (other->getType() == _BOOL)
-		return new Bool(this->_value == ((Bool*)other)->_value);
+	{
+		int res = this->_value == ((Bool*)other)->_value;
+		return TempMemory<Bool>::set(&res);
+	}
 	else
 		return Type::equal(other);
 }
@@ -55,7 +68,10 @@ Type* Bool::equal(Type* other)
 Type* Bool::notEqual(Type* other)
 {
 	if (other->getType() == _BOOL)
-		return new Bool(this->_value != ((Bool*)other)->_value);
+	{
+		int res = this->_value != ((Bool*)other)->_value;
+		return TempMemory<Bool>::set(&res);
+	}
 	else
 		return Type::notEqual(other);
 }
@@ -63,7 +79,10 @@ Type* Bool::notEqual(Type* other)
 Type* Bool::logicOr(Type* other)
 {
 	if (other->getType() == _BOOL)
-		return new Bool(this->_value || ((Bool*)other)->_value);
+	{
+		int res = this->_value || ((Bool*)other)->_value;
+		return TempMemory<Bool>::set(&res);
+	}
 	else
 		return Type::logicOr(other);
 }
@@ -71,14 +90,18 @@ Type* Bool::logicOr(Type* other)
 Type* Bool::logicAnd(Type* other)
 {
 	if (other->getType() == _BOOL)
-		return new Bool(this->_value && ((Bool*)other)->_value);
+	{
+		int res = this->_value && ((Bool*)other)->_value;
+		return TempMemory<Bool>::set(&res);
+	}
 	else
 		return Type::logicAnd(other);
 }
 
 Type* Bool::logicNot()
 {
-	return new Bool(!this->_value);
+	{int res = !this->_value;
+	return TempMemory<Bool>::set(&res); }
 }
 
 Type* Bool::ternary(Type* other)
@@ -91,10 +114,12 @@ Type* Bool::ternary(Type* other)
 
 Type* Bool::toInt()
 {
-	return new Int((int)this->_value);
+	int res = (int)this->_value;
+	return TempMemory<Int>::set(&res);
 }
 
 Type* Bool::toFloat()
 {
-	return new Float((double)this->_value);
+	int res = (double)this->_value;
+	return TempMemory<Float>::set(&res);
 }

@@ -37,6 +37,6 @@ bool For::runCondition()
 	if (ret->getType() != _BOOL)
 		throw InvalidOperationException("For loop condition doesn't return a bool");
 	bool result = ((Bool*)ret)->getValue();
-	delete ret;
+	ret->tryDelete();
 	return result;
 }

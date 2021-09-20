@@ -51,6 +51,7 @@
     <ClInclude Include="StaticFunction.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="SyntaxException.h" />
+    <ClInclude Include="TempMemory.h" />
     <ClInclude Include="TempSequence.h" />
     <ClInclude Include="Tuple.h" />
     <ClInclude Include="Type.h" />

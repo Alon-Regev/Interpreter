@@ -17,6 +17,7 @@ public:
 	virtual Type* copy();
 	static bool isType(const std::string& value);
 	bool getValue();
+	virtual void set(void*);
 	// operators
 	virtual Type* assign(Type* other);
 	virtual Type* equal(Type* other);

@@ -13,6 +13,7 @@ public:
 	virtual Type* copy();
 	static bool isType(const std::string& value);
 	double getValue();
+	virtual void set(void*);
 	// operators
 	virtual Type* add(Type* other);
 	virtual Type* sub(Type* other);
