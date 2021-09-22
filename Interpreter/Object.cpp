@@ -97,9 +97,9 @@ Type* Object::index(Type* other)
 
 Type* Object::point(Type* other)
 {
-	if (this->_variables.find(this->toName(other)) != this->_variables.end())
+	if (this->_variables.find(this->toName(other, true)) != this->_variables.end())
 	{
-		Type* value = this->_variables[this->toName(other)];
+		Type* value = this->_variables[this->toName(other, true)];
 		return this->isVariable() ? new Reference(value) : value->copy();
 	}
 	else
