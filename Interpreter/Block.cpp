@@ -73,3 +73,8 @@ std::map<std::string, Type*>& Block::getParentVariables()
 {
 	return this->_parentVariables;
 }
+
+void Block::setSameScope()
+{
+	this->_sameScope = true;
+}

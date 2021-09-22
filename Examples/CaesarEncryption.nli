@@ -1,0 +1,32 @@
+string NOT_IMPLEMENTED = "Not Implemented yet...";
+
+class Encryption = 
+{
+	"name": "",
+	
+	"Encryption": (string name) =>
+	{
+		this.name = name;
+	},
+	
+	"encrypt": (string msg) =>
+	{
+		throw(NOT_IMPLEMENTED);
+	},
+	
+	"decrypt": (string msg) =>
+	{
+		throw(NOT_IMPLEMENTED);
+	}
+};
+
+object enc = Encryption("None");
+
+
+{
+	enc.decrypt("hello");
+}
+catch
+{
+	print(e);
+}

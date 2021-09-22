@@ -288,6 +288,7 @@ Type* Interpreter::catchBlock(Type* a, Type* b, std::map<std::string, Type*>& va
 		if (b->getType() == BLOCK)
 		{
 			Interpreter::addVariable("e", variables, e, true);
+			((Block*)b)->setSameScope();
 			delete ((Block*)b)->run();
 			Interpreter::removeVariable("e", variables);
 		}

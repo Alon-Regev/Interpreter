@@ -19,6 +19,7 @@ public:
 	std::vector<Node*> split();
 	std::map<std::string, Type*>& getVariables();
 	std::map<std::string, Type*>& getParentVariables();
+	void setSameScope();
 private:
 	Node* _code;
 	Interpreter& _interpreter;
