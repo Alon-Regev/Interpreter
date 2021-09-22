@@ -3,7 +3,12 @@ string NOT_IMPLEMENTED = "Not Implemented yet...";
 function main = () =>
 {
 	object encryption = CaesarEncryption();
-	print(encryption.encrypt("hi"));
+	
+	string msg = input("Enter msg: ");
+	string enc = encryption.encrypt(msg);
+	
+	print("encrypted msg:", enc);
+	print("decrypted msg:", encryption.decrypt(enc));
 };
 
 // parent class for encryptions
