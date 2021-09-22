@@ -36,31 +36,43 @@ Type* Type::add(Type* other)
 {
     if (other->getType() == STRING)
         return new String(this->toString() + other->toString());
+    if (other->getType() == REFERENCE)
+        return this->add(((Reference*)other)->getValue());
     throw InvalidOperationException("+ between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::sub(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->sub(((Reference*)other)->getValue());
     throw InvalidOperationException("- between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::div(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->div(((Reference*)other)->getValue());
     throw InvalidOperationException("/ between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::mul(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->mul(((Reference*)other)->getValue());
     throw InvalidOperationException("* between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::mod(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->mod(((Reference*)other)->getValue());
     throw InvalidOperationException("% between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::exp(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->exp(((Reference*)other)->getValue());
     throw InvalidOperationException("** between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
@@ -76,51 +88,71 @@ Type* Type::decrement(bool post)
 
 Type* Type::ternary(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->ternary(((Reference*)other)->getValue());
     throw InvalidOperationException("? between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::xorAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->xorAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("^= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::andAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->andAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("&= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::orAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->orAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("|= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::leftShiftAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->leftShiftAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("<<= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::rightShiftAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->rightShiftAssign(((Reference*)other)->getValue());
     throw InvalidOperationException(">>= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::extendAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->extendAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("<-= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::bitXor(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->bitXor(((Reference*)other)->getValue());
     throw InvalidOperationException("^ between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::bitAnd(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->bitAnd(((Reference*)other)->getValue());
     throw InvalidOperationException("& between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::bitOr(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->bitOr(((Reference*)other)->getValue());
     throw InvalidOperationException("| between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
@@ -131,11 +163,15 @@ Type* Type::bitNot()
 
 Type* Type::leftShift(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->leftShift(((Reference*)other)->getValue());
     throw InvalidOperationException("<< between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::rightShift(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->rightShift(((Reference*)other)->getValue());
     throw InvalidOperationException(">> between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
@@ -148,56 +184,78 @@ Type* Type::assign(Type* other)
 
 Type* Type::addAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->addAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("+= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::subAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->subAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("-= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::divAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->divAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("/= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::mulAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->mulAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("*= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::modAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->modAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("%= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::expAssign(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->expAssign(((Reference*)other)->getValue());
     throw InvalidOperationException("**= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::call(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->call(((Reference*)other)->getValue());
     throw InvalidOperationException("() between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::block(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->block(((Reference*)other)->getValue());
     throw InvalidOperationException("{} between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::index(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->index(((Reference*)other)->getValue());
     throw InvalidOperationException("[] between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::point(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->point(((Reference*)other)->getValue());
     throw InvalidOperationException(". between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::extend(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->extend(((Reference*)other)->getValue());
     throw InvalidOperationException("-> between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
@@ -208,41 +266,57 @@ Type* Type::negative()
 
 Type* Type::equal(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->equal(((Reference*)other)->getValue());
     return new Bool(false);
 }
 
 Type* Type::notEqual(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->notEqual(((Reference*)other)->getValue());
     return new Bool(true);
 }
 
 Type* Type::greater(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->greater(((Reference*)other)->getValue());
     throw InvalidOperationException("> between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::less(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->less(((Reference*)other)->getValue());
     throw InvalidOperationException("< between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::greaterEqual(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->greaterEqual(((Reference*)other)->getValue());
     throw InvalidOperationException(">= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::lessEqual(Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->lessEqual(((Reference*)other)->getValue());
     throw InvalidOperationException("<= between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::logicOr (Type * other)
 {
+    if (other->getType() == REFERENCE)
+        return this->logicOr(((Reference*)other)->getValue());
     throw InvalidOperationException("|| between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 
 Type* Type::logicAnd (Type* other)
 {
+    if (other->getType() == REFERENCE)
+        return this->logicAnd(((Reference*)other)->getValue());
     throw InvalidOperationException("&& between types \"" + this->_type + "\" and \"" + other->_type + "\"");
 }
 

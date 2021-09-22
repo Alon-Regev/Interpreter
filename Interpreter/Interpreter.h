@@ -51,7 +51,7 @@ public:
 	void importFunctions(const std::map<std::string, staticFunction>&);
 	void importVariables(const std::map<std::string, Type*>&);
 	static Type* assign(Type* a, Type* b, std::map<std::string, Type*>& variables);
-	static void removeVariable(const std::string& name, std::map<std::string, Type*>& variables, bool deleteValue = true);
+	static void removeVariable(const std::string& name, std::map<std::string, Type*>& variables, bool deleteValue = true, bool variableExists = true);
 	static Type* addVariable(std::string variableName, std::map<std::string, Type*>& variables, Type* variable, bool isNew = false, bool setScope = false);
 	static void checkAssign(Type* type);
 	static Type* catchBlock(Type* a, Type* b, std::map<std::string, Type*>& variables);

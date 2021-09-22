@@ -10,7 +10,9 @@ Function::Function(Type* params, Block* block, std::map<std::string, Type*>& var
 		for (Type* param : ((Tuple*)params)->getValues())
 		{
 			parameters.push_back(Parameter{ param->getVariable(), param->getType() });
-			Interpreter::removeVariable(param->getVariable(), block->getVariables());
+			std::string name = param->getVariable();
+			Interpreter::removeVariable(name, block->getVariables());
+			Interpreter::removeVariable(name, block->getParentVariables(), false, false);
 		}
 		((Tuple*)params)->getValues().clear();
 	}
@@ -74,7 +76,9 @@ Type* Function::call(Type* other)
 		for (int i = 0; i < args.size() && !stopped; i++)
 		{
 			// check if type doesn't fit
-			if (args[i]->getType() != functionInstance.parameters[i].type && functionInstance.parameters[i].type != ANY && functionInstance.parameters[i].type != REFERENCE)
+			if (args[i]->getType() != functionInstance.parameters[i].type && functionInstance.parameters[i].type != ANY && functionInstance.parameters[i].type != REFERENCE &&
+				// check reference argument
+				!(args[i]->getType() == REFERENCE && ((Reference*)args[i])->getChildType() == functionInstance.parameters[i].type))
 				stopped = true;
 		}
 		if (!stopped)
@@ -84,7 +88,19 @@ Type* Function::call(Type* other)
 		}
 	}
 	if (fittingFunctionInstance == nullptr)
-		throw SyntaxException("Arguments don't fit any of the overloaded functions");
+	{
+		std::string types = "";
+		for (Type* arg : args)
+		{
+			if (arg->getType() == REFERENCE)
+				types += ((Reference*)arg)->getChildType() + ", ";
+			else
+				types += arg->getType() + ", ";
+		}
+		types.pop_back();
+		types.pop_back();
+		throw SyntaxException("Arguments don't fit any of the overloaded functions. types are: " + types);
+	}
 	return this->run(*fittingFunctionInstance, args);
 }
 
@@ -129,7 +145,7 @@ Type* Function::run(FunctionInstance& function, std::vector<Type*>& args)
 		Interpreter::addVariable(function.parameters[i].name, function.function->getVariables(), function.parameters[i].type == REFERENCE ? new Reference(args[i]) : args[i]->copy(), false, true);
 	}
 	if (this->_this)
-		Interpreter::addVariable("this", function.function->getVariables(),new Reference(this->_this), false, true);
+		Interpreter::addVariable("this", function.function->getVariables(), new Reference(this->_this), false, true);
 	// run and close scope
 	Type* ret = nullptr;
 	if (function.function->getType() == BLOCK)

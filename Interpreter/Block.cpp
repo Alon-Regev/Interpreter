@@ -2,22 +2,21 @@
 
 Block::Block(Interpreter& interpreter, Node* node, std::map<std::string, Type*>& parentVariables, bool sameScope) : Type(BLOCK), _interpreter(interpreter), _sameScope(sameScope), _parentVariables(parentVariables)
 {
-	this->_code = node->copy();
+	this->_code = node;
 	this->_code->setParentheses(0);	// change into regular tree
 	// copy parentVariables into variables
-	if(!sameScope)
+	if (!sameScope)
 		for (const std::pair<std::string, Type*>& pair : parentVariables)
 			this->_variables[pair.first] = pair.second;
 }
 
 Block::~Block()
 {
-	delete this->_code;
 }
 
 Type* Block::copy()
 {
-	return new Block(this->_interpreter, this->_code, this->_variables);
+	return new Block(this->_interpreter, this->_code, this->_parentVariables);
 }
 
 Node* Block::getCode()
@@ -32,6 +31,11 @@ Interpreter& Block::getInterpreter()
 
 Type* Block::run()
 {
+	// copy parentVariables into variables
+	if (!this->_sameScope)
+		for (const std::pair<std::string, Type*>& pair : this->_parentVariables)
+			this->_variables[pair.first] = pair.second;
+
 	Type* res = this->_interpreter.value(this->_code, this->_sameScope ? this->_parentVariables : this->_variables);
 	// check if need to delete variables
 	if (_sameScope)
@@ -73,4 +77,9 @@ std::map<std::string, Type*>& Block::getVariables()
 std::map<std::string, Type*>& Block::getParentVariables()
 {
 	return this->_parentVariables;
+}
+
+void Block::setSameScope()
+{
+	this->_sameScope = true;
 }

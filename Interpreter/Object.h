@@ -88,7 +88,7 @@ protected:
 	std::map<std::string, Type*> _variables;
 	std::vector<std::string> _instances;
 private:
-	std::string toName(Type* type, bool checkVar = true);
+	std::string toName(Type* type, bool checkVar = false);
 };
 
 template<class Iterator>

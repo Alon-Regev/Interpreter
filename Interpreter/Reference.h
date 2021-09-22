@@ -12,6 +12,7 @@ public:
 	virtual std::string toString() const;
 	virtual Type* copy();
 	virtual Type* getValue();
+	std::string getChildType();
 	// operators
 	virtual Type* add(Type* other);
 	virtual Type* sub(Type* other);

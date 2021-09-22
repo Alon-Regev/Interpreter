@@ -241,11 +241,11 @@ Type* Interpreter::assign(Type* a, Type* b, std::map<std::string, Type*>& variab
 	return Interpreter::addVariable(a->getVariable(), variables, b->copy());
 }
 
-void Interpreter::removeVariable(const std::string& name, std::map<std::string, Type*>& variables, bool deleteValue)
+void Interpreter::removeVariable(const std::string& name, std::map<std::string, Type*>& variables, bool deleteValue, bool variableExists)
 {
 	if (deleteValue)
 		delete variables[name];
-	else
+	else if(variableExists)
 		variables[name]->setVariable("");
 	variables.erase(name);
 }
@@ -288,6 +288,7 @@ Type* Interpreter::catchBlock(Type* a, Type* b, std::map<std::string, Type*>& va
 		if (b->getType() == BLOCK)
 		{
 			Interpreter::addVariable("e", variables, e, true);
+			((Block*)b)->setSameScope();
 			delete ((Block*)b)->run();
 			Interpreter::removeVariable("e", variables);
 		}
