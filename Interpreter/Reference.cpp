@@ -24,6 +24,16 @@ Type* Reference::getValue()
 	return _value;
 }
 
+std::string Reference::getChildType()
+{
+	this->checkReference();
+	// recursive reference
+	if (this->_value->getType() == REFERENCE)
+		return ((Reference*)this->_value)->getChildType();
+	// return childs type
+	return this->_value->getType();
+}
+
 Type* Reference::add(Type* other)
 {
 	this->checkReference();

@@ -252,7 +252,7 @@ Type* upper(Type* other)
 
 Type* ret(Type* other)
 {
-	throw ReturnException(other);
+	throw ReturnException(other->copy());
 }
 
 Type* throwFunc(Type* other)

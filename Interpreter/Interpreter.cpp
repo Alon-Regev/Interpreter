@@ -42,7 +42,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 
 	{"?", Operator{[](Type* a, Type* b) { return a->ternary(b); }, 7}},
 
-	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 4, UNARY_PREFIX, false, true, false, false, true}},
+	{"if", Operator{[](Type* a, Type* b) { return (Type*)new If(b); }, 4, UNARY_PREFIX, false, true, false, false, false}},
 	{"else", Operator{[](Type* a, Type* b) { return If::elseCheck(a, b); }, 2, BINARY_INFIX, false, true, false, false, true}},
 	{"{^}", Operator{[](Type* a, Type* b) { return a->block(b); }, 3, BINARY_INFIX, false, true, false, false, true} },
 
@@ -51,7 +51,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 22} },
 	{"[^]", Operator{[](Type* a, Type* b) { return a->index(b); }, 21} },
 	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX, false, true, false, false, true}},
-	{"foreach", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? (Type*)new Foreach(b) : Foreach::comprehension(a, b); }, 4, BINARY_INFIX, true, true, false, true, true} },
+	{"foreach", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? (Type*)new Foreach(b) : Foreach::comprehension(a, b); }, 4, BINARY_INFIX, true, true, false, true, false} },
 	{"for", Operator{[](Type* a, Type* b) { return (Type*)new For(b); }, 4, UNARY_PREFIX, false, true, false, false, true}},
 
 	// logic operators
@@ -241,11 +241,11 @@ Type* Interpreter::assign(Type* a, Type* b, std::map<std::string, Type*>& variab
 	return Interpreter::addVariable(a->getVariable(), variables, b->copy());
 }
 
-void Interpreter::removeVariable(const std::string& name, std::map<std::string, Type*>& variables, bool deleteValue)
+void Interpreter::removeVariable(const std::string& name, std::map<std::string, Type*>& variables, bool deleteValue, bool variableExists)
 {
 	if (deleteValue)
 		delete variables[name];
-	else
+	else if(variableExists)
 		variables[name]->setVariable("");
 	variables.erase(name);
 }
@@ -288,6 +288,7 @@ Type* Interpreter::catchBlock(Type* a, Type* b, std::map<std::string, Type*>& va
 		if (b->getType() == BLOCK)
 		{
 			Interpreter::addVariable("e", variables, e, true);
+			((Block*)b)->setSameScope();
 			delete ((Block*)b)->run();
 			Interpreter::removeVariable("e", variables);
 		}

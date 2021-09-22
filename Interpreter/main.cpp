@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#define VERSION "0.10"
+#define VERSION "1.0"
 #define NAME "<nameless interpreter>"
 
 std::string codeInput();

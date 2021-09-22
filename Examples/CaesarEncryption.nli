@@ -1,0 +1,101 @@
+string NOT_IMPLEMENTED = "Not Implemented yet...";
+
+function main = () =>
+{
+	object encryption = CaesarEncryption();
+	
+	string msg = input("Enter msg: ");
+	string enc = encryption.encrypt(msg);
+	
+	print("encrypted msg:", enc);
+	print("decrypted msg:", encryption.decrypt(enc));
+};
+
+// parent class for encryptions
+class Encryption = 
+{
+	"name": "",
+	
+	"Encryption": (string name) =>
+	{
+		this.name = name;
+	},
+	
+	"encrypt": (string msg) =>
+	{
+		throw(NOT_IMPLEMENTED);
+	},
+	
+	"decrypt": (string msg) =>
+	{
+		throw(NOT_IMPLEMENTED);
+	}
+};
+
+// class for shift encryptions
+class ShiftEncryption = Encryption <-
+{
+	"shift": 0,
+	
+	"ShiftEncryption": (int sh) => 
+	{
+		this.Encryption("Shift Encryption");
+		this.shift = sh;
+	},
+	
+	"encrypt": (string msg) =>
+	{
+		msg = lower(msg);
+		
+		string result = "";
+		foreach(char c, msg)
+		{
+			if('a' <= c && c <= 'z')
+			{
+				result += 'a' + this.shiftIndex(c - 'a', this.shift, 'z' - 'a' + 1);
+			}
+			else
+			{
+				result += c;
+			};
+		};
+		return(result);
+	},
+	
+	"decrypt": (string msg) =>
+	{
+		msg = lower(msg);
+		
+		string result = "";
+		foreach(char c, msg)
+		{
+			if('a' <= c && c <= 'z')
+			{
+				result += 'a' + this.shiftIndex(c - 'a', -this.shift, 'z' - 'a' + 1);
+			}
+			else
+			{
+				result += c;
+			};
+		};
+		return(result);
+	},
+	
+	// work when |shift| <= maxValue and 0 <= i < maxValue
+	"shiftIndex": (int i, int sh, int maxValue) =>
+	{
+		return((i + sh + maxValue) % maxValue);
+	}
+};
+
+// class for caesar encryption
+class CaesarEncryption = ShiftEncryption <-
+{
+	"CaesarEncryption": () =>
+	{
+		this.ShiftEncryption(3);
+		this.name = "Caesar Encryption";
+	}
+};
+
+main();

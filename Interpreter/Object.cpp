@@ -97,9 +97,9 @@ Type* Object::index(Type* other)
 
 Type* Object::point(Type* other)
 {
-	if (this->_variables.find(this->toName(other)) != this->_variables.end())
+	if (this->_variables.find(this->toName(other, true)) != this->_variables.end())
 	{
-		Type* value = this->_variables[this->toName(other)];
+		Type* value = this->_variables[this->toName(other, true)];
 		return this->isVariable() ? new Reference(value) : value->copy();
 	}
 	else
@@ -115,7 +115,12 @@ Type* Object::assign(Type* other)
 		this->_variables.clear();
 		// copy variables
 		for (std::pair<const std::string, Type*>& pair : ((Object*)other)->_variables)
+		{
 			this->_variables[pair.first] = pair.second->copy();
+			// change this
+			if (this->getType() != CLASS && pair.second->getType() == FUNCTION)
+				((Function*)this->_variables[pair.first])->setThis(new Reference(this));
+		}
 		// copy instances
 		for (const std::string& instance : ((Object*)other)->_instances)
 			this->_instances.push_back(instance);
