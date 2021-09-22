@@ -51,7 +51,7 @@ std::map<std::string, Operator> Interpreter::_operators = {
 	{".", Operator{[](Type* a, Type* b) { return a->point(b); }, 22} },
 	{"[^]", Operator{[](Type* a, Type* b) { return a->index(b); }, 21} },
 	{"while", Operator{[](Type* a, Type* b) { return (Type*)new While(b); }, 4, UNARY_PREFIX, false, true, false, false, true}},
-	{"foreach", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? (Type*)new Foreach(b) : Foreach::comprehension(a, b); }, 4, BINARY_INFIX, true, true, false, true, true} },
+	{"foreach", Operator{[](Type* a, Type* b) { if (b == nullptr) throw SyntaxException(INVALID_OPERATOR_USE(std::string("-"))); else return a == nullptr ? (Type*)new Foreach(b) : Foreach::comprehension(a, b); }, 4, BINARY_INFIX, true, true, false, true, false} },
 	{"for", Operator{[](Type* a, Type* b) { return (Type*)new For(b); }, 4, UNARY_PREFIX, false, true, false, false, true}},
 
 	// logic operators
