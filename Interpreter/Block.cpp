@@ -16,7 +16,7 @@ Block::~Block()
 
 Type* Block::copy()
 {
-	return new Block(this->_interpreter, this->_code, this->_variables);
+	return new Block(this->_interpreter, this->_code, this->_parentVariables);
 }
 
 Node* Block::getCode()
