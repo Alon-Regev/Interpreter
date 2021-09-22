@@ -115,7 +115,12 @@ Type* Object::assign(Type* other)
 		this->_variables.clear();
 		// copy variables
 		for (std::pair<const std::string, Type*>& pair : ((Object*)other)->_variables)
+		{
 			this->_variables[pair.first] = pair.second->copy();
+			// change this
+			if (this->getType() != CLASS && pair.second->getType() == FUNCTION)
+				((Function*)this->_variables[pair.first])->setThis(new Reference(this));
+		}
 		// copy instances
 		for (const std::string& instance : ((Object*)other)->_instances)
 			this->_instances.push_back(instance);
